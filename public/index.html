@@ -157,7 +157,7 @@
             document.querySelector('.subtitle').textContent = title;
         }
         async function loadStocks() {
-            const res = await fetch('http://43.133.48.91:3000/api/stocks');
+            const res = await fetch('https://api.aiopenfortune.com/api/stocks');
             const stocks = await res.json();
             const grid = document.getElementById('stocksGrid');
             grid.innerHTML = Object.entries(stocks).map(([symbol, data]) => `
@@ -259,7 +259,7 @@
             document.getElementById('forecastModal').style.display = 'none';
         }
         async function loadPortfolio() {
-            const res = await fetch('http://43.133.48.91:3000/api/portfolio');
+            const res = await fetch('https://api.aiopenfortune.com/api/portfolio');
             const data = await res.json();
             const section = document.getElementById('portfolioSection');
             const t = currentLang === 'cn' ? {
@@ -343,7 +343,7 @@
             `;
         }
         async function loadHistory() {
-            const res = await fetch('http://43.133.48.91:3000/api/history');
+            const res = await fetch('https://api.aiopenfortune.com/api/history');
             const data = await res.json();
             const section = document.getElementById('historySection');
             const t = currentLang === 'cn' ? {
@@ -415,7 +415,7 @@
             `;
         }
         async function loadPricing() {
-            const res = await fetch('http://43.133.48.91:3000/api/pricing');
+            const res = await fetch('https://api.aiopenfortune.com/api/pricing');
             const plans = await res.json();
             const section = document.getElementById('pricingSection');
             const t = currentLang === 'cn' ? {
@@ -460,7 +460,7 @@
                 return;
             }
             try {
-                const res = await fetch('http://43.133.48.91:3000/api/payment/paypal/create-order', {
+                const res = await fetch('https://api.aiopenfortune.com/api/payment/paypal/create-order', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
                     body: JSON.stringify({ plan, market: 'global' })
@@ -510,7 +510,7 @@
                 return;
             }
             try {
-                const res = await fetch('http://43.133.48.91:3000/api/auth/login', {
+                const res = await fetch('https://api.aiopenfortune.com/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
@@ -549,7 +549,7 @@
                 return;
             }
             try {
-                const res = await fetch('http://43.133.48.91:3000/api/auth/register', {
+                const res = await fetch('https://api.aiopenfortune.com/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, password })
