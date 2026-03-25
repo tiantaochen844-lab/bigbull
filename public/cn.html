@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开放财富 - A股智能投资</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { color: white; text-align: center; margin-bottom: 10px; font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .subtitle { color: rgba(255,255,255,0.9); text-align: center; margin-bottom: 30px; font-size: 1.1em; }
+        .nav-switch { position: fixed; top: 20px; right: 20px; z-index: 100; }
+        .nav-btn { background: white; border: 2px solid #f5576c; color: #f5576c; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 600; transition: all 0.3s; text-decoration: none; display: inline-block; }
+        .nav-btn:hover { background: #f5576c; color: white; }
+        .stocks-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stock-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); cursor: pointer; transition: all 0.3s; }
+        .stock-card:hover { transform: translateY(-8px); }
+        .stock-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .stock-code { font-size: 1.4em; font-weight: bold; color: #f5576c; }
+        .stock-name { font-size: 1.1em; color: #333; margin-bottom: 10px; }
+        .stock-price { font-size: 2.2em; color: #333; margin: 10px 0; font-weight: bold; }
+        .stock-change { font-size: 1.2em; font-weight: 600; }
+        .positive { color: #f5576c; }
+        .negative { color: #10b981; }
+        .stock-info { display: flex; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee; font-size: 0.9em; color: #666; }
+        .history-section, .portfolio-section, .pricing-section { background: white; border-radius: 12px; padding: 30px; margin-top: 30px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
+        .section-title { font-size: 2em; color: #f5576c; margin-bottom: 20px; text-align: center; }
+        .performance-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .perf-card { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 20px; border-radius: 10px; text-align: center; }
+        .perf-label { font-size: 0.9em; opacity: 0.9; }
+        .perf-value { font-size: 1.8em; font-weight: bold; margin-top: 5px; }
+        .cycle-card { background: #f9fafb; border-radius: 10px; padding: 20px; margin-bottom: 15px; border-left: 4px solid #f5576c; }
+        .cycle-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .cycle-title { font-size: 1.3em; font-weight: bold; color: #333; }
+        .cycle-return { font-size: 1.5em; font-weight: bold; color: #f5576c; }
+        .cycle-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; font-size: 0.9em; color: #666; }
+        .portfolio-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .summary-card { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 20px; border-radius: 10px; text-align: center; }
+        .summary-label { font-size: 0.9em; opacity: 0.9; }
+        .summary-value { font-size: 1.8em; font-weight: bold; margin-top: 5px; }
+        .allocation-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .allocation-table th { background: #f3f4f6; padding: 12px; text-align: left; font-weight: 600; }
+        .allocation-table td { padding: 12px; border-bottom: 1px solid #e5e7eb; }
+        .allocation-bar { height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; margin-top: 5px; }
+        .allocation-fill { height: 100%; background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%); }
+        .risk-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.85em; font-weight: 600; }
+        .risk-low { background: #d1fae5; color: #065f46; }
+        .risk-mid { background: #fef3c7; color: #92400e; }
+        .risk-high { background: #fee2e2; color: #991b1b; }
+        .recommendation { background: #fef3c7; padding: 20px; border-radius: 10px; border-left: 4px solid #f59e0b; margin-top: 20px; line-height: 1.6; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .price-card { background: #f9fafb; border-radius: 12px; padding: 30px; border: 2px solid #e5e7eb; transition: all 0.3s; position: relative; }
+        .price-card.recommended { border-color: #f5576c; box-shadow: 0 8px 24px rgba(245,87,108,0.3); transform: scale(1.05); }
+        .recommended-badge { position: absolute; top: -12px; right: 20px; background: #f5576c; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.85em; font-weight: 600; }
+        .plan-name { font-size: 1.5em; font-weight: bold; margin-bottom: 10px; color: #333; }
+        .plan-price { font-size: 2.5em; font-weight: bold; color: #f5576c; margin: 15px 0; }
+        .plan-period { color: #666; font-size: 0.9em; }
+        .plan-features { list-style: none; margin: 20px 0; }
+        .plan-features li { padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #555; }
+        .plan-features li:before { content: '✓'; color: #f5576c; font-weight: bold; margin-right: 10px; }
+        .subscribe-btn { width: 100%; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1.1em; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .subscribe-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(245,87,108,0.4); }
+    </style>
+</head>
+<body>
+    <div class="nav-switch">
+        <a href="index.html" class="nav-btn">🌍 Global / 全球版</a>
+    </div>
+    <div class="container">
+        <h1>🐂 开放财富 · A股版</h1>
+        <div class="subtitle">透明投资 真实收益 - 专注A股价值投资</div>
+        <div class="history-section" id="historySection"></div>
+        <div class="stocks-grid" id="stocksGrid"></div>
+        <div class="portfolio-section" id="portfolioSection"></div>
+        <div class="pricing-section" id="pricingSection"></div>
+    </div>
+    <script>
+        async function loadHistory() {
+            const res = await fetch('/api/cn/history');
+            const data = await res.json();
+            document.getElementById('historySection').innerHTML = `
+                <div class="section-title">📊 真实收益追踪</div>
+                <div class="performance-cards">
+                    <div class="perf-card"><div class="perf-label">初始投资</div><div class="perf-value">¥${data.initialInvestment.toLocaleString()}</div></div>
+                    <div class="perf-card"><div class="perf-label">当前价值</div><div class="perf-value">¥${data.currentValue.toLocaleString()}</div></div>
+                    <div class="perf-card"><div class="perf-label">累计收益</div><div class="perf-value">+${data.totalReturn}%</div></div>
+                    <div class="perf-card"><div class="perf-label">平均周期收益</div><div class="perf-value">${data.avgReturnPerCycle}%</div></div>
+                    <div class="perf-card"><div class="perf-label">完成周期</div><div class="perf-value">${data.totalCycles}</div></div>
+                </div>
+                ${data.cycles.map(c => `
+                    <div class="cycle-card">
+                        <div class="cycle-header">
+                            <div class="cycle-title">第${c.cycle}周期 (${c.startDate} - ${c.endDate})</div>
+                            <div class="cycle-return">+${c.actualReturn}%</div>
+                        </div>
+                        <div class="cycle-details">
+                            <div>初始: ¥${c.initialAmount.toLocaleString()}</div>
+                            <div>结束: ¥${c.finalAmount.toLocaleString()}</div>
+                            <div>收益: ¥${(c.finalAmount - c.initialAmount).toLocaleString()}</div>
+                            <div>目标: ${c.targetReturn}%</div>
+                        </div>
+                    </div>
+                `).join('')}
+            `;
+        }
+        async function loadStocks() {
+            const res = await fetch('/api/cn/stocks');
+            const stocks = await res.json();
+            document.getElementById('stocksGrid').innerHTML = Object.entries(stocks).map(([code, data]) => `
+                <div class="stock-card">
+                    <div class="stock-header"><div class="stock-code">${data.code}</div></div>
+                    <div class="stock-name">${data.name}</div>
+                    <div class="stock-price">¥${data.price}</div>
+                    <div class="stock-change ${data.change >= 0 ? 'positive' : 'negative'}">
+                        ${data.change >= 0 ? '▲' : '▼'} ${Math.abs(data.change)}%
+                    </div>
+                    <div class="stock-info">
+                        <span>成交量: ${data.volume}</span>
+                        <span>市盈率: ${data.pe}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+        async function loadPortfolio() {
+            const res = await fetch('/api/cn/portfolio');
+            const data = await res.json();
+            document.getElementById('portfolioSection').innerHTML = `
+                <div class="section-title">💼 第${data.cycle}周期投资组合 (${data.startDate} - ${data.endDate})</div>
+                <div class="portfolio-summary">
+                    <div class="summary-card"><div class="summary-label">投资金额</div><div class="summary-value">¥${data.totalAmount.toLocaleString()}</div></div>
+                    <div class="summary-card"><div class="summary-label">预期收益</div><div class="summary-value">${data.expectedReturn}%</div></div>
+                    <div class="summary-card"><div class="summary-label">投资周期</div><div class="summary-value">${data.period}</div></div>
+                    <div class="summary-card"><div class="summary-label">风险等级</div><div class="summary-value">${data.riskLevel}</div></div>
+                </div>
+                <table class="allocation-table">
+                    <thead><tr><th>股票</th><th>投资金额</th><th>占比</th><th>股数</th><th>预期收益</th><th>风险</th></tr></thead>
+                    <tbody>
+                        ${data.allocation.map(item => `
+                            <tr>
+                                <td><strong>${item.code}</strong> ${item.name}</td>
+                                <td>¥${item.amount.toLocaleString()}</td>
+                                <td>${item.percentage}%<div class="allocation-bar"><div class="allocation-fill" style="width: ${item.percentage}%"></div></div></td>
+                                <td>${item.shares}</td>
+                                <td style="color: #f5576c; font-weight: 600;">+${item.expectedReturn}%</td>
+                                <td><span class="risk-badge risk-${item.risk === '低' ? 'low' : item.risk === '高' ? 'high' : 'mid'}">${item.risk}</span></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+                <div class="recommendation"><strong>📋 策略说明：</strong><br>${data.recommendation}</div>
+            `;
+        }
+        async function loadPricing() {
+            const res = await fetch('/api/cn/pricing');
+            const plans = await res.json();
+            document.getElementById('pricingSection').innerHTML = `
+                <div class="section-title">💎 订阅计划</div>
+                <div class="pricing-grid">
+                    ${plans.map(plan => `
+                        <div class="price-card ${plan.recommended ? 'recommended' : ''}">
+                            ${plan.recommended ? '<div class="recommended-badge">推荐</div>' : ''}
+                            <div class="plan-name">${plan.name}</div>
+                            <div class="plan-price">¥${plan.price}</div>
+                            <div class="plan-period">/${plan.period}</div>
+                            <ul class="plan-features">${plan.features.map(f => `<li>${f}</li>`).join('')}</ul>
+                            <button class="subscribe-btn" onclick="startPayPal('${plan.id}')">立即订阅</button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        loadHistory();
+        loadStocks();
+        loadPortfolio();
+        loadPricing();
+
+        async function startPayPal(plan) {
+            const token = localStorage.getItem('token');
+            if (!token) { alert('请先登录后再订阅'); return; }
+            try {
+                const res = await fetch('/api/payment/paypal/create-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                    body: JSON.stringify({ plan, market: 'cn' })
+                });
+                const data = await res.json();
+                if (data.approveUrl) {
+                    window.location.href = data.approveUrl;
+                } else {
+                    alert('错误: ' + (data.error || '未知错误'));
+                }
+            } catch (e) {
+                alert('支付错误: ' + e.message);
+            }
+        }
+    </script>
+    <div style="background: #1a1a2e; color: #888; text-align: center; padding: 20px; font-size: 0.75em; line-height: 1.8; margin-top: 40px;">
+        <strong style="color: #aaa;">免责声明 / DISCLAIMER</strong><br>
+        本平台（Open Fortune）仅提供AI驱动投资组合咨询及教育性信息服务。<br>
+        <strong>本平台不受美国证券交易委员会（SEC）、中国证券监督管理委员会（CSRC）或任何金融监管机构的监管。</strong><br>
+        本平台所有内容均不构成投资建议、证券推荐或买卖要约。投资有风险，过往业绩不代表未来收益，用户需自行承担全部投资决策责任。<br><br>
+        This platform is for informational purposes only and is <strong>NOT regulated by the SEC, CSRC, or any financial authority.</strong> Nothing herein constitutes investment advice. Past performance does not guarantee future results.<br><br>
+        © 2026 Open Fortune. All rights reserved. | <a href="/terms.html" style="color: #667eea;">服务条款 / Terms of Service</a>
+    </div>
+</body>
+</html>

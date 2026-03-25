@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>支付成功 - Open Fortune</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .card { background: white; border-radius: 16px; padding: 50px 40px; text-align: center; max-width: 480px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+        .icon { font-size: 5em; margin-bottom: 20px; }
+        h1 { color: #10b981; font-size: 2em; margin-bottom: 15px; }
+        p { color: #666; line-height: 1.8; margin-bottom: 10px; }
+        .btn { display: inline-block; margin-top: 25px; padding: 14px 32px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; }
+        .loading { color: #667eea; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="icon" id="icon">⏳</div>
+        <h1 id="title" class="loading">处理中...</h1>
+        <p id="msg">正在确认您的 PayPal 支付，请稍候...</p>
+        <div id="actions"></div>
+    </div>
+    <script>
+        const params = new URLSearchParams(location.search);
+        const token   = params.get('token');   // PayPal 返回的 orderId
+        const plan    = params.get('plan');
+        const market  = params.get('market');
+        const uid     = params.get('uid');
+
+        async function captureOrder() {
+            if (!token) {
+                showSuccess();
+                return;
+            }
+            try {
+                const res = await fetch('/api/payment/paypal/capture-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ orderId: token, plan, market, uid })
+                });
+                const data = await res.json();
+                if (data.success) showSuccess();
+                else showError(data.error);
+            } catch (e) {
+                showError('网络错误，请联系客服');
+            }
+        }
+
+        function showSuccess() {
+            document.getElementById('icon').textContent = '🎉';
+            document.getElementById('title').textContent = '支付成功！';
+            document.getElementById('title').style.color = '#10b981';
+            document.getElementById('msg').innerHTML = `
+                <p>Payment Successful!</p>
+                <p>欢迎加入 Open Fortune，您的订阅已激活。</p>
+                <p>Welcome! Your subscription is now active.</p>
+                <p>确认邮件将发送至您的注册邮箱。</p>
+            `;
+            document.getElementById('actions').innerHTML =
+                `<a href="/${market === 'cn' ? 'cn.html' : ''}" class="btn">返回首页 / Back to Home</a>`;
+        }
+
+        function showError(msg) {
+            document.getElementById('icon').textContent = '❌';
+            document.getElementById('title').textContent = '支付确认失败';
+            document.getElementById('title').style.color = '#ef4444';
+            document.getElementById('msg').textContent = msg || '请联系客服处理';
+            document.getElementById('actions').innerHTML =
+                `<a href="/" class="btn">返回首页</a>`;
+        }
+
+        captureOrder();
+    </script>
+</body>
+</html>
