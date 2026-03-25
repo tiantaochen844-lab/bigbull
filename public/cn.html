@@ -78,7 +78,7 @@
     </div>
     <script>
         async function loadHistory() {
-            const res = await fetch('/api/cn/history');
+            const res = await fetch('http://43.133.48.91:3000/api/cn/history');
             const data = await res.json();
             document.getElementById('historySection').innerHTML = `
                 <div class="section-title">📊 真实收益追踪</div>
@@ -106,7 +106,7 @@
             `;
         }
         async function loadStocks() {
-            const res = await fetch('/api/cn/stocks');
+            const res = await fetch('http://43.133.48.91:3000/api/cn/stocks');
             const stocks = await res.json();
             document.getElementById('stocksGrid').innerHTML = Object.entries(stocks).map(([code, data]) => `
                 <div class="stock-card">
@@ -124,7 +124,7 @@
             `).join('');
         }
         async function loadPortfolio() {
-            const res = await fetch('/api/cn/portfolio');
+            const res = await fetch('http://43.133.48.91:3000/api/cn/portfolio');
             const data = await res.json();
             document.getElementById('portfolioSection').innerHTML = `
                 <div class="section-title">💼 第${data.cycle}周期投资组合 (${data.startDate} - ${data.endDate})</div>
@@ -153,7 +153,7 @@
             `;
         }
         async function loadPricing() {
-            const res = await fetch('/api/cn/pricing');
+            const res = await fetch('http://43.133.48.91:3000/api/cn/pricing');
             const plans = await res.json();
             document.getElementById('pricingSection').innerHTML = `
                 <div class="section-title">💎 订阅计划</div>
@@ -180,7 +180,7 @@
             const token = localStorage.getItem('token');
             if (!token) { alert('请先登录后再订阅'); return; }
             try {
-                const res = await fetch('/api/payment/paypal/create-order', {
+                const res = await fetch('http://43.133.48.91:3000/api/payment/paypal/create-order', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
                     body: JSON.stringify({ plan, market: 'cn' })

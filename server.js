@@ -7,7 +7,15 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ── 中间件 ───────────────────────────────────────────
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://43.133.48.91:3000',
+    'https://bigbull.pages.dev',
+    /\.pages\.dev$/,
+    /\.cloudflare\.com$/
+  ],
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.static('public'));
 
