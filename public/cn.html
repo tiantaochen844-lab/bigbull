@@ -62,6 +62,10 @@
         .plan-features li:before { content: '✓'; color: #f5576c; font-weight: bold; margin-right: 10px; }
         .subscribe-btn { width: 100%; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1.1em; font-weight: 600; cursor: pointer; transition: all 0.3s; }
         .subscribe-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(245,87,108,0.4); }
+        .forecast-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; }
+        .forecast-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; max-width: 900px; width: 90%; max-height: 90vh; overflow-y: auto; }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 2em; cursor: pointer; color: #999; }
+        .chart-container { position: relative; height: 400px; margin: 20px 0; }
     </style>
 </head>
 <body>
@@ -69,19 +73,26 @@
         <a href="index.html" class="nav-btn">🌍 Global / 全球版</a>
     </div>
     <div class="container">
-        <h1>🚀 开放财富 · A股版</h1>
-        <div class="subtitle">透明投资 真实收益 - 专注A股价值投资</div>
+    <div class="forecast-modal" id="forecastModal">
+        <div class="forecast-content">
+            <span class="close-btn" onclick="document.getElementById('forecastModal').style.display='none'">&times;</span>
+            <div id="forecastData"></div>
+        </div>
+    </div>
+        <h1>🚀 AI创富.A股版</h1>
+        <div class="subtitle">AI创富--智慧灵光，复利成长</div>
         <div class="history-section" id="historySection"></div>
+        <div id="tradesSection"></div>
         <div class="stocks-grid" id="stocksGrid"></div>
         <div class="portfolio-section" id="portfolioSection"></div>
         <div class="pricing-section" id="pricingSection"></div>
     </div>
     <script>
         async function loadHistory() {
-            const res = await fetch('http://api.aiopenfortune.com/api/cn/history');
+            const res = await fetch('https://aiopenfortune.com/api/cn/history');
             const data = await res.json();
             document.getElementById('historySection').innerHTML = `
-                <div class="section-title">📊 真实收益追踪</div>
+                <div class="section-title">📊 AI收益追踪</div>
                 <div class="performance-cards">
                     <div class="perf-card"><div class="perf-label">初始投资</div><div class="perf-value">¥${data.initialInvestment.toLocaleString()}</div></div>
                     <div class="perf-card"><div class="perf-label">当前价值</div><div class="perf-value">¥${data.currentValue.toLocaleString()}</div></div>
@@ -106,10 +117,10 @@
             `;
         }
         async function loadStocks() {
-            const res = await fetch('http://api.aiopenfortune.com/api/cn/stocks');
+            const res = await fetch('https://aiopenfortune.com/api/cn/stocks');
             const stocks = await res.json();
             document.getElementById('stocksGrid').innerHTML = Object.entries(stocks).map(([code, data]) => `
-                <div class="stock-card">
+                <div class="stock-card" onclick="showForecast('${code}')">
                     <div class="stock-header"><div class="stock-code">${data.code}</div></div>
                     <div class="stock-name">${data.name}</div>
                     <div class="stock-price">¥${data.price}</div>
@@ -124,7 +135,7 @@
             `).join('');
         }
         async function loadPortfolio() {
-            const res = await fetch('http://api.aiopenfortune.com/api/cn/portfolio');
+            const res = await fetch('https://aiopenfortune.com/api/cn/portfolio');
             const data = await res.json();
             document.getElementById('portfolioSection').innerHTML = `
                 <div class="section-title">💼 第${data.cycle}周期投资组合 (${data.startDate} - ${data.endDate})</div>
@@ -153,7 +164,7 @@
             `;
         }
         async function loadPricing() {
-            const res = await fetch('http://api.aiopenfortune.com/api/cn/pricing');
+            const res = await fetch('https://aiopenfortune.com/api/cn/pricing');
             const plans = await res.json();
             document.getElementById('pricingSection').innerHTML = `
                 <div class="section-title">💎 订阅计划</div>
@@ -171,16 +182,109 @@
                 </div>
             `;
         }
+        let forecastChart = null;
+        async function showForecast(code) {
+            document.getElementById("forecastModal").style.display = "block";
+            document.getElementById("forecastData").innerHTML = "<p style=\"text-align:center;padding:40px;\">加载中...</p>";
+            try {
+                const res = await fetch("https://aiopenfortune.com/api/cn/forecast/" + code);
+                const data = await res.json();
+                const history = data.history || [];
+                const future = data.future || [];
+                const labels = [...history.map(d => d.date), ...future.map(d => d.date)];
+                const histPrices = [...history.map(d => d.price), ...future.map(() => null)];
+                const futurePrices = [...history.map(() => null), ...future.map(d => d.price)];
+                document.getElementById("forecastData").innerHTML = `
+                    <h2 style="color:#f5576c;margin-bottom:15px;">${data.name}（${data.symbol}）走势分析</h2>
+                    <p style="color:#666;margin-bottom:10px;">当前价格：<strong style="color:#f5576c;font-size:1.3em;">¥${data.current}</strong></p>
+                    <div class="chart-container"><canvas id="forecastChart"></canvas></div>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;margin:20px 0;">
+                        ${(data.predictions||[]).map(p => `<div style="background:#f9fafb;padding:15px;border-radius:8px;text-align:center;"><div style="color:#666;font-size:0.9em;">${p.periodCn}</div><div style="color:#f5576c;font-size:1.5em;font-weight:bold;">¥${p.price}</div><div style="color:#10b981;font-size:0.85em;">置信度 ${p.confidence}</div></div>`).join("")}
+                    </div>
+                    <div style="background:#fef3c7;padding:15px;border-radius:8px;border-left:4px solid #f59e0b;">${data.analysisCn || ""}</div>
+                `;
+                if (forecastChart) forecastChart.destroy();
+                const ctx = document.getElementById("forecastChart").getContext("2d");
+                forecastChart = new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels,
+                        datasets: [
+                            { label: "历史价格", data: histPrices, borderColor: "#f5576c", backgroundColor: "rgba(245,87,108,0.1)", tension: 0.3, pointRadius: 2 },
+                            { label: "AI预测", data: futurePrices, borderColor: "#667eea", backgroundColor: "rgba(102,126,234,0.1)", borderDash: [5,5], tension: 0.3, pointRadius: 2 }
+                        ]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: "top" } }, scales: { x: { ticks: { maxTicksLimit: 10 } } } }
+                });
+            } catch(e) {
+                document.getElementById("forecastData").innerHTML = "<p style=\"color:red;text-align:center;\">加载失败: " + e.message + "</p>";
+            }
+        }
+
+        async function loadTrades() {
+            try {
+                const res = await fetch('https://aiopenfortune.com/api/cn/trades');
+                const cycles = await res.json();
+                document.getElementById('tradesSection').innerHTML = `
+                    <div class="history-section" style="margin-top:20px;">
+                        <div class="section-title">📋 实盘交易记录</div>
+                        <p style="text-align:center;color:#666;margin-bottom:20px;font-size:0.95em;">真实建仓/清仓价格，每季度公开透明</p>
+                        ${cycles.map(cycle => `
+                            <div style="background:#f9fafb;border-radius:12px;padding:20px;margin-bottom:20px;border-left:4px solid #f5576c;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+                                    <div style="font-size:1.2em;font-weight:bold;color:#333;">第${cycle.cycle}周期（${cycle.startDate} ~ ${cycle.endDate}）</div>
+                                    <div style="font-size:1.4em;font-weight:bold;color:#f5576c;">+${cycle.actualReturn}%</div>
+                                </div>
+                                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:15px;">
+                                    <div style="background:white;padding:10px;border-radius:8px;text-align:center;"><div style="color:#666;font-size:0.85em;">初始资金</div><div style="font-weight:bold;">¥${cycle.initialAmount.toLocaleString()}</div></div>
+                                    <div style="background:white;padding:10px;border-radius:8px;text-align:center;"><div style="color:#666;font-size:0.85em;">期末资金</div><div style="font-weight:bold;color:#f5576c;">¥${cycle.finalAmount.toLocaleString()}</div></div>
+                                    <div style="background:white;padding:10px;border-radius:8px;text-align:center;"><div style="color:#666;font-size:0.85em;">实际收益</div><div style="font-weight:bold;color:#f5576c;">+${cycle.actualReturn}%</div></div>
+                                    <div style="background:white;padding:10px;border-radius:8px;text-align:center;"><div style="color:#666;font-size:0.85em;">目标收益</div><div style="font-weight:bold;">${cycle.targetReturn}%</div></div>
+                                </div>
+                                <table style="width:100%;border-collapse:collapse;font-size:0.9em;">
+                                    <thead><tr style="background:#f5576c;color:white;">
+                                        <th style="padding:10px;text-align:left;border-radius:4px 0 0 4px;">股票</th>
+                                        <th style="padding:10px;text-align:center;">建仓日期</th>
+                                        <th style="padding:10px;text-align:center;">建仓价</th>
+                                        <th style="padding:10px;text-align:center;">清仓日期</th>
+                                        <th style="padding:10px;text-align:center;">清仓价</th>
+                                        <th style="padding:10px;text-align:center;">股数</th>
+                                        <th style="padding:10px;text-align:center;border-radius:0 4px 4px 0;">收益</th>
+                                    </tr></thead>
+                                    <tbody>
+                                        ${cycle.stocks.map((s, i) => `
+                                            <tr style="background:${i % 2 === 0 ? 'white' : '#f9fafb'};">
+                                                <td style="padding:10px;font-weight:bold;">${s.code} ${s.name}</td>
+                                                <td style="padding:10px;text-align:center;">${s.buyDate}</td>
+                                                <td style="padding:10px;text-align:center;">¥${s.buyPrice}</td>
+                                                <td style="padding:10px;text-align:center;">${s.sellDate}</td>
+                                                <td style="padding:10px;text-align:center;">¥${s.sellPrice}</td>
+                                                <td style="padding:10px;text-align:center;">${s.shares}股</td>
+                                                <td style="padding:10px;text-align:center;color:#f5576c;font-weight:bold;">+¥${s.gain.toLocaleString()} (+${s.gainPct}%)</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } catch(e) {
+                console.error('loadTrades error', e);
+            }
+        }
+
         loadHistory();
         loadStocks();
         loadPortfolio();
         loadPricing();
+        loadTrades();
 
         async function startPayPal(plan) {
             const token = localStorage.getItem('token');
             if (!token) { alert('请先登录后再订阅'); return; }
             try {
-                const res = await fetch('http://api.aiopenfortune.com/api/payment/paypal/create-order', {
+                const res = await fetch('https://aiopenfortune.com/api/payment/paypal/create-order', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
                     body: JSON.stringify({ plan, market: 'cn' })

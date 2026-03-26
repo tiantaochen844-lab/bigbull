@@ -94,7 +94,7 @@
     </div>
     <div class="container">
         <h1>🚀 AI Open Fortune</h1>
-        <div class="subtitle">开放财富 - 透明化投资，真实收益见证成长</div>
+        <div class="subtitle">AI创富--智慧灵光，复利成长</div>
         <div class="history-section" id="historySection"></div>
         <div class="stocks-grid" id="stocksGrid"></div>
         <div class="portfolio-section" id="portfolioSection"></div>
@@ -153,11 +153,11 @@
         }
         
         function updateTitle() {
-            const title = currentLang === 'cn' ? '开放财富 - 透明化投资，真实收益见证成长' : 'AI Open Fortune - AI-Driven Investment Platform';
+            const title = currentLang === 'cn' ? 'AI创富--智慧灵光，复利成长' : 'AI Open Fortune - AI-Driven Investment Platform';
             document.querySelector('.subtitle').textContent = title;
         }
         async function loadStocks() {
-            const res = await fetch('http://api.aiopenfortune.com/api/stocks');
+            const res = await fetch('https://aiopenfortune.com/api/stocks');
             const stocks = await res.json();
             const grid = document.getElementById('stocksGrid');
             grid.innerHTML = Object.entries(stocks).map(([symbol, data]) => `
@@ -179,7 +179,7 @@
             `).join('');
         }
         async function showForecast(symbol) {
-            const res = await fetch(`/api/forecast/${symbol}`);
+            const res = await fetch(`https://aiopenfortune.com/api/forecast/${symbol}`);
             const data = await res.json();
             
             const allDates = [...data.history.map(h => h.date), ...data.future.map(f => f.date)];
@@ -259,7 +259,7 @@
             document.getElementById('forecastModal').style.display = 'none';
         }
         async function loadPortfolio() {
-            const res = await fetch('http://api.aiopenfortune.com/api/portfolio');
+            const res = await fetch('https://aiopenfortune.com/api/portfolio');
             const data = await res.json();
             const section = document.getElementById('portfolioSection');
             const t = currentLang === 'cn' ? {
@@ -343,11 +343,11 @@
             `;
         }
         async function loadHistory() {
-            const res = await fetch('http://api.aiopenfortune.com/api/history');
+            const res = await fetch('https://aiopenfortune.com/api/history');
             const data = await res.json();
             const section = document.getElementById('historySection');
             const t = currentLang === 'cn' ? {
-                title: '📊 真实收益追踪',
+                title: '📊 AI收益追踪',
                 initial: '初始投资',
                 current: '当前价值',
                 total: '累计收益',
@@ -415,7 +415,7 @@
             `;
         }
         async function loadPricing() {
-            const res = await fetch('http://api.aiopenfortune.com/api/pricing');
+            const res = await fetch('https://aiopenfortune.com/api/pricing');
             const plans = await res.json();
             const section = document.getElementById('pricingSection');
             const t = currentLang === 'cn' ? {
@@ -460,7 +460,7 @@
                 return;
             }
             try {
-                const res = await fetch('http://api.aiopenfortune.com/api/payment/paypal/create-order', {
+                const res = await fetch('https://aiopenfortune.com/api/payment/paypal/create-order', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
                     body: JSON.stringify({ plan, market: 'global' })
@@ -510,7 +510,7 @@
                 return;
             }
             try {
-                const res = await fetch('http://api.aiopenfortune.com/api/auth/login', {
+                const res = await fetch('https://aiopenfortune.com/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
@@ -549,7 +549,7 @@
                 return;
             }
             try {
-                const res = await fetch('http://api.aiopenfortune.com/api/auth/register', {
+                const res = await fetch('https://aiopenfortune.com/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, password })
@@ -571,12 +571,18 @@
             const user = JSON.parse(localStorage.getItem('user') || '{}');
             if (token) {
                 document.getElementById('authBtn').style.display = 'none';
-                document.getElementById('userInfo').style.display = 'block';
-                document.getElementById('userInfo').textContent = user.email || 'User';
+                document.getElementById('userInfo').style.display = 'inline-block';
+                document.getElementById('userInfo').innerHTML = `${user.email || 'User'} <button onclick="logout()" style="margin-left:8px;padding:4px 10px;background:#f5576c;color:white;border:none;border-radius:12px;cursor:pointer;font-size:0.85em;">退出</button>`;
             } else {
                 document.getElementById('authBtn').style.display = 'block';
                 document.getElementById('userInfo').style.display = 'none';
             }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            updateAuthUI();
         }
 
         updateAuthUI();
