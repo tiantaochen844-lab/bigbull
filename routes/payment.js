@@ -8,7 +8,7 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'openfortune_secret';
-const BASE_URL = `http://43.133.48.91:${process.env.PORT || 3000}`;
+const BASE_URL = 'https://aiopenfortune.com';
 
 // ── PayPal 环境配置 ───────────────────────────────────
 function getPayPalClient() {
