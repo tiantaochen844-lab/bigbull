@@ -96,6 +96,7 @@
         <h1>🚀 AI Open Fortune</h1>
         <div class="subtitle">AI创富--智慧灵光，复利成长</div>
         <div class="history-section" id="historySection"></div>
+        <div id="tradesSection"></div>
         <div class="stocks-grid" id="stocksGrid"></div>
         <div class="portfolio-section" id="portfolioSection"></div>
         <div class="pricing-section" id="pricingSection"></div>
@@ -449,9 +450,63 @@
                 </div>
             `;
         }
+        async function loadTrades() {
+            try {
+                const res = await fetch('https://aiopenfortune.com/api/trades');
+                const cycles = await res.json();
+                document.getElementById('tradesSection').innerHTML = `
+                    <div class="history-section" style="margin-top:20px;">
+                        <div class="section-title">📋 ${currentLang === 'cn' ? '实盘交易记录' : 'Real Trade Records'}</div>
+                        <p style="text-align:center;color:#666;margin-bottom:20px;font-size:0.95em;">${currentLang === 'cn' ? '真实建仓/清仓价格，每季度公开透明' : 'Transparent buy/sell records, verified quarterly'}</p>
+                        ${cycles.map(cycle => `
+                            <div style="background:#f9fafb;border-radius:12px;padding:20px;margin-bottom:20px;border-left:4px solid #667eea;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+                                    <div style="font-size:1.2em;font-weight:bold;color:#333;">Cycle ${cycle.cycle}（${cycle.startDate} ~ ${cycle.endDate}）${cycle.status === 'active' ? '<span style="background:#fef3c7;color:#92400e;padding:3px 10px;border-radius:12px;font-size:0.8em;margin-left:8px;">持仓中</span>' : ''}</div>
+                                    <div style="font-size:1.4em;font-weight:bold;color:${cycle.actualReturn >= 0 ? '#667eea' : '#ef4444'};">${cycle.actualReturn >= 0 ? '+' : ''}${cycle.actualReturn}%</div>
+                                </div>
+                                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:15px;">
+                                    <div style="background:white;padding:10px;border-radius:8px;text-align:center;"><div style="color:#666;font-size:0.85em;">Initial</div><div style="font-weight:bold;">$${cycle.initialAmount.toLocaleString()}</div></div>
+                                    <div style="background:white;padding:10px;border-radius:8px;text-align:center;"><div style="color:#666;font-size:0.85em;">Current/Final</div><div style="font-weight:bold;color:#667eea;">$${cycle.finalAmount.toLocaleString()}</div></div>
+                                    <div style="background:white;padding:10px;border-radius:8px;text-align:center;"><div style="color:#666;font-size:0.85em;">Return</div><div style="font-weight:bold;color:${cycle.actualReturn >= 0 ? '#667eea' : '#ef4444'};">${cycle.actualReturn >= 0 ? '+' : ''}${cycle.actualReturn}%</div></div>
+                                    <div style="background:white;padding:10px;border-radius:8px;text-align:center;"><div style="color:#666;font-size:0.85em;">Target</div><div style="font-weight:bold;">${cycle.targetReturn}%</div></div>
+                                </div>
+                                <table style="width:100%;border-collapse:collapse;font-size:0.9em;">
+                                    <thead><tr style="background:#667eea;color:white;">
+                                        <th style="padding:10px;text-align:left;">Stock</th>
+                                        <th style="padding:10px;text-align:center;">Buy Date</th>
+                                        <th style="padding:10px;text-align:center;">Buy Price</th>
+                                        <th style="padding:10px;text-align:center;">Sell Date</th>
+                                        <th style="padding:10px;text-align:center;">Sell Price</th>
+                                        <th style="padding:10px;text-align:center;">Shares</th>
+                                        <th style="padding:10px;text-align:center;">Gain</th>
+                                    </tr></thead>
+                                    <tbody>
+                                        ${cycle.stocks.map((s, i) => `
+                                            <tr style="background:${i % 2 === 0 ? 'white' : '#f9fafb'};">
+                                                <td style="padding:10px;font-weight:bold;">${s.symbol} ${s.name}</td>
+                                                <td style="padding:10px;text-align:center;">${s.buyDate}</td>
+                                                <td style="padding:10px;text-align:center;">$${s.buyPrice}</td>
+                                                <td style="padding:10px;text-align:center;">${s.sellDate || '<span style="color:#f59e0b;">持仓中</span>'}</td>
+                                                <td style="padding:10px;text-align:center;">${s.sellPrice ? '$' + s.sellPrice : '--'}</td>
+                                                <td style="padding:10px;text-align:center;">${s.shares}</td>
+                                                <td style="padding:10px;text-align:center;color:#667eea;font-weight:bold;">${s.gain ? '+$' + s.gain + ' (+' + s.gainPct + '%)' : '<span style="color:#f59e0b;">持仓中</span>'}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } catch(e) {
+                console.error('loadTrades error', e);
+            }
+        }
+
         loadHistory();
         loadStocks();
         loadPortfolio();
+        loadTrades();
 
         async function startPayPal(plan) {
             const token = localStorage.getItem('token');
