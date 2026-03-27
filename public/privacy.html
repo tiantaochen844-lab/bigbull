@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隐私政策 / Privacy Policy - AI Open Fortune</title>
+    <meta name="description" content="AI Open Fortune 隐私政策 - 我们如何收集、使用和保护您的个人信息">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif; background: #f8f9ff; color: #333; line-height: 1.8; }
+
+        .nav { background: white; padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 12px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+        .nav-logo { font-size: 1.4em; font-weight: bold; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+        .nav-links a { text-decoration: none; color: #555; font-size: 0.9em; margin-left: 20px; transition: color 0.2s; }
+        .nav-links a:hover { color: #667eea; }
+
+        .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 70px 40px 50px; text-align: center; color: white; }
+        .hero h1 { font-size: 2.4em; font-weight: 800; margin-bottom: 12px; }
+        .hero p { opacity: 0.9; font-size: 1em; }
+        .lang-toggle { display: inline-flex; background: rgba(255,255,255,0.2); border-radius: 30px; padding: 4px; margin-top: 20px; gap: 4px; }
+        .lang-btn { padding: 8px 24px; border-radius: 24px; border: none; cursor: pointer; font-size: 0.9em; font-weight: 600; transition: all 0.3s; background: transparent; color: white; }
+        .lang-btn.active { background: white; color: #667eea; }
+
+        .content { max-width: 860px; margin: 50px auto; padding: 0 30px 80px; }
+        .update-date { text-align: center; color: #9ca3af; font-size: 0.9em; margin-bottom: 40px; }
+
+        .section { background: white; border-radius: 14px; padding: 36px 40px; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.05); }
+        .section h2 { font-size: 1.25em; font-weight: 700; color: #667eea; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #eff6ff; display: flex; align-items: center; gap: 10px; }
+        .section p { color: #555; font-size: 0.95em; margin-bottom: 12px; }
+        .section ul { list-style: none; padding: 0; }
+        .section ul li { color: #555; font-size: 0.95em; padding: 6px 0 6px 20px; position: relative; }
+        .section ul li::before { content: '•'; color: #667eea; position: absolute; left: 0; font-weight: bold; }
+
+        .highlight-box { background: #eff6ff; border-left: 4px solid #667eea; border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 16px 0; }
+        .highlight-box p { color: #444; margin: 0; }
+
+        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px; }
+        .contact-item { background: #f9fafb; border-radius: 10px; padding: 16px; text-align: center; }
+        .contact-item .icon { font-size: 1.8em; margin-bottom: 8px; }
+        .contact-item p { font-size: 0.9em; color: #555; margin: 0; }
+        .contact-item a { color: #667eea; text-decoration: none; font-weight: 600; }
+
+        .toc { background: white; border-radius: 14px; padding: 30px 40px; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.05); }
+        .toc h3 { font-size: 1em; font-weight: 700; color: #333; margin-bottom: 14px; }
+        .toc ol { padding-left: 20px; }
+        .toc ol li { margin-bottom: 6px; }
+        .toc ol li a { color: #667eea; text-decoration: none; font-size: 0.92em; }
+        .toc ol li a:hover { text-decoration: underline; }
+
+        /* Language toggle */
+        .zh { display: block; }
+        .en { display: none; }
+        body.en-mode .zh { display: none; }
+        body.en-mode .en { display: block; }
+
+        @media (max-width: 640px) {
+            .nav { padding: 12px 16px; }
+            .hero { padding: 50px 20px 40px; }
+            .hero h1 { font-size: 1.8em; }
+            .section { padding: 24px 20px; }
+            .content { padding: 0 16px 60px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <a href="index.html" class="nav-logo">🚀 AI创富</a>
+    <div class="nav-links">
+        <a href="index.html">首页</a>
+        <a href="philosophy.html">AI创富理念</a>
+        <a href="service.html">服务流程</a>
+    </div>
+</nav>
+
+<div class="hero">
+    <h1 class="zh">🔐 隐私政策</h1>
+    <h1 class="en">🔐 Privacy Policy</h1>
+    <p class="zh">您的隐私是我们最重要的承诺</p>
+    <p class="en">Your privacy is our most important commitment</p>
+    <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+        <button class="lang-btn" onclick="setLang('en')">English</button>
+    </div>
+</div>
+
+<div class="content">
+    <div class="update-date">
+        <span class="zh">最后更新：2026年3月27日 | 生效日期：2026年3月27日</span>
+        <span class="en">Last Updated: March 27, 2026 | Effective Date: March 27, 2026</span>
+    </div>
+
+    <!-- 目录 -->
+    <div class="toc">
+        <h3 class="zh">📋 目录</h3>
+        <h3 class="en">📋 Table of Contents</h3>
+        <ol class="zh">
+            <li><a href="#collect">我们收集哪些信息</a></li>
+            <li><a href="#use">如何使用您的信息</a></li>
+            <li><a href="#protect">如何保护您的信息</a></li>
+            <li><a href="#share">信息共享与披露</a></li>
+            <li><a href="#cookie">Cookie 使用说明</a></li>
+            <li><a href="#rights">您的权利</a></li>
+            <li><a href="#retention">数据保留期限</a></li>
+            <li><a href="#children">未成年人保护</a></li>
+            <li><a href="#changes">政策变更</a></li>
+            <li><a href="#contact">联系我们</a></li>
+        </ol>
+        <ol class="en">
+            <li><a href="#collect">Information We Collect</a></li>
+            <li><a href="#use">How We Use Your Information</a></li>
+            <li><a href="#protect">How We Protect Your Information</a></li>
+            <li><a href="#share">Information Sharing & Disclosure</a></li>
+            <li><a href="#cookie">Cookie Policy</a></li>
+            <li><a href="#rights">Your Rights</a></li>
+            <li><a href="#retention">Data Retention</a></li>
+            <li><a href="#children">Children's Privacy</a></li>
+            <li><a href="#changes">Policy Changes</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+        </ol>
+    </div>
+
+    <!-- 1. 收集信息 -->
+    <div class="section" id="collect">
+        <h2>📥 <span class="zh">1. 我们收集哪些信息</span><span class="en">1. Information We Collect</span></h2>
+        <div class="zh">
+            <p>我们在您使用 AI Open Fortune 服务时，可能收集以下类型的信息：</p>
+            <p><strong>您主动提供的信息：</strong></p>
+            <ul>
+                <li>账户信息：姓名、电子邮箱地址、密码（加密存储）</li>
+                <li>市场偏好：您选择的市场版本（A股版或全球版）</li>
+                <li>支付信息：订阅套餐选择、支付记录（不存储完整银行卡信息）</li>
+                <li>联系信息：您通过邮件或客服渠道与我们沟通的内容</li>
+            </ul>
+            <p style="margin-top:12px;"><strong>自动收集的信息：</strong></p>
+            <ul>
+                <li>设备信息：浏览器类型、操作系统、设备标识符</li>
+                <li>日志信息：IP 地址、访问时间、页面浏览记录</li>
+                <li>使用数据：功能使用频率、点击行为（匿名化处理）</li>
+            </ul>
+        </div>
+        <div class="en">
+            <p>We may collect the following types of information when you use AI Open Fortune services:</p>
+            <p><strong>Information You Provide:</strong></p>
+            <ul>
+                <li>Account information: name, email address, password (encrypted)</li>
+                <li>Market preference: your selected market version (A-Share or Global)</li>
+                <li>Payment information: subscription plan, payment records (no full card numbers stored)</li>
+                <li>Communications: content of emails or support messages you send us</li>
+            </ul>
+            <p style="margin-top:12px;"><strong>Automatically Collected Information:</strong></p>
+            <ul>
+                <li>Device information: browser type, operating system, device identifiers</li>
+                <li>Log data: IP address, access time, page views</li>
+                <li>Usage data: feature usage frequency, click behavior (anonymized)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 2. 使用信息 -->
+    <div class="section" id="use">
+        <h2>⚙️ <span class="zh">2. 如何使用您的信息</span><span class="en">2. How We Use Your Information</span></h2>
+        <div class="zh">
+            <p>我们使用收集的信息用于以下目的：</p>
+            <ul>
+                <li>提供、维护和改善我们的 AI 投资策略服务</li>
+                <li>发送账户验证邮件、订阅确认邮件和每周投资周报</li>
+                <li>处理您的订阅付款和退款请求</li>
+                <li>回应您的询问和客服请求</li>
+                <li>发送重要的服务变更通知</li>
+                <li>防止欺诈、滥用和安全威胁</li>
+                <li>遵守适用的法律法规要求</li>
+            </ul>
+            <div class="highlight-box">
+                <p>✅ <strong>我们不会</strong>将您的个人信息用于无关的商业推广，不会将您的数据出售给第三方广告商。</p>
+            </div>
+        </div>
+        <div class="en">
+            <p>We use the collected information for the following purposes:</p>
+            <ul>
+                <li>Provide, maintain, and improve our AI investment strategy services</li>
+                <li>Send account verification emails, subscription confirmations, and weekly reports</li>
+                <li>Process your subscription payments and refund requests</li>
+                <li>Respond to your inquiries and support requests</li>
+                <li>Send important service change notifications</li>
+                <li>Prevent fraud, abuse, and security threats</li>
+                <li>Comply with applicable laws and regulations</li>
+            </ul>
+            <div class="highlight-box">
+                <p>✅ <strong>We will not</strong> use your personal information for unrelated commercial promotions or sell your data to third-party advertisers.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. 保护信息 -->
+    <div class="section" id="protect">
+        <h2>🛡️ <span class="zh">3. 如何保护您的信息</span><span class="en">3. How We Protect Your Information</span></h2>
+        <div class="zh">
+            <p>我们采用行业标准的安全措施保护您的个人信息：</p>
+            <ul>
+                <li><strong>传输加密：</strong>全站启用 HTTPS/TLS 加密传输</li>
+                <li><strong>密码安全：</strong>使用 bcryptjs 算法加盐哈希，从不明文存储密码</li>
+                <li><strong>访问控制：</strong>JWT Token 身份验证，API 接口限流保护</li>
+                <li><strong>最小权限：</strong>内部员工仅能访问工作所需的最少信息</li>
+                <li><strong>定期审计：</strong>定期对系统安全性进行审查和更新</li>
+            </ul>
+            <div class="highlight-box">
+                <p>⚠️ 请注意：互联网传输不能保证100%安全。如果您怀疑账户安全受损，请立即联系我们。</p>
+            </div>
+        </div>
+        <div class="en">
+            <p>We implement industry-standard security measures to protect your personal information:</p>
+            <ul>
+                <li><strong>Encryption in Transit:</strong> Full HTTPS/TLS encryption across the entire site</li>
+                <li><strong>Password Security:</strong> bcryptjs algorithm with salting, passwords never stored in plaintext</li>
+                <li><strong>Access Control:</strong> JWT Token authentication, API rate limiting protection</li>
+                <li><strong>Least Privilege:</strong> Internal staff only access the minimum information required for their work</li>
+                <li><strong>Regular Audits:</strong> Periodic security reviews and updates</li>
+            </ul>
+            <div class="highlight-box">
+                <p>⚠️ Please note: Internet transmission cannot be guaranteed 100% secure. If you suspect your account security has been compromised, please contact us immediately.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. 信息共享 -->
+    <div class="section" id="share">
+        <h2>🤝 <span class="zh">4. 信息共享与披露</span><span class="en">4. Information Sharing & Disclosure</span></h2>
+        <div class="zh">
+            <p>我们不会出售、出租或交易您的个人信息。仅在以下有限情况下共享：</p>
+            <ul>
+                <li><strong>服务提供商：</strong>与帮助我们运营服务的可信第三方（如邮件服务 Resend、支付处理方），这些方受保密协议约束</li>
+                <li><strong>法律要求：</strong>当法律法规、法院命令或政府机构要求时</li>
+                <li><strong>安全保护：</strong>为防止欺诈、保护用户安全或调查违规行为时</li>
+                <li><strong>业务转让：</strong>公司合并或收购时，您的信息可能作为资产转移，届时我们会提前通知您</li>
+            </ul>
+        </div>
+        <div class="en">
+            <p>We do not sell, rent, or trade your personal information. We only share in the following limited circumstances:</p>
+            <ul>
+                <li><strong>Service Providers:</strong> Trusted third parties who help us operate our services (e.g., email service Resend, payment processors), bound by confidentiality agreements</li>
+                <li><strong>Legal Requirements:</strong> When required by law, court order, or government agency</li>
+                <li><strong>Security Protection:</strong> To prevent fraud, protect user safety, or investigate violations</li>
+                <li><strong>Business Transfers:</strong> In case of merger or acquisition, your information may be transferred as an asset; we will notify you in advance</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 5. Cookie -->
+    <div class="section" id="cookie">
+        <h2>🍪 <span class="zh">5. Cookie 使用说明</span><span class="en">5. Cookie Policy</span></h2>
+        <div class="zh">
+            <p>我们使用以下类型的本地存储技术：</p>
+            <ul>
+                <li><strong>必要性 Cookie：</strong>用于保持登录状态（JWT Token），这是服务正常运行所必须的</li>
+                <li><strong>偏好存储：</strong>记住您的语言偏好（localStorage）</li>
+                <li><strong>分析 Cookie：</strong>匿名统计页面访问量，帮助我们改善用户体验</li>
+            </ul>
+            <p>您可以通过浏览器设置管理或删除 Cookie，但这可能影响某些功能的正常使用。</p>
+        </div>
+        <div class="en">
+            <p>We use the following types of local storage technologies:</p>
+            <ul>
+                <li><strong>Necessary Cookies:</strong> Used to maintain login state (JWT Token), essential for service operation</li>
+                <li><strong>Preference Storage:</strong> Remember your language preference (localStorage)</li>
+                <li><strong>Analytics Cookies:</strong> Anonymous page view statistics to help us improve user experience</li>
+            </ul>
+            <p>You can manage or delete cookies through your browser settings, though this may affect certain features.</p>
+        </div>
+    </div>
+
+    <!-- 6. 您的权利 -->
+    <div class="section" id="rights">
+        <h2>✅ <span class="zh">6. 您的权利</span><span class="en">6. Your Rights</span></h2>
+        <div class="zh">
+            <p>根据适用法律，您享有以下权利：</p>
+            <ul>
+                <li><strong>访问权：</strong>查看我们持有的您的个人信息</li>
+                <li><strong>更正权：</strong>要求更正不准确的个人信息</li>
+                <li><strong>删除权：</strong>要求删除您的账户和相关数据（"被遗忘权"）</li>
+                <li><strong>数据可携权：</strong>以结构化格式获取您的数据副本</li>
+                <li><strong>反对权：</strong>反对某些类型的数据处理</li>
+                <li><strong>退订权：</strong>随时退订营销邮件（邮件底部有退订链接）</li>
+            </ul>
+            <p>如需行使上述权利，请发送邮件至 <a href="mailto:privacy@aiopenfortune.com" style="color:#667eea;">privacy@aiopenfortune.com</a>，我们将在30天内回复。</p>
+        </div>
+        <div class="en">
+            <p>Under applicable law, you have the following rights:</p>
+            <ul>
+                <li><strong>Right of Access:</strong> View the personal information we hold about you</li>
+                <li><strong>Right to Rectification:</strong> Request correction of inaccurate personal information</li>
+                <li><strong>Right to Erasure:</strong> Request deletion of your account and related data ("Right to be Forgotten")</li>
+                <li><strong>Right to Data Portability:</strong> Receive a copy of your data in a structured format</li>
+                <li><strong>Right to Object:</strong> Object to certain types of data processing</li>
+                <li><strong>Right to Unsubscribe:</strong> Unsubscribe from marketing emails at any time (unsubscribe link in email footer)</li>
+            </ul>
+            <p>To exercise these rights, please email <a href="mailto:privacy@aiopenfortune.com" style="color:#667eea;">privacy@aiopenfortune.com</a>. We will respond within 30 days.</p>
+        </div>
+    </div>
+
+    <!-- 7. 数据保留 -->
+    <div class="section" id="retention">
+        <h2>🗂️ <span class="zh">7. 数据保留期限</span><span class="en">7. Data Retention</span></h2>
+        <div class="zh">
+            <ul>
+                <li><strong>账户数据：</strong>在您注销账户后，我们将在30天内删除您的个人信息</li>
+                <li><strong>交易记录：</strong>根据法律要求，财务记录保留7年</li>
+                <li><strong>日志数据：</strong>服务器日志保留90天后自动删除</li>
+                <li><strong>邮件通信：</strong>客服邮件保留2年，用于纠纷解决</li>
+            </ul>
+        </div>
+        <div class="en">
+            <ul>
+                <li><strong>Account Data:</strong> We will delete your personal information within 30 days after account cancellation</li>
+                <li><strong>Transaction Records:</strong> Financial records are retained for 7 years as required by law</li>
+                <li><strong>Log Data:</strong> Server logs are automatically deleted after 90 days</li>
+                <li><strong>Email Communications:</strong> Support emails are retained for 2 years for dispute resolution</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 8. 未成年人 -->
+    <div class="section" id="children">
+        <h2>👶 <span class="zh">8. 未成年人保护</span><span class="en">8. Children's Privacy</span></h2>
+        <div class="zh">
+            <p>AI Open Fortune 的投资服务面向18岁及以上的成年人。我们不会故意收集未成年人的个人信息。如果您发现未成年人注册了我们的服务，请立即联系我们，我们将删除相关账户。</p>
+        </div>
+        <div class="en">
+            <p>AI Open Fortune's investment services are intended for adults aged 18 and over. We do not knowingly collect personal information from minors. If you discover that a minor has registered for our services, please contact us immediately and we will delete the relevant account.</p>
+        </div>
+    </div>
+
+    <!-- 9. 政策变更 -->
+    <div class="section" id="changes">
+        <h2>📝 <span class="zh">9. 政策变更</span><span class="en">9. Policy Changes</span></h2>
+        <div class="zh">
+            <p>我们可能会不定期更新本隐私政策。发生重大变更时，我们会通过以下方式通知您：</p>
+            <ul>
+                <li>在网站显著位置发布更新通知</li>
+                <li>通过您注册的邮箱发送通知邮件</li>
+            </ul>
+            <p>您在变更生效后继续使用服务，即视为接受新的隐私政策。</p>
+        </div>
+        <div class="en">
+            <p>We may update this Privacy Policy from time to time. When significant changes occur, we will notify you through:</p>
+            <ul>
+                <li>A prominent notice on the website</li>
+                <li>An email notification to your registered address</li>
+            </ul>
+            <p>Your continued use of the service after changes take effect constitutes acceptance of the new Privacy Policy.</p>
+        </div>
+    </div>
+
+    <!-- 10. 联系我们 -->
+    <div class="section" id="contact">
+        <h2>📬 <span class="zh">10. 联系我们</span><span class="en">10. Contact Us</span></h2>
+        <div class="zh">
+            <p>如果您对本隐私政策有任何疑问、建议或投诉，请通过以下方式联系我们：</p>
+        </div>
+        <div class="en">
+            <p>If you have any questions, suggestions, or complaints about this Privacy Policy, please contact us through:</p>
+        </div>
+        <div class="contact-grid">
+            <div class="contact-item">
+                <div class="icon">📧</div>
+                <p class="zh"><strong>隐私邮件</strong></p>
+                <p class="en"><strong>Privacy Email</strong></p>
+                <p><a href="mailto:privacy@aiopenfortune.com">privacy@aiopenfortune.com</a></p>
+            </div>
+            <div class="contact-item">
+                <div class="icon">🌐</div>
+                <p class="zh"><strong>官方网站</strong></p>
+                <p class="en"><strong>Official Website</strong></p>
+                <p><a href="https://aiopenfortune.com">aiopenfortune.com</a></p>
+            </div>
+            <div class="contact-item">
+                <div class="icon">⏱️</div>
+                <p class="zh"><strong>响应时间</strong></p>
+                <p class="en"><strong>Response Time</strong></p>
+                <p class="zh">工作日内30天响应</p>
+                <p class="en">Within 30 business days</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setLang(lang) {
+        const btns = document.querySelectorAll('.lang-btn');
+        if (lang === 'en') {
+            document.body.classList.add('en-mode');
+            btns[0].classList.remove('active');
+            btns[1].classList.add('active');
+        } else {
+            document.body.classList.remove('en-mode');
+            btns[0].classList.add('active');
+            btns[1].classList.remove('active');
+        }
+    }
+</script>
+</body>
+</html>
