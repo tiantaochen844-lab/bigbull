@@ -70,15 +70,20 @@
         .lang-btn { background: white; border: 2px solid #667eea; color: #667eea; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
         .lang-btn:hover { background: #667eea; color: white; }
         .performance-banner { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 40px 30px; margin: 30px 0; color: white; text-align: center; }
-        .performance-title { font-size: 2em; font-weight: bold; margin-bottom: 10px; }
-        .performance-subtitle { font-size: 1.1em; opacity: 0.95; margin-bottom: 30px; }
-        .performance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; max-width: 900px; margin: 0 auto; }
+        .performance-title { font-size: 2em; font-weight: bold; margin-bottom: 8px; }
+        .performance-subtitle { font-size: 1.1em; opacity: 0.95; margin-bottom: 25px; }
+        .performance-stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-bottom: 30px; padding: 20px; background: rgba(255,255,255,0.12); border-radius: 12px; }
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 2.4em; font-weight: 800; line-height: 1; }
+        .stat-label { font-size: 0.85em; opacity: 0.85; margin-top: 6px; }
+        .performance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; max-width: 900px; margin: 0 auto 28px; }
         .perf-card { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 12px; padding: 20px; border: 1px solid rgba(255,255,255,0.3); }
-        .perf-period { font-size: 0.9em; opacity: 0.9; margin-bottom: 8px; }
-        .perf-value { font-size: 2.2em; font-weight: bold; margin: 10px 0; }
+        .perf-period { font-size: 0.9em; opacity: 0.9; margin-bottom: 6px; }
+        .perf-value { font-size: 2.2em; font-weight: bold; margin: 8px 0; }
         .perf-value.positive { color: #10b981; }
         .perf-value.negative { color: #fbbf24; }
         .perf-label { font-size: 0.85em; opacity: 0.85; }
+        .chart-wrapper { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; max-width: 800px; margin: 0 auto; }
         .pricing-section { background: white; border-radius: 12px; padding: 30px; margin-top: 30px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
         .pricing-title { font-size: 2em; color: #667eea; margin-bottom: 10px; text-align: center; }
         .pricing-subtitle { text-align: center; color: #666; margin-bottom: 30px; }
@@ -115,6 +120,24 @@
         <div class="performance-banner">
             <div class="performance-title" id="perfTitle">📊 Real Performance</div>
             <div class="performance-subtitle" id="perfSubtitle">Transparent results, honest disclosure</div>
+            
+            <!-- 核心数据 -->
+            <div class="performance-stats">
+                <div class="stat-item">
+                    <div class="stat-value">+35.00%</div>
+                    <div class="stat-label" id="statLabel1">Cumulative Return</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label" id="statLabel2">Quarters Tracked</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">75%</div>
+                    <div class="stat-label" id="statLabel3">Win Rate</div>
+                </div>
+            </div>
+
+            <!-- 季度收益卡片 -->
             <div class="performance-grid">
                 <div class="perf-card">
                     <div class="perf-period">2026-Q1</div>
@@ -136,6 +159,11 @@
                     <div class="perf-value positive">+9.85%</div>
                     <div class="perf-label">US Market</div>
                 </div>
+            </div>
+
+            <!-- 累计收益曲线图 -->
+            <div class="chart-wrapper">
+                <canvas id="perfChart" style="max-height:280px;"></canvas>
             </div>
         </div>
 
@@ -552,6 +580,7 @@
         loadStocks();
         loadPortfolio();
         loadTrades();
+        initPerfChart();
 
         async function startPayPal(plan) {
             const token = localStorage.getItem('token');
@@ -698,6 +727,54 @@
             } catch (e) {
                 alert('❌ 发送失败，请重试');
             }
+        }
+
+        function initPerfChart() {
+            const ctx = document.getElementById('perfChart');
+            if (!ctx) return;
+            
+            const data = {
+                labels: ['2025-Q2', '2025-Q3', '2025-Q4', '2026-Q1'],
+                datasets: [{
+                    label: 'Cumulative Return (%)',
+                    data: [9.85, 23.52, 45.84, 35.00],
+                    borderColor: 'rgba(255,255,255,0.9)',
+                    backgroundColor: 'rgba(255,255,255,0.2)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointBackgroundColor: 'white'
+                }]
+            };
+
+            new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            padding: 12,
+                            titleFont: { size: 14 },
+                            bodyFont: { size: 13 }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: { color: 'rgba(255,255,255,0.8)', font: { size: 12 } },
+                            grid: { color: 'rgba(255,255,255,0.15)' }
+                        },
+                        x: {
+                            ticks: { color: 'rgba(255,255,255,0.8)', font: { size: 12 } },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
         }
 
         updateAuthUI();
