@@ -1,801 +1,407 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Open Fortune - AI-Driven Investment Platform</title>
+    <meta name="description" content="AI-powered investment strategies for global markets. Transparent performance, honest disclosure.">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        h1 { color: white; text-align: center; margin-bottom: 10px; font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-        .subtitle { color: rgba(255,255,255,0.9); text-align: center; margin-bottom: 30px; font-size: 1.1em; }
-        .nav-switch { position: fixed; top: 20px; right: 20px; z-index: 100; }
-        .nav-btn { background: white; border: 2px solid #667eea; color: #667eea; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 600; transition: all 0.3s; text-decoration: none; display: inline-block; margin-left: 10px; }
-        .nav-btn:hover { background: #667eea; color: white; }
-        .stocks-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .stock-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); cursor: pointer; transition: all 0.3s; }
-        .stock-card:hover { transform: translateY(-8px); box-shadow: 0 12px 24px rgba(0,0,0,0.3); }
-        .stock-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .stock-symbol { font-size: 1.4em; font-weight: bold; color: #667eea; }
-        .stock-name { font-size: 0.95em; color: #666; margin-bottom: 5px; }
-        .stock-name-en { font-size: 0.85em; color: #999; }
-        .stock-price { font-size: 2.2em; color: #333; margin: 10px 0; font-weight: bold; }
-        .stock-change { font-size: 1.2em; font-weight: 600; }
-        .positive { color: #10b981; }
-        .negative { color: #ef4444; }
-        .stock-info { display: flex; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee; font-size: 0.9em; color: #666; }
-        .forecast-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; }
-        .forecast-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; max-width: 900px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
-        .close-btn { float: right; font-size: 1.8em; cursor: pointer; color: #999; line-height: 1; }
-        .close-btn:hover { color: #333; }
-        .forecast-title { font-size: 1.8em; margin-bottom: 20px; color: #667eea; }
-        .current-price { font-size: 1.3em; margin-bottom: 20px; padding: 15px; background: #f3f4f6; border-radius: 8px; }
-        .prediction { padding: 15px; margin: 10px 0; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border-radius: 8px; border-left: 4px solid #667eea; }
-        .prediction-period { font-weight: bold; color: #333; margin-bottom: 5px; }
-        .prediction-price { font-size: 1.5em; color: #667eea; font-weight: bold; }
-        .prediction-confidence { font-size: 0.9em; color: #666; margin-top: 5px; }
-        .analysis { margin-top: 20px; padding: 15px; background: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b; }
-        .chart-container { margin: 20px 0; padding: 15px; background: #f9fafb; border-radius: 8px; }
-        canvas { max-height: 300px; }
-        .portfolio-section { background: white; border-radius: 12px; padding: 30px; margin-top: 30px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
-        .portfolio-title { font-size: 2em; color: #667eea; margin-bottom: 20px; text-align: center; }
-        .portfolio-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .summary-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; text-align: center; }
-        .summary-label { font-size: 0.9em; opacity: 0.9; }
-        .summary-value { font-size: 1.8em; font-weight: bold; margin-top: 5px; }
-        .allocation-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        .allocation-table th { background: #f3f4f6; padding: 12px; text-align: left; font-weight: 600; }
-        .allocation-table td { padding: 12px; border-bottom: 1px solid #e5e7eb; }
-        .allocation-bar { height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; margin-top: 5px; }
-        .allocation-fill { height: 100%; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); }
-        .risk-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.85em; font-weight: 600; }
-        .risk-low { background: #d1fae5; color: #065f46; }
-        .risk-mid { background: #fef3c7; color: #92400e; }
-        .risk-high { background: #fee2e2; color: #991b1b; }
-        .recommendation { background: #eff6ff; padding: 20px; border-radius: 10px; border-left: 4px solid #3b82f6; margin-top: 20px; line-height: 1.6; }
-        .history-section { background: white; border-radius: 12px; padding: 30px; margin-top: 30px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
-        .history-title { font-size: 2em; color: #667eea; margin-bottom: 20px; text-align: center; }
-        .performance-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .perf-card { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 20px; border-radius: 10px; text-align: center; }
-        .perf-label { font-size: 0.9em; opacity: 0.9; }
-        .perf-value { font-size: 1.8em; font-weight: bold; margin-top: 5px; }
-        .cycle-card { background: #f9fafb; border-radius: 10px; padding: 20px; margin-bottom: 15px; border-left: 4px solid #667eea; }
-        .cycle-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .cycle-title { font-size: 1.3em; font-weight: bold; color: #333; }
-        .cycle-return { font-size: 1.5em; font-weight: bold; color: #10b981; }
-        .cycle-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; font-size: 0.9em; color: #666; }
-        .lang-switch { position: fixed; top: 20px; right: 20px; z-index: 100; }
-        .lang-btn { background: white; border: 2px solid #667eea; color: #667eea; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
-        .lang-btn:hover { background: #667eea; color: white; }
-        .performance-banner { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 40px 30px; margin: 30px 0; color: white; text-align: center; }
-        .performance-title { font-size: 2em; font-weight: bold; margin-bottom: 8px; }
-        .performance-subtitle { font-size: 1.1em; opacity: 0.95; margin-bottom: 25px; }
-        .performance-stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-bottom: 30px; padding: 20px; background: rgba(255,255,255,0.12); border-radius: 12px; }
-        .stat-item { text-align: center; }
-        .stat-value { font-size: 2.4em; font-weight: 800; line-height: 1; }
-        .stat-label { font-size: 0.85em; opacity: 0.85; margin-top: 6px; }
-        .performance-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 700px; margin: 0 auto 28px; }
-        .perf-card { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 12px; padding: 20px; border: 1px solid rgba(255,255,255,0.3); }
-        .perf-period { font-size: 0.9em; opacity: 0.9; margin-bottom: 6px; }
-        .perf-value { font-size: 2.2em; font-weight: bold; margin: 8px 0; }
-        .perf-value.positive { color: #10b981; }
-        .perf-value.negative { color: #fbbf24; }
-        .perf-label { font-size: 0.85em; opacity: 0.85; }
-        .chart-wrapper { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; max-width: 800px; margin: 0 auto; }
-        .pricing-section { background: white; border-radius: 12px; padding: 30px; margin-top: 30px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
-        .pricing-title { font-size: 2em; color: #667eea; margin-bottom: 10px; text-align: center; }
-        .pricing-subtitle { text-align: center; color: #666; margin-bottom: 30px; }
-        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .price-card { background: #f9fafb; border-radius: 12px; padding: 30px; border: 2px solid #e5e7eb; transition: all 0.3s; position: relative; }
-        .price-card.recommended { border-color: #667eea; box-shadow: 0 8px 24px rgba(102,126,234,0.3); transform: scale(1.05); }
-        .recommended-badge { position: absolute; top: -12px; right: 20px; background: #667eea; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.85em; font-weight: 600; }
-        .plan-name { font-size: 1.5em; font-weight: bold; margin-bottom: 10px; color: #333; }
-        .plan-price { font-size: 2.5em; font-weight: bold; color: #667eea; margin: 15px 0; }
-        .plan-period { color: #666; font-size: 0.9em; }
-        .plan-features { list-style: none; margin: 20px 0; }
-        .plan-features li { padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #555; }
-        .plan-features li:before { content: '✓'; color: #10b981; font-weight: bold; margin-right: 10px; }
-        .subscribe-btn { width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1.1em; font-weight: 600; cursor: pointer; transition: all 0.3s; }
-        .subscribe-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102,126,234,0.4); }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f8f9ff; color: #333; }
+
+        /* ── NAV ── */
+        .nav { background: white; padding: 0 48px; height: 64px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 12px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+        .nav-logo { font-size: 1.3em; font-weight: 800; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+        .nav-links { display: flex; gap: 8px; align-items: center; }
+        .nav-links a { text-decoration: none; color: #555; font-size: 0.92em; padding: 8px 14px; border-radius: 8px; transition: all 0.2s; }
+        .nav-links a:hover { background: #f0f4ff; color: #667eea; }
+        .nav-divider { width: 1px; height: 24px; background: #e5e7eb; margin: 0 4px; }
+        .nav-cn-btn { background: #fff7ed; color: #c2410c !important; border: 1px solid #fed7aa; border-radius: 20px !important; padding: 6px 16px !important; font-weight: 600; }
+        .nav-cn-btn:hover { background: #ffedd5 !important; }
+        .btn-login { background: linear-gradient(135deg, #667eea, #764ba2); color: white !important; border-radius: 20px !important; padding: 8px 22px !important; font-weight: 600; }
+        .btn-login:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* ── HERO ── */
+        .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 80px 48px 60px; text-align: center; color: white; }
+        .hero-tag { display: inline-block; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); border-radius: 20px; padding: 5px 18px; font-size: 0.88em; margin-bottom: 18px; }
+        .hero h1 { font-size: 3em; font-weight: 800; margin-bottom: 14px; line-height: 1.2; }
+        .hero p { font-size: 1.15em; opacity: 0.92; max-width: 600px; margin: 0 auto 36px; line-height: 1.7; }
+
+        /* ── PERF BANNER ── */
+        .perf-banner { background: white; border-radius: 16px; padding: 32px 40px; max-width: 900px; margin: -32px auto 0; box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+        .perf-banner-title { font-size: 1em; font-weight: 700; color: #667eea; text-align: center; margin-bottom: 20px; letter-spacing: 0.5px; }
+        .perf-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .perf-card { background: #f9fafb; border-radius: 10px; padding: 16px; text-align: center; border: 1px solid #e5e7eb; }
+        .perf-period { font-size: 0.8em; color: #6b7280; margin-bottom: 6px; }
+        .perf-value { font-size: 1.8em; font-weight: 800; margin: 4px 0; }
+        .perf-value.up { color: #10b981; }
+        .perf-value.down { color: #ef4444; }
+        .perf-note { font-size: 0.75em; color: #9ca3af; margin-top: 4px; }
+        .perf-disclaimer { text-align: center; font-size: 0.8em; color: #9ca3af; margin-top: 16px; }
+
+        /* ── MAIN ── */
+        .main { max-width: 1100px; margin: 48px auto; padding: 0 24px; }
+        .section-label { font-size: 0.85em; font-weight: 700; color: #667eea; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+        .section-title { font-size: 1.6em; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; }
+        .section-sub { color: #6b7280; font-size: 0.95em; margin-bottom: 28px; }
+
+        /* ── STOCKS ── */
+        .stocks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-bottom: 48px; }
+        .stock-card { background: white; border-radius: 14px; padding: 24px; border: 1px solid #e5e7eb; cursor: pointer; transition: all 0.25s; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .stock-card:hover { border-color: #667eea; box-shadow: 0 8px 24px rgba(102,126,234,0.15); transform: translateY(-3px); }
+        .stock-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+        .stock-code { font-size: 0.78em; font-weight: 700; color: #667eea; background: #eff6ff; padding: 3px 10px; border-radius: 12px; }
+        .stock-badge { font-size: 0.72em; color: #6b7280; }
+        .stock-name { font-size: 1.05em; font-weight: 700; color: #1a1a2e; margin-bottom: 10px; }
+        .stock-price { font-size: 2em; font-weight: 800; color: #1a1a2e; }
+        .stock-change { display: inline-flex; align-items: center; gap: 4px; font-size: 0.9em; font-weight: 600; padding: 3px 10px; border-radius: 12px; margin-top: 6px; }
+        .stock-change.up { background: #d1fae5; color: #065f46; }
+        .stock-change.down { background: #fee2e2; color: #991b1b; }
+        .stock-meta { display: flex; gap: 16px; margin-top: 14px; padding-top: 14px; border-top: 1px solid #f3f4f6; font-size: 0.82em; color: #6b7280; }
+
+        /* ── PORTFOLIO ── */
+        .portfolio-card { background: white; border-radius: 14px; padding: 28px; border: 1px solid #e5e7eb; margin-bottom: 48px; }
+        .port-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
+        .port-item { text-align: center; padding: 16px; background: #f9fafb; border-radius: 10px; }
+        .port-value { font-size: 1.5em; font-weight: 800; color: #667eea; }
+        .port-label { font-size: 0.82em; color: #6b7280; margin-top: 4px; }
+
+        /* ── PRICING ── */
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 48px; }
+        .plan-card { background: white; border-radius: 14px; padding: 28px; border: 2px solid #e5e7eb; position: relative; transition: all 0.3s; }
+        .plan-card.featured { border-color: #667eea; box-shadow: 0 8px 32px rgba(102,126,234,0.2); }
+        .plan-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg,#667eea,#764ba2); color: white; padding: 3px 16px; border-radius: 12px; font-size: 0.8em; font-weight: 600; white-space: nowrap; }
+        .plan-name { font-size: 1.1em; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+        .plan-price { font-size: 2.4em; font-weight: 800; color: #667eea; margin: 12px 0 4px; }
+        .plan-period { font-size: 0.85em; color: #6b7280; margin-bottom: 20px; }
+        .plan-features { list-style: none; margin-bottom: 24px; }
+        .plan-features li { padding: 8px 0; border-bottom: 1px solid #f3f4f6; font-size: 0.9em; color: #555; }
+        .plan-features li::before { content: '✓'; color: #10b981; font-weight: bold; margin-right: 8px; }
+        .plan-btn { width: 100%; padding: 12px; background: linear-gradient(135deg,#667eea,#764ba2); color: white; border: none; border-radius: 10px; font-size: 1em; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .plan-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        /* ── FOOTER ── */
+        .footer { background: #1a1a2e; color: #666; text-align: center; padding: 28px 24px; font-size: 0.78em; line-height: 1.9; }
+        .footer a { color: #667eea; text-decoration: none; }
+
+        /* ── AUTH MODAL ── */
+        .modal-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-box { background: white; padding: 36px; border-radius: 16px; width: 90%; max-width: 420px; }
+        .modal-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+        .modal-tab { flex: 1; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px; cursor: pointer; font-weight: 600; background: white; color: #6b7280; transition: all 0.2s; }
+        .modal-tab.active { border-color: #667eea; background: #667eea; color: white; }
+        .modal-input { width: 100%; padding: 11px 14px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 0.95em; margin-bottom: 12px; transition: border 0.2s; }
+        .modal-input:focus { outline: none; border-color: #667eea; }
+        .modal-btn { width: 100%; padding: 12px; background: linear-gradient(135deg,#667eea,#764ba2); color: white; border: none; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; margin-top: 4px; }
+        .modal-close { float: right; background: none; border: none; font-size: 1.4em; cursor: pointer; color: #9ca3af; margin-top: -8px; }
+        .modal-msg { font-size: 0.85em; text-align: center; margin-top: 10px; padding: 8px; border-radius: 6px; }
+        .modal-msg.error { background: #fee2e2; color: #991b1b; }
+        .modal-msg.success { background: #d1fae5; color: #065f46; }
+        .forgot-link { text-align: center; margin-top: 10px; font-size: 0.88em; color: #667eea; cursor: pointer; }
+
+        @media (max-width: 768px) {
+            .nav { padding: 0 16px; }
+            .hero { padding: 60px 20px 48px; }
+            .hero h1 { font-size: 2em; }
+            .perf-banner { margin: -20px 16px 0; padding: 20px; }
+            .perf-grid { grid-template-columns: repeat(2, 1fr); }
+            .main { padding: 0 16px; }
+        }
     </style>
 </head>
 <body>
-    <div class="lang-switch">
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <button class="lang-btn" onclick="toggleLang()">中文/EN</button>
-            <button id="authBtn" class="lang-btn" onclick="showAuthModal()">Login</button>
-            <span id="userInfo" style="display: none; color: #667eea; font-weight: 600;"></span>
-        </div>
-        <a href="philosophy.html" class="lang-btn" style="margin-left: 10px;">💡 Philosophy</a>
-        <a href="service.html" class="lang-btn" style="margin-left: 10px;">📋 Service</a>
-        <a href="cn.html" class="lang-btn" style="margin-left: 10px;">🇨🇳 A股版</a>
+
+<!-- NAV -->
+<nav class="nav">
+    <a href="index.html" class="nav-logo">🚀 AI Open Fortune</a>
+    <div class="nav-links">
+        <a href="philosophy.html">💡 Philosophy</a>
+        <a href="service.html">📋 Service</a>
+        <div class="nav-divider"></div>
+        <a href="cn.html" class="nav-cn-btn">🇨🇳 A股版</a>
+        <div class="nav-divider"></div>
+        <span id="userArea">
+            <a href="#" id="loginBtn" class="btn-login" onclick="showModal();return false;">Login</a>
+        </span>
     </div>
-    <div class="container">
-        <h1>🚀 AI Open Fortune</h1>
-        <div class="subtitle">AI-Driven Wealth · Growing Together</div>
-        
-        <!-- 业绩展示 Banner -->
-        <div class="performance-banner">
-            <div class="performance-title" id="perfTitle">📊 Real Performance, Full Transparency</div>
-            <div class="performance-subtitle" id="perfSubtitle">Past performance does not guarantee future results, but integrity is the foundation of long-term partnership</div>
-            
-            <!-- 核心数据 -->
-            <div class="performance-stats">
-                <div class="stat-item">
-                    <div class="stat-value">+35.00%</div>
-                    <div class="stat-label" id="statLabel1">Cumulative Return</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value">4</div>
-                    <div class="stat-label" id="statLabel2">Quarters Tracked</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value">75%</div>
-                    <div class="stat-label" id="statLabel3">Win Rate</div>
-                </div>
-            </div>
+</nav>
 
-            <!-- 季度收益卡片 -->
-            <!-- 中美市场对比 2×2 -->
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:800px;margin:0 auto 28px;">
-                <!-- 左列：🇺🇸 美股 -->
-                <div style="display:flex;flex-direction:column;gap:12px;">
-                    <div style="font-size:0.85em;opacity:0.8;text-align:center;letter-spacing:1px;">🇺🇸 US MARKET</div>
-                    <div class="perf-card">
-                        <div class="perf-period">2026-Q1 (Latest)</div>
-                        <div class="perf-value negative">-5.64%</div>
-                        <div class="perf-label">Honest Disclosure</div>
-                    </div>
-                    <div class="perf-card">
-                        <div class="perf-period">2025-Q4</div>
-                        <div class="perf-value positive">+18.32%</div>
-                        <div class="perf-label">US Market</div>
-                    </div>
-                </div>
-                <!-- 右列：🇨🇳 A股 -->
-                <div style="display:flex;flex-direction:column;gap:12px;">
-                    <div style="font-size:0.85em;opacity:0.8;text-align:center;letter-spacing:1px;">🇨🇳 A-SHARE</div>
-                    <div class="perf-card">
-                        <div class="perf-period">2026-Q1 (Latest)</div>
-                        <div class="perf-value negative">-3.21%</div>
-                        <div class="perf-label">Honest Disclosure</div>
-                    </div>
-                    <div class="perf-card">
-                        <div class="perf-period">2025-Q4</div>
-                        <div class="perf-value positive">+15.68%</div>
-                        <div class="perf-label">A-Share</div>
-                    </div>
-                </div>
-            </div>
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-tag">🤖 AI-Driven · Transparent · Long-term</div>
+    <h1>AI Open Fortune</h1>
+    <p>Smart AI-powered investment strategies for global markets. Real performance, honest disclosure, growing together.</p>
+</section>
 
-            <!-- 累计收益曲线图 -->
-            <div class="chart-wrapper">
-                <canvas id="perfChart" style="max-height:280px;"></canvas>
-            </div>
+<!-- PERF BANNER -->
+<div class="perf-banner">
+    <div class="perf-banner-title">📊 REAL PERFORMANCE — US MARKET</div>
+    <div class="perf-grid">
+        <div class="perf-card">
+            <div class="perf-period">2026 Q1 · Latest</div>
+            <div class="perf-value down">-5.64%</div>
+            <div class="perf-note">Honestly disclosed</div>
         </div>
-
-        <div class="history-section" id="historySection"></div>
-        <div id="tradesSection"></div>
-        <div class="stocks-grid" id="stocksGrid"></div>
-        <div class="portfolio-section" id="portfolioSection"></div>
-        <div class="pricing-section" id="pricingSection"></div>
-        
-        <div id="authModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
-            <div style="background: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 400px;">
-                <span class="close-btn" onclick="closeAuthModal()" style="float: right; cursor: pointer; font-size: 24px;">&times;</span>
-                <div style="clear: both;"></div>
-                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                    <button id="loginTab" onclick="switchAuthTab('login')" style="flex: 1; padding: 10px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer;">Login</button>
-                    <button id="signupTab" onclick="switchAuthTab('signup')" style="flex: 1; padding: 10px; background: #ddd; color: #333; border: none; border-radius: 6px; cursor: pointer;">Sign Up</button>
-                </div>
-                <div id="loginForm">
-                    <input type="email" id="loginEmail" placeholder="Email" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box;">
-                    <input type="password" id="loginPassword" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box;">
-                    <button onclick="handleLogin()" style="width: 100%; padding: 10px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Login</button>
-                    <div style="text-align:center;margin-top:10px;"><a href="#" onclick="forgotPassword();return false;" style="color:#667eea;font-size:0.9em;text-decoration:none;">Forgot password?</a></div>
-                </div>
-                <div id="signupForm" style="display: none;">
-                    <input type="text" id="signupName" placeholder="Your Name" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box;">
-                    <input type="email" id="signupEmail" placeholder="Email" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box;">
-                    <input type="password" id="signupPassword" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box;">
-                    <input type="password" id="signupConfirm" placeholder="Confirm Password" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box;">
-                    <div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 6px; padding: 12px; margin-bottom: 12px; font-size: 0.78em; color: #555; max-height: 120px; overflow-y: auto; line-height: 1.5;">
-                        <strong>Disclaimer</strong><br><br>
-                        Open Fortune provides AI-driven investment portfolio consultation and educational information only. <strong>This service is NOT registered with or regulated by the U.S. Securities and Exchange Commission (SEC), FINRA, or any other financial regulatory authority.</strong> Nothing on this platform constitutes investment advice, a solicitation, or an offer to buy or sell any securities.<br><br>
-                        Past performance does not guarantee future results. All investments involve risk, and you may lose money. Users are solely responsible for their own investment decisions.<br><br>
-                        By registering, you confirm that: (1) you understand this service is for informational purposes only; (2) you will not rely solely on this platform for investment decisions; (3) you accept full responsibility for your own investment choices.
-                    </div>
-                    <div style="display: flex; align-items: flex-start; gap: 8px; margin-bottom: 12px;">
-                        <input type="checkbox" id="agreeTerms" style="margin-top: 3px; cursor: pointer;">
-                        <label for="agreeTerms" style="font-size: 0.85em; color: #444; cursor: pointer;">
-                            I have read and agree to the <a href="/terms.html" target="_blank" style="color: #667eea;">Disclaimer and Terms of Service</a>.
-                        </label>
-                    </div>
-                    <button onclick="handleSignup()" style="width: 100%; padding: 10px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Sign Up</button>
-                </div>
-            </div>
+        <div class="perf-card">
+            <div class="perf-period">2025 Q4</div>
+            <div class="perf-value up">+18.32%</div>
+            <div class="perf-note">US Market</div>
+        </div>
+        <div class="perf-card">
+            <div class="perf-period">2025 Q3</div>
+            <div class="perf-value up">+12.47%</div>
+            <div class="perf-note">US Market</div>
+        </div>
+        <div class="perf-card">
+            <div class="perf-period">2025 Q2</div>
+            <div class="perf-value up">+9.85%</div>
+            <div class="perf-note">US Market</div>
         </div>
     </div>
-    <div class="forecast-modal" id="forecastModal">
-        <div class="forecast-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <div id="forecastData"></div>
+    <div class="perf-disclaimer">Past performance does not guarantee future results. Integrity is the foundation of long-term partnership.</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- US Stocks -->
+    <div style="margin-top:48px;">
+        <div class="section-label">Live Market</div>
+        <div class="section-title">US Stock Watchlist</div>
+        <div class="section-sub">AI-curated selections updated in real time</div>
+        <div class="stocks-grid" id="stocksGrid">
+            <div style="color:#9ca3af;padding:20px;">Loading market data...</div>
         </div>
     </div>
-    <script>
-        let currentLang = 'cn';
-        
-        function toggleLang() {
-            currentLang = currentLang === 'cn' ? 'en' : 'cn';
-            loadHistory();
-            loadPortfolio();
-            loadPricing();
-            updateTitle();
-        }
-        
-        function updateTitle() {
-            const title = currentLang === 'cn' ? 'AI创富--智慧灵光，复利成长' : 'AI Open Fortune - AI-Driven Investment Platform';
-            document.querySelector('.subtitle').textContent = title;
-        }
-        async function loadStocks() {
-            const res = await fetch('https://aiopenfortune.com/api/stocks');
-            const stocks = await res.json();
-            const grid = document.getElementById('stocksGrid');
-            grid.innerHTML = Object.entries(stocks).map(([symbol, data]) => `
-                <div class="stock-card" onclick="showForecast('${symbol}')">
-                    <div class="stock-header">
-                        <div class="stock-symbol">${symbol}</div>
-                    </div>
-                    <div class="stock-name">${currentLang === 'cn' ? data.name : data.nameEn}</div>
-                    <div class="stock-name-en">${currentLang === 'cn' ? data.nameEn : data.name}</div>
-                    <div class="stock-price">$${data.price}</div>
-                    <div class="stock-change ${data.change >= 0 ? 'positive' : 'negative'}">
-                        ${data.change >= 0 ? '▲' : '▼'} ${Math.abs(data.change)}%
-                    </div>
-                    <div class="stock-info">
-                        <span>${currentLang === 'cn' ? '成交量' : 'Volume'}: ${currentLang === 'cn' ? data.volume : data.volumeEn}</span>
-                        <span>${currentLang === 'cn' ? '市盈率' : 'P/E'}: ${data.pe}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-        async function showForecast(symbol) {
-            const res = await fetch(`https://aiopenfortune.com/api/forecast/${symbol}`);
-            const data = await res.json();
-            
-            const allDates = [...data.history.map(h => h.date), ...data.future.map(f => f.date)];
-            const historyPrices = data.history.map(h => parseFloat(h.price));
-            const futurePrices = data.future.map(f => parseFloat(f.price));
-            
-            const t = currentLang === 'cn' ? {
-                current: '当前价格',
-                confidence: '预测置信度',
-                analysis: '分析建议',
-                histLabel: '历史价格',
-                predLabel: '预测价格'
-            } : {
-                current: 'Current Price',
-                confidence: 'Confidence',
-                analysis: 'Analysis',
-                histLabel: 'Historical',
-                predLabel: 'Forecast'
-            };
-            
-            document.getElementById('forecastData').innerHTML = `
-                <div class="forecast-title">${symbol} - ${currentLang === 'cn' ? data.name : data.nameEn}</div>
-                <div class="current-price">${t.current}: <strong>$${data.current}</strong></div>
-                <div class="chart-container">
-                    <canvas id="priceChart"></canvas>
-                </div>
-                ${data.predictions.map(p => `
-                    <div class="prediction">
-                        <div class="prediction-period">${currentLang === 'cn' ? p.periodCn : p.periodEn}</div>
-                        <div class="prediction-price">$${p.price}</div>
-                        <div class="prediction-confidence">${t.confidence}: ${p.confidence}</div>
-                    </div>
-                `).join('')}
-                <div class="analysis">📊 ${t.analysis}: ${currentLang === 'cn' ? data.analysisCn : data.analysisEn}</div>
-            `;
-            
-            document.getElementById('forecastModal').style.display = 'block';
-            
-            setTimeout(() => {
-                const ctx = document.getElementById('priceChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: allDates,
-                        datasets: [{
-                            label: t.histLabel,
-                            data: [...historyPrices, ...Array(futurePrices.length).fill(null)],
-                            borderColor: '#667eea',
-                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                            borderWidth: 2,
-                            pointRadius: 0
-                        }, {
-                            label: t.predLabel,
-                            data: [...Array(historyPrices.length).fill(null), ...futurePrices],
-                            borderColor: '#f59e0b',
-                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            pointRadius: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: true,
-                        plugins: {
-                            legend: { display: true, position: 'top' }
-                        },
-                        scales: {
-                            x: { display: false },
-                            y: { beginAtZero: false }
-                        }
-                    }
-                });
-            }, 100);
-        }
-        function closeModal() {
-            document.getElementById('forecastModal').style.display = 'none';
-        }
-        async function loadPortfolio() {
-            const res = await fetch('https://aiopenfortune.com/api/portfolio');
-            const data = await res.json();
-            const section = document.getElementById('portfolioSection');
-            const t = currentLang === 'cn' ? {
-                title: `💼 第${data.cycle}周期投资组合`,
-                amount: '投资金额',
-                expected: '预期收益',
-                period: '投资周期',
-                risk: '风险等级',
-                stock: '股票',
-                invested: '投资金额',
-                ratio: '占比',
-                shares: '股数',
-                return: '预期收益',
-                strategy: '策略说明'
-            } : {
-                title: `💼 Cycle ${data.cycle} Portfolio`,
-                amount: 'Investment',
-                expected: 'Target Return',
-                period: 'Period',
-                risk: 'Risk Level',
-                stock: 'Stock',
-                invested: 'Amount',
-                ratio: 'Allocation',
-                shares: 'Shares',
-                return: 'Expected',
-                strategy: 'Strategy'
-            };
-            
-            section.innerHTML = `
-                <div class="portfolio-title">${t.title} (${data.startDate} - ${data.endDate})</div>
-                <div class="portfolio-summary">
-                    <div class="summary-card">
-                        <div class="summary-label">${t.amount}</div>
-                        <div class="summary-value">$${data.totalAmount.toLocaleString()}</div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-label">${t.expected}</div>
-                        <div class="summary-value">${data.expectedReturn}%</div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-label">${t.period}</div>
-                        <div class="summary-value">${currentLang === 'cn' ? data.period : '90 Days'}</div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-label">${t.risk}</div>
-                        <div class="summary-value">${currentLang === 'cn' ? data.riskLevel : data.riskLevelEn}</div>
-                    </div>
-                </div>
-                <table class="allocation-table">
-                    <thead>
-                        <tr>
-                            <th>${t.stock}</th>
-                            <th>${t.invested}</th>
-                            <th>${t.ratio}</th>
-                            <th>${t.shares}</th>
-                            <th>${t.return}</th>
-                            <th>${t.risk}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${data.allocation.map(item => `
-                            <tr>
-                                <td><strong>${item.symbol}</strong> ${item.name}</td>
-                                <td>$${item.amount.toLocaleString()}</td>
-                                <td>
-                                    ${item.percentage}%
-                                    <div class="allocation-bar">
-                                        <div class="allocation-fill" style="width: ${item.percentage}%"></div>
-                                    </div>
-                                </td>
-                                <td>${item.shares}</td>
-                                <td style="color: #10b981; font-weight: 600;">+${item.expectedReturn}%</td>
-                                <td><span class="risk-badge risk-${item.risk === '低' ? 'low' : item.risk === '高' ? 'high' : 'mid'}">${currentLang === 'cn' ? item.risk : (item.risk === '低' ? 'Low' : item.risk === '高' ? 'High' : 'Medium')}</span></td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-                <div class="recommendation">
-                    <strong>📋 ${t.strategy}:</strong><br>${currentLang === 'cn' ? data.recommendationCn : data.recommendationEn}
-                </div>
-            `;
-        }
-        async function loadHistory() {
-            const res = await fetch('https://aiopenfortune.com/api/history');
-            const data = await res.json();
-            const section = document.getElementById('historySection');
-            const t = currentLang === 'cn' ? {
-                title: '📊 AI收益追踪',
-                initial: '初始投资',
-                current: '当前价值',
-                total: '累计收益',
-                avg: '平均周期收益',
-                cycles: '完成周期',
-                cycle: '第',
-                cycleUnit: '周期',
-                start: '初始',
-                end: '结束',
-                profit: '收益',
-                target: '目标'
-            } : {
-                title: '📊 Real Performance Tracking',
-                initial: 'Initial Investment',
-                current: 'Current Value',
-                total: 'Total Return',
-                avg: 'Avg Return/Cycle',
-                cycles: 'Completed Cycles',
-                cycle: 'Cycle ',
-                cycleUnit: '',
-                start: 'Start',
-                end: 'End',
-                profit: 'Profit',
-                target: 'Target'
-            };
-            
-            section.innerHTML = `
-                <div class="history-title">${t.title}</div>
-                <div class="performance-cards">
-                    <div class="perf-card">
-                        <div class="perf-label">${t.initial}</div>
-                        <div class="perf-value">$${data.initialInvestment.toLocaleString()}</div>
-                    </div>
-                    <div class="perf-card">
-                        <div class="perf-label">${t.current}</div>
-                        <div class="perf-value">$${data.currentValue.toLocaleString()}</div>
-                    </div>
-                    <div class="perf-card">
-                        <div class="perf-label">${t.total}</div>
-                        <div class="perf-value">+${data.totalReturn}%</div>
-                    </div>
-                    <div class="perf-card">
-                        <div class="perf-label">${t.avg}</div>
-                        <div class="perf-value">${data.avgReturnPerCycle}%</div>
-                    </div>
-                    <div class="perf-card">
-                        <div class="perf-label">${t.cycles}</div>
-                        <div class="perf-value">${data.totalCycles}</div>
-                    </div>
-                </div>
-                ${data.cycles.map(cycle => `
-                    <div class="cycle-card">
-                        <div class="cycle-header">
-                            <div class="cycle-title">${t.cycle}${cycle.cycle}${t.cycleUnit} (${cycle.startDate} - ${cycle.endDate})</div>
-                            <div class="cycle-return">+${cycle.actualReturn}%</div>
-                        </div>
-                        <div class="cycle-details">
-                            <div>${t.start}: $${cycle.initialAmount.toLocaleString()}</div>
-                            <div>${t.end}: $${cycle.finalAmount.toLocaleString()}</div>
-                            <div>${t.profit}: $${(cycle.finalAmount - cycle.initialAmount).toLocaleString()}</div>
-                            <div>${t.target}: ${cycle.targetReturn}%</div>
-                        </div>
-                    </div>
-                `).join('')}
-            `;
-        }
-        async function loadPricing() {
-            const res = await fetch('https://aiopenfortune.com/api/pricing');
-            const plans = await res.json();
-            const section = document.getElementById('pricingSection');
-            const t = currentLang === 'cn' ? {
-                title: '💎 订阅计划',
-                subtitle: '选择最适合您的投资方案',
-                recommended: '推荐',
-                subscribe: '立即订阅'
-            } : {
-                title: '💎 Subscription Plans',
-                subtitle: 'Choose the best plan for your investment journey',
-                recommended: 'Recommended',
-                subscribe: 'Subscribe Now'
-            };
-            
-            section.innerHTML = `
-                <div class="pricing-title">${t.title}</div>
-                <div class="pricing-subtitle">${t.subtitle}</div>
-                <div class="pricing-grid">
-                    ${plans.map(plan => `
-                        <div class="price-card ${plan.recommended ? 'recommended' : ''}">
-                            ${plan.recommended ? `<div class="recommended-badge">${t.recommended}</div>` : ''}
-                            <div class="plan-name">${currentLang === 'cn' ? plan.nameCn : plan.name}</div>
-                            <div class="plan-price">$${plan.price}</div>
-                            <div class="plan-period">/${currentLang === 'cn' ? plan.periodCn : plan.period}</div>
-                            <ul class="plan-features">
-                                ${plan.features.map(f => `<li>${currentLang === 'cn' ? f.cn : f.en}</li>`).join('')}
-                            </ul>
-                            <button class="subscribe-btn" onclick="startPayPal('${plan.id}')">${t.subscribe}</button>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
-        async function loadTrades() {
-            try {
-                const res = await fetch('https://aiopenfortune.com/api/trades');
-                const cycles = await res.json();
-                document.getElementById('tradesSection').innerHTML = `
-                    <div class="history-section" style="margin-top:20px;">
-                        <div class="section-title">📋 ${currentLang === 'cn' ? '实盘交易记录' : 'Real Trade Records'}</div>
-                        <p style="text-align:center;color:#666;margin-bottom:20px;font-size:0.95em;">${currentLang === 'cn' ? '真实建仓/清仓价格，每季度公开透明' : 'Transparent buy/sell records, verified quarterly'}</p>
-                        ${cycles.map(cycle => `
-                            <div style="background:#f9fafb;border-radius:12px;padding:20px;margin-bottom:20px;border-left:4px solid #667eea;">
-                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
-                                    <div style="font-size:1.2em;font-weight:bold;color:#333;">Cycle ${cycle.cycle}（${cycle.startDate} ~ ${cycle.endDate}）${cycle.status === 'active' ? '<span style="background:#fef3c7;color:#92400e;padding:3px 10px;border-radius:12px;font-size:0.8em;margin-left:8px;">持仓中</span>' : ''}</div>
-                                    <div style="font-size:1.4em;font-weight:bold;color:${cycle.actualReturn >= 0 ? '#667eea' : '#ef4444'};">${cycle.actualReturn >= 0 ? '+' : ''}${cycle.actualReturn}%</div>
-                                </div>
-                                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:15px;">
-                                    <div style="background:white;padding:10px;border-radius:8px;text-align:center;"><div style="color:#666;font-size:0.85em;">Initial</div><div style="font-weight:bold;">$${cycle.initialAmount.toLocaleString()}</div></div>
-                                    <div style="background:white;padding:10px;border-radius:8px;text-align:center;"><div style="color:#666;font-size:0.85em;">Current/Final</div><div style="font-weight:bold;color:#667eea;">$${cycle.finalAmount.toLocaleString()}</div></div>
-                                    <div style="background:white;padding:10px;border-radius:8px;text-align:center;"><div style="color:#666;font-size:0.85em;">Return</div><div style="font-weight:bold;color:${cycle.actualReturn >= 0 ? '#667eea' : '#ef4444'};">${cycle.actualReturn >= 0 ? '+' : ''}${cycle.actualReturn}%</div></div>
-                                    <div style="background:white;padding:10px;border-radius:8px;text-align:center;"><div style="color:#666;font-size:0.85em;">Target</div><div style="font-weight:bold;">${cycle.targetReturn}%</div></div>
-                                </div>
-                                <table style="width:100%;border-collapse:collapse;font-size:0.9em;">
-                                    <thead><tr style="background:#667eea;color:white;">
-                                        <th style="padding:10px;text-align:left;">Stock</th>
-                                        <th style="padding:10px;text-align:center;">Buy Date</th>
-                                        <th style="padding:10px;text-align:center;">Buy Price</th>
-                                        <th style="padding:10px;text-align:center;">Sell Date</th>
-                                        <th style="padding:10px;text-align:center;">Sell Price</th>
-                                        <th style="padding:10px;text-align:center;">Shares</th>
-                                        <th style="padding:10px;text-align:center;">Gain</th>
-                                    </tr></thead>
-                                    <tbody>
-                                        ${cycle.stocks.map((s, i) => `
-                                            <tr style="background:${i % 2 === 0 ? 'white' : '#f9fafb'};">
-                                                <td style="padding:10px;font-weight:bold;">${s.symbol} ${s.name}</td>
-                                                <td style="padding:10px;text-align:center;">${s.buyDate}</td>
-                                                <td style="padding:10px;text-align:center;">$${s.buyPrice}</td>
-                                                <td style="padding:10px;text-align:center;">${s.sellDate || '<span style="color:#f59e0b;">持仓中</span>'}</td>
-                                                <td style="padding:10px;text-align:center;">${s.sellPrice ? '$' + s.sellPrice : '--'}</td>
-                                                <td style="padding:10px;text-align:center;">${s.shares}</td>
-                                                <td style="padding:10px;text-align:center;color:#667eea;font-weight:bold;">${s.gain ? '+$' + s.gain + ' (+' + s.gainPct + '%)' : '<span style="color:#f59e0b;">持仓中</span>'}</td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } catch(e) {
-                console.error('loadTrades error', e);
-            }
-        }
 
-        loadHistory();
-        loadStocks();
-        loadPortfolio();
-        loadTrades();
-        initPerfChart();
+    <!-- Portfolio -->
+    <div class="section-label">Portfolio</div>
+    <div class="section-title">Current Holdings</div>
+    <div class="section-sub">AI-managed portfolio snapshot</div>
+    <div id="portfolioSection"></div>
 
-        async function startPayPal(plan) {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                alert(currentLang === 'cn' ? '请先登录后再订阅' : 'Please login first');
-                return;
-            }
-            try {
-                const res = await fetch('https://aiopenfortune.com/api/payment/paypal/create-order', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-                    body: JSON.stringify({ plan, market: 'global' })
-                });
-                const data = await res.json();
-                if (data.approveUrl) {
-                    window.location.href = data.approveUrl;
-                } else {
-                    alert('Error: ' + (data.error || 'Unknown error'));
-                }
-            } catch (e) {
-                alert('Payment error: ' + e.message);
-            }
-        }
+    <!-- Pricing -->
+    <div class="section-label" style="margin-top:48px;">Plans</div>
+    <div class="section-title">Subscription Plans</div>
+    <div class="section-sub">Choose the best plan for your investment journey</div>
+    <div class="pricing-grid" id="pricingSection"></div>
 
-        function showAuthModal() {
-            document.getElementById('authModal').style.display = 'flex';
-        }
+</div>
 
-        function closeAuthModal() {
-            document.getElementById('authModal').style.display = 'none';
-        }
+<!-- FOOTER -->
+<div class="footer">
+    <strong style="color:#aaa;">DISCLAIMER</strong><br>
+    AI Open Fortune provides AI-driven investment portfolio consultation for informational and educational purposes only.<br>
+    <strong>This platform is NOT registered with or regulated by the SEC, FINRA, or any financial regulatory authority.</strong><br>
+    Nothing herein constitutes investment advice. Past performance does not guarantee future results. Invest at your own risk.<br><br>
+    © 2026 AI Open Fortune. All rights reserved. &nbsp;|&nbsp;
+    <a href="/terms.html">Terms of Service</a> &nbsp;|&nbsp;
+    <a href="/privacy.html">Privacy Policy</a>
+</div>
 
-        function switchAuthTab(tab) {
-            if (tab === 'login') {
-                document.getElementById('loginForm').style.display = 'block';
-                document.getElementById('signupForm').style.display = 'none';
-                document.getElementById('loginTab').style.background = '#667eea';
-                document.getElementById('loginTab').style.color = 'white';
-                document.getElementById('signupTab').style.background = '#ddd';
-                document.getElementById('signupTab').style.color = '#333';
-            } else {
-                document.getElementById('loginForm').style.display = 'none';
-                document.getElementById('signupForm').style.display = 'block';
-                document.getElementById('loginTab').style.background = '#ddd';
-                document.getElementById('loginTab').style.color = '#333';
-                document.getElementById('signupTab').style.background = '#667eea';
-                document.getElementById('signupTab').style.color = 'white';
-            }
-        }
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="authModal" onclick="if(event.target===this)closeModal()">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <div class="modal-tabs">
+            <button class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Login</button>
+            <button class="modal-tab" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+        </div>
 
-        async function handleLogin() {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            if (!email || !password) {
-                alert('Please fill in all fields');
-                return;
-            }
-            try {
-                const res = await fetch('https://aiopenfortune.com/api/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                const data = await res.json();
-                if (data.token) {
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                    closeAuthModal();
-                    updateAuthUI();
-                    alert('Login successful!');
-                } else {
-                    alert('Login failed: ' + (data.error || 'Unknown error'));
-                }
-            } catch (e) {
-                alert('Error: ' + e.message);
-            }
-        }
+        <!-- Login -->
+        <div id="loginForm">
+            <input class="modal-input" type="email" id="loginEmail" placeholder="Email address">
+            <input class="modal-input" type="password" id="loginPass" placeholder="Password">
+            <button class="modal-btn" onclick="doLogin()">Login</button>
+            <div class="forgot-link" onclick="doForgot()">Forgot password?</div>
+        </div>
 
-        async function handleSignup() {
-            const name = document.getElementById('signupName').value;
-            const email = document.getElementById('signupEmail').value;
-            const password = document.getElementById('signupPassword').value;
-            const confirm = document.getElementById('signupConfirm').value;
-            const agreed = document.getElementById('agreeTerms').checked;
-            if (!name || !email || !password || !confirm) {
-                alert('Please fill in all fields');
-                return;
-            }
-            if (password !== confirm) {
-                alert('Passwords do not match');
-                return;
-            }
-            if (!agreed) {
-                alert('Please read and agree to the Disclaimer and Terms of Service before registering.');
-                return;
-            }
-            try {
-                const res = await fetch('https://aiopenfortune.com/api/auth/register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, password, market: 'global' })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    alert('Registration successful! Please check your email to verify.');
-                    switchAuthTab('login');
-                } else {
-                    alert('Registration failed: ' + (data.error || 'Unknown error'));
-                }
-            } catch (e) {
-                alert('Error: ' + e.message);
-            }
-        }
+        <!-- Sign Up -->
+        <div id="signupForm" style="display:none;">
+            <input class="modal-input" type="text" id="regName" placeholder="Your name">
+            <input class="modal-input" type="email" id="regEmail" placeholder="Email address">
+            <input class="modal-input" type="password" id="regPass" placeholder="Password (min 6 chars)">
+            <div style="font-size:0.82em;color:#6b7280;margin-bottom:12px;line-height:1.6;">
+                By signing up, you agree to our <a href="/terms.html" target="_blank" style="color:#667eea;">Terms of Service</a> and <a href="/privacy.html" target="_blank" style="color:#667eea;">Privacy Policy</a>.
+            </div>
+            <button class="modal-btn" onclick="doSignup()">Create Account</button>
+        </div>
 
-        function updateAuthUI() {
-            const token = localStorage.getItem('token');
-            const user = JSON.parse(localStorage.getItem('user') || '{}');
-            if (token) {
-                document.getElementById('authBtn').style.display = 'none';
-                document.getElementById('userInfo').style.display = 'inline-block';
-                document.getElementById('userInfo').innerHTML = `<a href="user.html" style="color:#667eea;font-weight:600;text-decoration:none;">👤 ${user.name || user.email}</a> <button onclick="logout()" style="margin-left:8px;padding:4px 10px;background:#f5576c;color:white;border:none;border-radius:12px;cursor:pointer;font-size:0.85em;">Logout</button>`;
-            } else {
-                document.getElementById('authBtn').style.display = 'block';
-                document.getElementById('userInfo').style.display = 'none';
-            }
-        }
-
-        function logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            updateAuthUI();
-        }
-
-        async function forgotPassword() {
-            const email = prompt('请输入您的注册邮箱：');
-            if (!email) return;
-            try {
-                const res = await fetch('https://aiopenfortune.com/api/password/request', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email })
-                });
-                alert('✅ 如果该邮箱已注册，您将收到重置密码邮件，请查收！');
-            } catch (e) {
-                alert('❌ 发送失败，请重试');
-            }
-        }
-
-        function initPerfChart() {
-            const ctx = document.getElementById('perfChart');
-            if (!ctx) return;
-            
-            const data = {
-                labels: ['2025-Q2', '2025-Q3', '2025-Q4', '2026-Q1'],
-                datasets: [{
-                    label: 'Cumulative Return (%)',
-                    data: [9.85, 23.52, 45.84, 35.00],
-                    borderColor: 'rgba(255,255,255,0.9)',
-                    backgroundColor: 'rgba(255,255,255,0.2)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 5,
-                    pointBackgroundColor: 'white'
-                }]
-            };
-
-            new Chart(ctx, {
-                type: 'line',
-                data: data,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: 'rgba(0,0,0,0.8)',
-                            padding: 12,
-                            titleFont: { size: 14 },
-                            bodyFont: { size: 13 }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            ticks: { color: 'rgba(255,255,255,0.8)', font: { size: 12 } },
-                            grid: { color: 'rgba(255,255,255,0.15)' }
-                        },
-                        x: {
-                            ticks: { color: 'rgba(255,255,255,0.8)', font: { size: 12 } },
-                            grid: { display: false }
-                        }
-                    }
-                }
-            });
-        }
-
-        updateAuthUI();
-
-        loadPricing();
-    </script>
-    <div style="background: #1a1a2e; color: #888; text-align: center; padding: 20px; font-size: 0.75em; line-height: 1.8; margin-top: 40px;">
-        <strong style="color: #aaa;">DISCLAIMER</strong><br>
-        AI Open Fortune is an AI-driven investment portfolio consultation service for informational and educational purposes only.<br>
-        <strong>This platform is NOT registered with or regulated by the U.S. Securities and Exchange Commission (SEC), FINRA, or any financial regulatory authority.</strong><br>
-        Nothing herein constitutes investment advice, a solicitation, or an offer to buy or sell any securities. Past performance does not guarantee future results. Invest at your own risk.<br><br>
-        © 2026 AI Open Fortune. All rights reserved. | <a href="/terms.html" style="color: #667eea;">Terms of Service</a> | <a href="/privacy.html" style="color: #667eea;">Privacy Policy</a>
+        <div id="authMsg"></div>
     </div>
+</div>
+
+<script>
+const API = 'https://aiopenfortune.com';
+let token = localStorage.getItem('token');
+let currentUser = null;
+
+// ── Auth UI ──────────────────────────────────────────
+function showModal() {
+    document.getElementById('authModal').style.display = 'flex';
+}
+function closeModal() {
+    document.getElementById('authModal').style.display = 'none';
+    document.getElementById('authMsg').innerHTML = '';
+}
+function switchTab(tab) {
+    document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+    document.getElementById('signupForm').style.display = tab === 'signup' ? 'block' : 'none';
+    document.getElementById('tabLogin').className = 'modal-tab' + (tab === 'login' ? ' active' : '');
+    document.getElementById('tabSignup').className = 'modal-tab' + (tab === 'signup' ? ' active' : '');
+}
+function showMsg(msg, type) {
+    document.getElementById('authMsg').innerHTML = `<div class="modal-msg ${type}">${msg}</div>`;
+}
+function setUserArea(user) {
+    document.getElementById('userArea').innerHTML = `
+        <a href="user.html" style="color:#667eea;font-weight:600;text-decoration:none;font-size:0.92em;">👤 ${user.name || user.email}</a>
+        <button onclick="doLogout()" style="margin-left:8px;padding:5px 14px;background:#f5576c;color:white;border:none;border-radius:16px;cursor:pointer;font-size:0.85em;">Logout</button>
+    `;
+}
+
+async function doLogin() {
+    const email = document.getElementById('loginEmail').value;
+    const pass = document.getElementById('loginPass').value;
+    if (!email || !pass) return showMsg('Please fill in all fields.', 'error');
+    try {
+        const res = await fetch(`${API}/api/auth/login`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email, password:pass}) });
+        const data = await res.json();
+        if (data.token) {
+            localStorage.setItem('token', data.token);
+            token = data.token;
+            closeModal();
+            setUserArea(data.user || {email});
+        } else {
+            showMsg(data.error || 'Login failed.', 'error');
+        }
+    } catch(e) { showMsg('Network error. Please try again.', 'error'); }
+}
+
+async function doSignup() {
+    const name = document.getElementById('regName').value;
+    const email = document.getElementById('regEmail').value;
+    const pass = document.getElementById('regPass').value;
+    if (!name || !email || !pass) return showMsg('Please fill in all fields.', 'error');
+    if (pass.length < 6) return showMsg('Password must be at least 6 characters.', 'error');
+    try {
+        const res = await fetch(`${API}/api/auth/register`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name, email, password:pass, market:'global'}) });
+        const data = await res.json();
+        if (data.success || data.token) {
+            showMsg('✅ Account created! Please check your email to verify.', 'success');
+            if (data.token) { localStorage.setItem('token', data.token); token = data.token; setUserArea({name, email}); }
+        } else {
+            showMsg(data.error || 'Sign up failed.', 'error');
+        }
+    } catch(e) { showMsg('Network error. Please try again.', 'error'); }
+}
+
+function doLogout() {
+    localStorage.removeItem('token');
+    token = null;
+    document.getElementById('userArea').innerHTML = `<a href="#" class="btn-login" onclick="showModal();return false;">Login</a>`;
+}
+
+async function doForgot() {
+    const email = document.getElementById('loginEmail').value;
+    if (!email) return showMsg('Enter your email above first.', 'error');
+    await fetch(`${API}/api/password/request`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email}) });
+    showMsg('✅ If that email is registered, a reset link has been sent.', 'success');
+}
+
+// ── Load User ────────────────────────────────────────
+async function loadUser() {
+    if (!token) return;
+    try {
+        const res = await fetch(`${API}/api/auth/me`, { headers:{'Authorization':'Bearer '+token} });
+        if (res.ok) { const d = await res.json(); setUserArea(d.user || d); }
+        else { localStorage.removeItem('token'); token = null; }
+    } catch(e) {}
+}
+
+// ── Stocks ───────────────────────────────────────────
+async function loadStocks() {
+    try {
+        const res = await fetch(`${API}/api/stocks`);
+        const stocks = await res.json();
+        document.getElementById('stocksGrid').innerHTML = Object.entries(stocks).map(([code, d]) => `
+            <div class="stock-card">
+                <div class="stock-top">
+                    <span class="stock-code">${code}</span>
+                    <span class="stock-badge">NASDAQ / NYSE</span>
+                </div>
+                <div class="stock-name">${d.nameEn || d.name}</div>
+                <div class="stock-price">$${d.price}</div>
+                <div class="stock-change ${d.change >= 0 ? 'up' : 'down'}">
+                    ${d.change >= 0 ? '▲' : '▼'} ${Math.abs(d.change)}%
+                </div>
+                <div class="stock-meta">
+                    <span>Vol: ${d.volume || d.volumeEn || '-'}</span>
+                    <span>P/E: ${d.pe}</span>
+                    <span>H: $${d.high} · L: $${d.low}</span>
+                </div>
+            </div>
+        `).join('');
+    } catch(e) {
+        document.getElementById('stocksGrid').innerHTML = '<div style="color:#9ca3af;padding:20px;">Unable to load market data.</div>';
+    }
+}
+
+// ── Portfolio ────────────────────────────────────────
+async function loadPortfolio() {
+    try {
+        const res = await fetch(`${API}/api/portfolio`);
+        const data = await res.json();
+        document.getElementById('portfolioSection').innerHTML = `
+            <div class="portfolio-card">
+                <div class="port-grid">
+                    <div class="port-item"><div class="port-value">$${data.totalValue?.toLocaleString() || '-'}</div><div class="port-label">Total Value</div></div>
+                    <div class="port-item"><div class="port-value" style="color:${data.totalReturn >= 0 ? '#10b981' : '#ef4444'}">${data.totalReturn >= 0 ? '+' : ''}${data.totalReturn || 0}%</div><div class="port-label">Total Return</div></div>
+                    <div class="port-item"><div class="port-value">${data.positions?.length || 0}</div><div class="port-label">Positions</div></div>
+                    <div class="port-item"><div class="port-value">${data.winRate || '-'}</div><div class="port-label">Win Rate</div></div>
+                </div>
+            </div>
+        `;
+    } catch(e) {}
+}
+
+// ── Pricing ──────────────────────────────────────────
+async function loadPricing() {
+    try {
+        const res = await fetch(`${API}/api/pricing`);
+        const plans = await res.json();
+        document.getElementById('pricingSection').innerHTML = plans.map(p => `
+            <div class="plan-card ${p.recommended ? 'featured' : ''}">
+                ${p.recommended ? `<div class="plan-badge">⭐ Most Popular</div>` : ''}
+                <div class="plan-name">${p.name}</div>
+                <div class="plan-price">$${p.price}</div>
+                <div class="plan-period">per quarter</div>
+                <ul class="plan-features">
+                    ${(p.features || []).map(f => `<li>${f}</li>`).join('')}
+                </ul>
+                <button class="plan-btn" onclick="handleSubscribe('${p.id}')">Subscribe Now</button>
+            </div>
+        `).join('');
+    } catch(e) {}
+}
+
+function handleSubscribe(plan) {
+    if (!token) { showModal(); return; }
+    fetch(`${API}/api/payment/paypal/create-order`, {
+        method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+        body: JSON.stringify({plan, market:'global'})
+    }).then(r => r.json()).then(d => {
+        if (d.approveUrl) window.location.href = d.approveUrl;
+        else alert(d.error || 'Error creating order.');
+    }).catch(() => alert('Network error.'));
+}
+
+// ── Init ─────────────────────────────────────────────
+loadUser();
+loadStocks();
+loadPortfolio();
+loadPricing();
+</script>
 </body>
 </html>
