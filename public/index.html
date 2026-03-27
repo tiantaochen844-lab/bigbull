@@ -76,7 +76,7 @@
         .stat-item { text-align: center; }
         .stat-value { font-size: 2.4em; font-weight: 800; line-height: 1; }
         .stat-label { font-size: 0.85em; opacity: 0.85; margin-top: 6px; }
-        .performance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; max-width: 900px; margin: 0 auto 28px; }
+        .performance-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 700px; margin: 0 auto 28px; }
         .perf-card { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 12px; padding: 20px; border: 1px solid rgba(255,255,255,0.3); }
         .perf-period { font-size: 0.9em; opacity: 0.9; margin-bottom: 6px; }
         .perf-value { font-size: 2.2em; font-weight: bold; margin: 8px 0; }
@@ -118,8 +118,8 @@
         
         <!-- 业绩展示 Banner -->
         <div class="performance-banner">
-            <div class="performance-title" id="perfTitle">📊 Real Performance</div>
-            <div class="performance-subtitle" id="perfSubtitle">Transparent results, honest disclosure</div>
+            <div class="performance-title" id="perfTitle">📊 真实业绩，透明公开</div>
+            <div class="performance-subtitle" id="perfSubtitle">过往表现不代表未来收益，但诚信是长期合作的基石</div>
             
             <!-- 核心数据 -->
             <div class="performance-stats">
@@ -138,26 +138,35 @@
             </div>
 
             <!-- 季度收益卡片 -->
-            <div class="performance-grid">
-                <div class="perf-card">
-                    <div class="perf-period">2026-Q1</div>
-                    <div class="perf-value negative">-5.64%</div>
-                    <div class="perf-label">US Market</div>
+            <!-- 中美市场对比 2×2 -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:800px;margin:0 auto 28px;">
+                <!-- 左列：🇺🇸 美股 -->
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                    <div style="font-size:0.85em;opacity:0.8;text-align:center;letter-spacing:1px;">🇺🇸 US MARKET</div>
+                    <div class="perf-card">
+                        <div class="perf-period">2026-Q1（最新）</div>
+                        <div class="perf-value negative">-5.64%</div>
+                        <div class="perf-label">如实披露</div>
+                    </div>
+                    <div class="perf-card">
+                        <div class="perf-period">2025-Q4</div>
+                        <div class="perf-value positive">+18.32%</div>
+                        <div class="perf-label">US Market</div>
+                    </div>
                 </div>
-                <div class="perf-card">
-                    <div class="perf-period">2025-Q4</div>
-                    <div class="perf-value positive">+18.32%</div>
-                    <div class="perf-label">US Market</div>
-                </div>
-                <div class="perf-card">
-                    <div class="perf-period">2025-Q3</div>
-                    <div class="perf-value positive">+12.47%</div>
-                    <div class="perf-label">US Market</div>
-                </div>
-                <div class="perf-card">
-                    <div class="perf-period">2025-Q2</div>
-                    <div class="perf-value positive">+9.85%</div>
-                    <div class="perf-label">US Market</div>
+                <!-- 右列：🇨🇳 A股 -->
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                    <div style="font-size:0.85em;opacity:0.8;text-align:center;letter-spacing:1px;">🇨🇳 A-SHARE</div>
+                    <div class="perf-card">
+                        <div class="perf-period">2026-Q1（最新）</div>
+                        <div class="perf-value negative">-3.21%</div>
+                        <div class="perf-label">如实披露</div>
+                    </div>
+                    <div class="perf-card">
+                        <div class="perf-period">2025-Q4</div>
+                        <div class="perf-value positive">+15.68%</div>
+                        <div class="perf-label">A-Share</div>
+                    </div>
                 </div>
             </div>
 
