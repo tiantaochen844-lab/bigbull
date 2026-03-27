@@ -6,6 +6,9 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// 信任 Cloudflare 代理
+app.set('trust proxy', 1);
+
 const { generalLimiter, authLimiter, emailLimiter, paymentLimiter } = require('./middleware/rateLimiter');
 
 // ── 中间件 ───────────────────────────────────────────
