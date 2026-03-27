@@ -163,7 +163,7 @@
                 <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:800px;margin:0 auto;">
                     ${stockList.map(([code, data]) => `
                         <div class="stock-card" onclick="showForecast('${code}')">
-                            <div class="stock-header"><div class="stock-code">${data.code}</div></div>
+                            <div class="stock-header"><div class="stock-code">${data.symbol || code}</div></div>
                             <div class="stock-name">${data.name}</div>
                             <div class="stock-price">¥${data.price}</div>
                             <div class="stock-change ${data.change >= 0 ? 'positive' : 'negative'}">
