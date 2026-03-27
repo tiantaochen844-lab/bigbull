@@ -378,7 +378,7 @@ async function loadPricing() {
                 <div class="plan-price">$${p.price}</div>
                 <div class="plan-period">per quarter</div>
                 <ul class="plan-features">
-                    ${(p.features || []).map(f => `<li>${f}</li>`).join('')}
+                    ${(p.features || []).map(f => `<li>${typeof f === 'object' ? f.en : f}</li>`).join('')}
                 </ul>
                 <button class="plan-btn" onclick="handleSubscribe('${p.id}')">Subscribe Now</button>
             </div>
