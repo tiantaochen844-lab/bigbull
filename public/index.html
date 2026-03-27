@@ -69,6 +69,16 @@
         .lang-switch { position: fixed; top: 20px; right: 20px; z-index: 100; }
         .lang-btn { background: white; border: 2px solid #667eea; color: #667eea; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
         .lang-btn:hover { background: #667eea; color: white; }
+        .performance-banner { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 40px 30px; margin: 30px 0; color: white; text-align: center; }
+        .performance-title { font-size: 2em; font-weight: bold; margin-bottom: 10px; }
+        .performance-subtitle { font-size: 1.1em; opacity: 0.95; margin-bottom: 30px; }
+        .performance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; max-width: 900px; margin: 0 auto; }
+        .perf-card { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 12px; padding: 20px; border: 1px solid rgba(255,255,255,0.3); }
+        .perf-period { font-size: 0.9em; opacity: 0.9; margin-bottom: 8px; }
+        .perf-value { font-size: 2.2em; font-weight: bold; margin: 10px 0; }
+        .perf-value.positive { color: #10b981; }
+        .perf-value.negative { color: #fbbf24; }
+        .perf-label { font-size: 0.85em; opacity: 0.85; }
         .pricing-section { background: white; border-radius: 12px; padding: 30px; margin-top: 30px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
         .pricing-title { font-size: 2em; color: #667eea; margin-bottom: 10px; text-align: center; }
         .pricing-subtitle { text-align: center; color: #666; margin-bottom: 30px; }
@@ -93,12 +103,42 @@
             <button id="authBtn" class="lang-btn" onclick="showAuthModal()">Login</button>
             <span id="userInfo" style="display: none; color: #667eea; font-weight: 600;"></span>
         </div>
+        <a href="philosophy.html" class="lang-btn" style="margin-left: 10px;">💡 Philosophy</a>
         <a href="service.html" class="lang-btn" style="margin-left: 10px;">📋 Service</a>
         <a href="cn.html" class="lang-btn" style="margin-left: 10px;">🇨🇳 A股版</a>
     </div>
     <div class="container">
         <h1>🚀 AI Open Fortune</h1>
-        <div class="subtitle">AI创富--智慧灵光，复利成长</div>
+        <div class="subtitle">AI创富--智慧灵光,复利成长</div>
+        
+        <!-- 业绩展示 Banner -->
+        <div class="performance-banner">
+            <div class="performance-title" id="perfTitle">📊 Real Performance</div>
+            <div class="performance-subtitle" id="perfSubtitle">Transparent results, honest disclosure</div>
+            <div class="performance-grid">
+                <div class="perf-card">
+                    <div class="perf-period">2026-Q1</div>
+                    <div class="perf-value negative">-5.64%</div>
+                    <div class="perf-label">US Market</div>
+                </div>
+                <div class="perf-card">
+                    <div class="perf-period">2025-Q4</div>
+                    <div class="perf-value positive">+18.32%</div>
+                    <div class="perf-label">US Market</div>
+                </div>
+                <div class="perf-card">
+                    <div class="perf-period">2025-Q3</div>
+                    <div class="perf-value positive">+12.47%</div>
+                    <div class="perf-label">US Market</div>
+                </div>
+                <div class="perf-card">
+                    <div class="perf-period">2025-Q2</div>
+                    <div class="perf-value positive">+9.85%</div>
+                    <div class="perf-label">US Market</div>
+                </div>
+            </div>
+        </div>
+
         <div class="history-section" id="historySection"></div>
         <div id="tradesSection"></div>
         <div class="stocks-grid" id="stocksGrid"></div>
