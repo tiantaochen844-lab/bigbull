@@ -114,12 +114,12 @@
     </div>
     <div class="container">
         <h1>🚀 AI Open Fortune</h1>
-        <div class="subtitle">AI创富--智慧灵光,复利成长</div>
+        <div class="subtitle">AI-Driven Wealth · Growing Together</div>
         
         <!-- 业绩展示 Banner -->
         <div class="performance-banner">
-            <div class="performance-title" id="perfTitle">📊 真实业绩，透明公开</div>
-            <div class="performance-subtitle" id="perfSubtitle">过往表现不代表未来收益，但诚信是长期合作的基石</div>
+            <div class="performance-title" id="perfTitle">📊 Real Performance, Full Transparency</div>
+            <div class="performance-subtitle" id="perfSubtitle">Past performance does not guarantee future results, but integrity is the foundation of long-term partnership</div>
             
             <!-- 核心数据 -->
             <div class="performance-stats">
@@ -144,9 +144,9 @@
                 <div style="display:flex;flex-direction:column;gap:12px;">
                     <div style="font-size:0.85em;opacity:0.8;text-align:center;letter-spacing:1px;">🇺🇸 US MARKET</div>
                     <div class="perf-card">
-                        <div class="perf-period">2026-Q1（最新）</div>
+                        <div class="perf-period">2026-Q1 (Latest)</div>
                         <div class="perf-value negative">-5.64%</div>
-                        <div class="perf-label">如实披露</div>
+                        <div class="perf-label">Honest Disclosure</div>
                     </div>
                     <div class="perf-card">
                         <div class="perf-period">2025-Q4</div>
@@ -158,9 +158,9 @@
                 <div style="display:flex;flex-direction:column;gap:12px;">
                     <div style="font-size:0.85em;opacity:0.8;text-align:center;letter-spacing:1px;">🇨🇳 A-SHARE</div>
                     <div class="perf-card">
-                        <div class="perf-period">2026-Q1（最新）</div>
+                        <div class="perf-period">2026-Q1 (Latest)</div>
                         <div class="perf-value negative">-3.21%</div>
-                        <div class="perf-label">如实披露</div>
+                        <div class="perf-label">Honest Disclosure</div>
                     </div>
                     <div class="perf-card">
                         <div class="perf-period">2025-Q4</div>
@@ -202,15 +202,15 @@
                     <input type="password" id="signupPassword" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box;">
                     <input type="password" id="signupConfirm" placeholder="Confirm Password" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box;">
                     <div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 6px; padding: 12px; margin-bottom: 12px; font-size: 0.78em; color: #555; max-height: 120px; overflow-y: auto; line-height: 1.5;">
-                        <strong>Disclaimer / 免责声明</strong><br><br>
+                        <strong>Disclaimer</strong><br><br>
                         Open Fortune provides AI-driven investment portfolio consultation and educational information only. <strong>This service is NOT registered with or regulated by the U.S. Securities and Exchange Commission (SEC), FINRA, or any other financial regulatory authority.</strong> Nothing on this platform constitutes investment advice, a solicitation, or an offer to buy or sell any securities.<br><br>
-                        本平台仅提供AI驱动的投资组合咨询及教育性信息。<strong>本服务不受美国证券交易委员会（SEC）、FINRA或任何其他金融监管机构的监管。</strong>平台内容不构成投资建议、招揽或买卖任何证券的要约。投资有风险，过往业绩不代表未来收益。用户需自行承担投资决策的全部责任。<br><br>
-                        By registering, you confirm that: (1) you are not a U.S. person subject to SEC jurisdiction, or you understand this service is for informational purposes only; (2) you will not rely solely on this platform for investment decisions; (3) you accept full responsibility for your own investment choices.
+                        Past performance does not guarantee future results. All investments involve risk, and you may lose money. Users are solely responsible for their own investment decisions.<br><br>
+                        By registering, you confirm that: (1) you understand this service is for informational purposes only; (2) you will not rely solely on this platform for investment decisions; (3) you accept full responsibility for your own investment choices.
                     </div>
                     <div style="display: flex; align-items: flex-start; gap: 8px; margin-bottom: 12px;">
                         <input type="checkbox" id="agreeTerms" style="margin-top: 3px; cursor: pointer;">
                         <label for="agreeTerms" style="font-size: 0.85em; color: #444; cursor: pointer;">
-                            I have read and agree to the <a href="/terms.html" target="_blank" style="color: #667eea;">Disclaimer and Terms of Service</a>. / 我已阅读并同意 <a href="/terms.html" target="_blank" style="color: #667eea;">免责声明及服务条款</a>。
+                            I have read and agree to the <a href="/terms.html" target="_blank" style="color: #667eea;">Disclaimer and Terms of Service</a>.
                         </label>
                     </div>
                     <button onclick="handleSignup()" style="width: 100%; padding: 10px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Sign Up</button>
@@ -683,7 +683,7 @@
                 return;
             }
             if (!agreed) {
-                alert('Please read and agree to the Disclaimer and Terms of Service before registering. / 请先阅读并同意免责声明及服务条款。');
+                alert('Please read and agree to the Disclaimer and Terms of Service before registering.');
                 return;
             }
             try {
@@ -710,7 +710,7 @@
             if (token) {
                 document.getElementById('authBtn').style.display = 'none';
                 document.getElementById('userInfo').style.display = 'inline-block';
-                document.getElementById('userInfo').innerHTML = `<a href="user.html" style="color:#667eea;font-weight:600;text-decoration:none;">👤 ${user.name || user.email}</a> <button onclick="logout()" style="margin-left:8px;padding:4px 10px;background:#f5576c;color:white;border:none;border-radius:12px;cursor:pointer;font-size:0.85em;">退出</button>`;
+                document.getElementById('userInfo').innerHTML = `<a href="user.html" style="color:#667eea;font-weight:600;text-decoration:none;">👤 ${user.name || user.email}</a> <button onclick="logout()" style="margin-left:8px;padding:4px 10px;background:#f5576c;color:white;border:none;border-radius:12px;cursor:pointer;font-size:0.85em;">Logout</button>`;
             } else {
                 document.getElementById('authBtn').style.display = 'block';
                 document.getElementById('userInfo').style.display = 'none';
@@ -791,12 +791,11 @@
         loadPricing();
     </script>
     <div style="background: #1a1a2e; color: #888; text-align: center; padding: 20px; font-size: 0.75em; line-height: 1.8; margin-top: 40px;">
-        <strong style="color: #aaa;">DISCLAIMER / 免责声明</strong><br>
+        <strong style="color: #aaa;">DISCLAIMER</strong><br>
         AI Open Fortune is an AI-driven investment portfolio consultation service for informational and educational purposes only.<br>
         <strong>This platform is NOT registered with or regulated by the U.S. Securities and Exchange Commission (SEC), FINRA, or any financial regulatory authority.</strong><br>
         Nothing herein constitutes investment advice, a solicitation, or an offer to buy or sell any securities. Past performance does not guarantee future results. Invest at your own risk.<br><br>
-        本平台仅提供AI驱动投资组合咨询及教育性信息，<strong>不受美国证监会（SEC）或任何金融监管机构监管</strong>，内容不构成投资建议或证券买卖要约。投资有风险，过往业绩不代表未来收益，用户需自行承担投资决策责任。<br><br>
-        © 2026 AI Open Fortune. All rights reserved. | <a href="/terms.html" style="color: #667eea;">Terms of Service / 服务条款</a> | <a href="/privacy.html" style="color: #667eea;">Privacy Policy / 隐私政策</a>
+        © 2026 AI Open Fortune. All rights reserved. | <a href="/terms.html" style="color: #667eea;">Terms of Service</a> | <a href="/privacy.html" style="color: #667eea;">Privacy Policy</a>
     </div>
 </body>
 </html>
