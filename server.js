@@ -6,6 +6,8 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const { generalLimiter, authLimiter, emailLimiter, paymentLimiter } = require('./middleware/rateLimiter');
+
 // ── 中间件 ───────────────────────────────────────────
 app.use(cors({
   origin: [
@@ -21,14 +23,17 @@ app.use(cors({
 app.use(express.json());
 app.use(express.static('public'));
 
+// 全局API限流（所有 /api/* 路由）
+app.use('/api/', generalLimiter);
+
 // ── 初始化数据库 ─────────────────────────────────────
 require('./services/db');
 
 // ── 路由 ─────────────────────────────────────────────
-app.use('/api/auth',        require('./routes/auth'));
-app.use('/api/password',    require('./routes/password'));
-app.use('/api/payment',     require('./routes/payment'));
-app.use('/api/cn-payment',  require('./routes/cn_payment'));
+app.use('/api/auth',        authLimiter,    require('./routes/auth'));
+app.use('/api/password',    emailLimiter,   require('./routes/password'));
+app.use('/api/payment',     paymentLimiter, require('./routes/payment'));
+app.use('/api/cn-payment',  paymentLimiter, require('./routes/cn_payment'));
 app.use('/api/admin',       require('./routes/admin'));
 app.use('/api',         require('./routes/us_market'));
 app.use('/api',         require('./routes/cn_market'));
