@@ -35,7 +35,7 @@
         .section-subtitle { font-size: 1.1em; color: #6b7280; line-height: 1.8; margin-bottom: 50px; }
 
         /* 核心理念卡片 */
-        .principles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 60px; }
+        .principles-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 60px; max-width: 900px; margin-left: auto; margin-right: auto; }
         .principle-card { background: white; border-radius: 16px; padding: 32px; border: 1px solid #e5e7eb; transition: all 0.3s; }
         .principle-card:hover { border-color: #667eea; box-shadow: 0 8px 30px rgba(102,126,234,0.15); transform: translateY(-4px); }
         .principle-icon { font-size: 2.5em; margin-bottom: 16px; }
@@ -85,6 +85,7 @@
             .nav { padding: 12px 16px; }
             .section { padding: 50px 20px; }
             .ai-section, .promise-section { padding: 40px 25px; }
+            .principles-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -125,9 +126,9 @@
             <div class="principle-text">投资最大的敌人是情绪。AI不会恐惧，不会贪婪，不会因昨晚的新闻改变既定策略。每一个买卖决策，都来自多维度的量化模型，而不是直觉与冲动。</div>
         </div>
         <div class="principle-card">
-            <div class="principle-icon">🌱</div>
-            <div class="principle-title">长期主义，复利为王</div>
-            <div class="principle-text">我们不追求一夜暴富，只追求持续稳健的复利增长。短期波动是噪音，长期趋势才是信号。每一季度的积累，都是通向财务自由的阶梯。</div>
+            <div class="principle-icon">🛡️</div>
+            <div class="principle-title">风控优先，守住本金</div>
+            <div class="principle-text">再好的策略都有回撤。我们的AI风控系统实时监控持仓风险，设定严格的止损线，确保每一次市场波动都在可控范围内，守住本金是一切收益的前提。</div>
         </div>
         <div class="principle-card">
             <div class="principle-icon">💎</div>
@@ -135,9 +136,9 @@
             <div class="principle-text">业绩好的时候我们公开庆祝，亏损的季度我们照实披露。没有美化，没有选择性展示。只有真实的数据，才能建立真实的信任。</div>
         </div>
         <div class="principle-card">
-            <div class="principle-icon">🛡️</div>
-            <div class="principle-title">风控优先，守住本金</div>
-            <div class="principle-text">再好的策略都有回撤。我们的AI风控系统实时监控持仓风险，设定严格的止损线，确保每一次市场波动都在可控范围内，守住本金是一切收益的前提。</div>
+            <div class="principle-icon">🌱</div>
+            <div class="principle-title">长期主义，复利为王</div>
+            <div class="principle-text">我们不追求一夜暴富，只追求持续稳健的复利增长。短期波动是噪音，长期趋势才是信号。每一季度的积累，都是通向财务自由的阶梯。</div>
         </div>
     </div>
 
@@ -151,7 +152,7 @@
                     <li>实时解析财报、新闻、情绪数据，快于人类100倍</li>
                     <li>多因子量化模型，综合基本面+技术面+市场情绪</li>
                     <li>自动调仓再平衡，每月动态优化持仓结构</li>
-                    <li>AI调整策略，遭遇亏损季后智能对冲补偿</li>
+                    <li>AI调整策略，遭遇亏损季后智能对冲守恒</li>
                     <li>每周推送持仓报告，透明展示每一笔交易理由</li>
                 </ul>
             </div>
