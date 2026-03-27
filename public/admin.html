@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI创富 - 管理后台</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', Arial, sans-serif; background: #f5f7fa; }
+        .header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px 40px; }
+        .header h1 { font-size: 1.5em; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .card { background: white; border-radius: 12px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .card-title { font-size: 1.3em; font-weight: bold; margin-bottom: 15px; color: #333; }
+        .btn { padding: 10px 24px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.95em; font-weight: 600; transition: all 0.2s; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-primary:hover { background: #5568d3; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-danger { background: #ef4444; color: white; }
+        .status { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.85em; font-weight: 600; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-approved { background: #d1fae5; color: #065f46; }
+        .report-preview { background: #f9fafb; border-radius: 8px; padding: 20px; margin: 15px 0; border-left: 4px solid #667eea; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-box { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px; border-radius: 10px; text-align: center; }
+        .stat-num { font-size: 2em; font-weight: bold; }
+        .stat-label { font-size: 0.9em; opacity: 0.9; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🚀 AI创富管理后台</h1>
+    <p style="opacity:0.9;margin-top:5px;">AI全程陪跑 + 人工最终审核</p>
+</div>
+
+<div class="container">
+
+    <!-- 统计概览 -->
+    <div class="stats">
+        <div class="stat-box">
+            <div class="stat-num" id="totalUsers">0</div>
+            <div class="stat-label">总订阅用户</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-num" id="pendingReports">0</div>
+            <div class="stat-label">待审核报告</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-num" id="thisWeekSent">0</div>
+            <div class="stat-label">本周已发送</div>
+        </div>
+    </div>
+
+    <!-- 待审核报告 -->
+    <div class="card">
+        <div class="card-title">📋 待审核报告</div>
+        <div id="pendingReportsList"></div>
+    </div>
+
+    <!-- 快速操作 -->
+    <div class="card">
+        <div class="card-title">⚡ 快速操作</div>
+        <button class="btn btn-primary" onclick="generateWeeklyReport()">生成本周周报</button>
+        <button class="btn btn-primary" onclick="generateQuarterReport()">生成季度报告</button>
+        <button class="btn btn-success" onclick="testEmail()">测试邮件发送</button>
+    </div>
+
+    <!-- 订阅用户列表 -->
+    <div class="card">
+        <div class="card-title">👥 订阅用户列表</div>
+        <div id="usersList"></div>
+    </div>
+
+</div>
+
+<script>
+    // 加载统计数据
+    async function loadStats() {
+        try {
+            const res = await fetch('/api/admin/stats');
+            const data = await res.json();
+            document.getElementById('totalUsers').textContent = data.totalUsers || 0;
+            document.getElementById('pendingReports').textContent = data.pendingReports || 0;
+            document.getElementById('thisWeekSent').textContent = data.thisWeekSent || 0;
+        } catch(e) {
+            console.error('加载统计失败', e);
+        }
+    }
+
+    // 加载待审核报告
+    async function loadPendingReports() {
+        try {
+            const res = await fetch('/api/admin/reports/pending');
+            const reports = await res.json();
+            const html = reports.length ? reports.map(r => `
+                <div class="report-preview">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                        <div>
+                            <strong>${r.title}</strong>
+                            <span class="status status-pending">待审核</span>
+                        </div>
+                        <div>
+                            <button class="btn btn-success" onclick="approveReport(${r.id})">✓ 审核通过并发送</button>
+                            <button class="btn btn-danger" onclick="rejectReport(${r.id})">✗ 拒绝</button>
+                        </div>
+                    </div>
+                    <div style="color:#666;font-size:0.9em;">${r.preview}</div>
+                </div>
+            `).join('') : '<p style="color:#999;">暂无待审核报告</p>';
+            document.getElementById('pendingReportsList').innerHTML = html;
+        } catch(e) {
+            console.error('加载报告失败', e);
+        }
+    }
+
+    // 审核通过并发送
+    async function approveReport(id) {
+        if (!confirm('确认审核通过并群发邮件？')) return;
+        try {
+            const res = await fetch(`/api/admin/reports/${id}/approve`, { method: 'POST' });
+            const data = await res.json();
+            alert(data.message || '发送成功！');
+            loadPendingReports();
+            loadStats();
+        } catch(e) {
+            alert('操作失败：' + e.message);
+        }
+    }
+
+    // 生成周报
+    async function generateWeeklyReport() {
+        if (!confirm('AI将自动生成本周周报，生成后需要您审核')) return;
+        try {
+            const res = await fetch('/api/admin/reports/generate-weekly', { method: 'POST' });
+            const data = await res.json();
+            alert(data.message || '周报已生成，请审核');
+            loadPendingReports();
+        } catch(e) {
+            alert('生成失败：' + e.message);
+        }
+    }
+
+    // 测试邮件
+    async function testEmail() {
+        const email = prompt('输入测试邮箱地址：');
+        if (!email) return;
+        try {
+            const res = await fetch('/api/admin/test-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await res.json();
+            alert(data.message || '测试邮件已发送');
+        } catch(e) {
+            alert('发送失败：' + e.message);
+        }
+    }
+
+    // 初始化
+    loadStats();
+    loadPendingReports();
+    setInterval(loadStats, 30000); // 每30秒刷新统计
+</script>
+
+</body>
+</html>

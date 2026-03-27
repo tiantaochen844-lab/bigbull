@@ -24,36 +24,38 @@ const FALLBACK = {
   BABA:  { price: 88.20,  change: 1.80,  volume: '15.6M' },
 };
 
-// ── 美股实盘交易记录（过去两周）────────────────────────
+// ── 美股实盘交易记录（季度周期）────────────────────────
 const US_TRADES = [
   {
     cycle: 1,
-    startDate: '2026-03-10',
-    endDate: '2026-03-21',
+    startDate: '2025-10-01',
+    endDate: '2025-12-31',
     initialAmount: 10000,
-    finalAmount: 11380,
-    actualReturn: 13.8,
+    finalAmount: 11480,
+    actualReturn: 14.8,
     targetReturn: 10,
     currency: 'USD',
     stocks: [
-      { symbol: 'NVDA', name: '英伟达', buyDate: '2026-03-10', buyPrice: 112.50, sellDate: '2026-03-21', sellPrice: 135.20, shares: 20, gain: 454, gainPct: 20.18 },
-      { symbol: 'AAPL', name: '苹果公司', buyDate: '2026-03-10', buyPrice: 210.30, sellDate: '2026-03-21', sellPrice: 227.50, shares: 10, gain: 172, gainPct: 8.18 },
-      { symbol: 'TSLA', name: '特斯拉', buyDate: '2026-03-10', buyPrice: 165.40, sellDate: '2026-03-21', sellPrice: 198.20, shares: 15, gain: 492, gainPct: 19.83 },
+      { symbol: 'NVDA', name: '英伟达',   buyDate: '2025-10-07', buyPrice: 121.40, sellDate: '2025-12-26', sellPrice: 149.80, shares: 30, gain: 852,  gainPct: 23.39 },
+      { symbol: 'MSFT', name: '微软',     buyDate: '2025-10-07', buyPrice: 418.30, sellDate: '2025-12-26', sellPrice: 444.50, shares: 8,  gain: 210,  gainPct: 6.26  },
+      { symbol: 'AAPL', name: '苹果公司', buyDate: '2025-10-07', buyPrice: 225.80, sellDate: '2025-12-26', sellPrice: 254.20, shares: 10, gain: 284,  gainPct: 12.58 },
+      { symbol: 'TSLA', name: '特斯拉',   buyDate: '2025-10-07', buyPrice: 248.60, sellDate: '2025-12-26', sellPrice: 403.84, shares: 5,  gain: 776,  gainPct: 62.44 },
     ]
   },
   {
     cycle: 2,
-    startDate: '2026-03-24',
+    startDate: '2026-01-02',
     endDate: '2026-03-25',
-    initialAmount: 11380,
-    finalAmount: 11040,
-    actualReturn: -2.99,
-    targetReturn: 8,
+    initialAmount: 11480,
+    finalAmount: 10832,
+    actualReturn: -5.64,
+    targetReturn: 10,
     currency: 'USD',
-    status: 'active',
     stocks: [
-      { symbol: 'NVDA', name: '英伟达', buyDate: '2026-03-24', buyPrice: 172.50, sellDate: null, sellPrice: null, shares: 20, gain: null, gainPct: null, status: 'holding' },
-      { symbol: 'MSFT', name: '微软',   buyDate: '2026-03-24', buyPrice: 385.20, sellDate: null, sellPrice: null, shares: 8,  gain: null, gainPct: null, status: 'holding' },
+      { symbol: 'NVDA', name: '英伟达',   buyDate: '2026-01-06', buyPrice: 149.43, sellDate: '2026-03-25', sellPrice: 113.82, shares: 30, gain: -1068, gainPct: -23.83 },
+      { symbol: 'MSFT', name: '微软',     buyDate: '2026-01-06', buyPrice: 422.20, sellDate: '2026-03-25', sellPrice: 390.80, shares: 8,  gain: -251,  gainPct: -7.44  },
+      { symbol: 'AAPL', name: '苹果公司', buyDate: '2026-01-06', buyPrice: 243.70, sellDate: '2026-03-25', sellPrice: 221.53, shares: 10, gain: -222,  gainPct: -9.10  },
+      { symbol: 'GOOGL', name: '谷歌',    buyDate: '2026-01-06', buyPrice: 194.80, sellDate: '2026-03-25', sellPrice: 161.42, shares: 10, gain: -334,  gainPct: -17.13 },
     ]
   }
 ];
