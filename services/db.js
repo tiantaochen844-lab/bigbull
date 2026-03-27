@@ -49,6 +49,21 @@ db.serialize(() => {
     FOREIGN KEY(user_id) REFERENCES users(id)
   )`);
 
+  // 订单表
+  db.run(`CREATE TABLE IF NOT EXISTS orders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    order_id TEXT UNIQUE NOT NULL,
+    user_id INTEGER,
+    plan TEXT NOT NULL,
+    amount REAL NOT NULL,
+    currency TEXT DEFAULT 'USD',
+    status TEXT DEFAULT 'pending',
+    payment_provider TEXT,
+    created_at TEXT DEFAULT (datetime('now')),
+    paid_at TEXT,
+    FOREIGN KEY(user_id) REFERENCES users(id)
+  )`);
+
   console.log('✅ Database initialized');
 });
 
