@@ -153,22 +153,55 @@
             `;
         }
         async function loadStocks() {
-            const res = await fetch('https://aiopenfortune.com/api/cn/stocks');
-            const stocks = await res.json();
-            document.getElementById('stocksGrid').innerHTML = Object.entries(stocks).map(([code, data]) => `
-                <div class="stock-card" onclick="showForecast('${code}')">
-                    <div class="stock-header"><div class="stock-code">${data.code}</div></div>
-                    <div class="stock-name">${data.name}</div>
-                    <div class="stock-price">¥${data.price}</div>
-                    <div class="stock-change ${data.change >= 0 ? 'positive' : 'negative'}">
-                        ${data.change >= 0 ? '▲' : '▼'} ${Math.abs(data.change)}%
+            const resCn = await fetch('https://aiopenfortune.com/api/cn/stocks');
+            const resUs = await fetch('https://aiopenfortune.com/api/stocks');
+            const stocksCn = await resCn.json();
+            const stocksUs = await resUs.json();
+            
+            // 取前2只A股和前2只美股
+            const cnList = Object.entries(stocksCn).slice(0, 2);
+            const usList = Object.entries(stocksUs).slice(0, 2);
+            
+            document.getElementById('stocksGrid').innerHTML = `
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px;margin:0 auto;">
+                    <!-- 左列：🇨🇳 A股 -->
+                    <div>
+                        <div style="text-align:center;font-size:0.9em;color:#f5576c;font-weight:600;margin-bottom:12px;letter-spacing:1px;">🇨🇳 A股市场</div>
+                        ${cnList.map(([code, data]) => `
+                            <div class="stock-card" onclick="showForecast('${code}')" style="margin-bottom:12px;">
+                                <div class="stock-header"><div class="stock-code">${data.code}</div></div>
+                                <div class="stock-name">${data.name}</div>
+                                <div class="stock-price">¥${data.price}</div>
+                                <div class="stock-change ${data.change >= 0 ? 'positive' : 'negative'}">
+                                    ${data.change >= 0 ? '▲' : '▼'} ${Math.abs(data.change)}%
+                                </div>
+                                <div class="stock-info">
+                                    <span>成交量: ${data.volume}</span>
+                                    <span>市盈率: ${data.pe}</span>
+                                </div>
+                            </div>
+                        `).join('')}
                     </div>
-                    <div class="stock-info">
-                        <span>成交量: ${data.volume}</span>
-                        <span>市盈率: ${data.pe}</span>
+                    <!-- 右列：🇺🇸 美股 -->
+                    <div>
+                        <div style="text-align:center;font-size:0.9em;color:#667eea;font-weight:600;margin-bottom:12px;letter-spacing:1px;">🇺🇸 美股市场</div>
+                        ${usList.map(([code, data]) => `
+                            <div class="stock-card" style="margin-bottom:12px;">
+                                <div class="stock-header"><div class="stock-code">${code}</div></div>
+                                <div class="stock-name">${data.nameEn}</div>
+                                <div class="stock-price">$${data.price}</div>
+                                <div class="stock-change ${data.change >= 0 ? 'positive' : 'negative'}">
+                                    ${data.change >= 0 ? '▲' : '▼'} ${Math.abs(data.change)}%
+                                </div>
+                                <div class="stock-info">
+                                    <span>Volume: ${data.volume}</span>
+                                    <span>P/E: ${data.pe}</span>
+                                </div>
+                            </div>
+                        `).join('')}
                     </div>
                 </div>
-            `).join('');
+            `;
         }
         async function loadPortfolio() {
             const res = await fetch('https://aiopenfortune.com/api/cn/portfolio');
