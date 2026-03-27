@@ -8,7 +8,7 @@ require('dotenv').config();
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'openfortune_secret';
-const BASE_URL = `http://43.133.48.91:${process.env.PORT || 3000}`;
+const BASE_URL = process.env.BASE_URL || 'https://aiopenfortune.com';
 
 // 注册
 router.post('/register', async (req, res) => {
@@ -29,9 +29,9 @@ router.post('/register', async (req, res) => {
         return res.status(500).json({ error: 'Registration failed' });
       }
 
-      // 发送验证邮件
+      // 发送验证邮件（根据 market 区分中英文）
       const verifyUrl = `${BASE_URL}/api/auth/verify?token=${verifyToken}`;
-      const { subject, html } = welcomeEmail(name, verifyUrl);
+      const { subject, html } = welcomeEmail(name, verifyUrl, market);
       await sendMail({ to: email, subject, html });
 
       res.json({ success: true, message: 'Registration successful, please check your email / 注册成功，请查收验证邮件' });

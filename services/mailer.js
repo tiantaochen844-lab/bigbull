@@ -33,10 +33,13 @@ async function sendMail({ to, subject, html }) {
 }
 
 // 欢迎邮件
-function welcomeEmail(name, verifyUrl) {
+function welcomeEmail(name, verifyUrl, market = 'cn') {
+  const isCn = market === 'cn';
   return {
-    subject: '🐂 Welcome to Open Fortune - 验证您的邮箱',
-    html: welcomeEmailTemplate(name, verifyUrl)
+    subject: isCn
+      ? '🐂 欢迎加入 Open Fortune — 验证您的邮箱'
+      : '🐂 Welcome to Open Fortune — Please Verify Your Email',
+    html: welcomeEmailTemplate(name, verifyUrl, market)
   };
 }
 

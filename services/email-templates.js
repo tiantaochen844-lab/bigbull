@@ -6,35 +6,47 @@ const footerStyle = `padding: 20px 30px; background: #f3f4f6; text-align: center
 const buttonStyle = `display: inline-block; margin: 20px 0; padding: 14px 32px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 1rem;`;
 
 // 欢迎邮件模板
-function welcomeEmailTemplate(name, verifyUrl) {
+function welcomeEmailTemplate(name, verifyUrl, market = 'cn') {
+  const isCn = market === 'cn';
+  
   return `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>欢迎加入 Open Fortune</title>
+  <title>${isCn ? '欢迎加入 Open Fortune' : 'Welcome to Open Fortune'}</title>
 </head>
 <body style="${baseStyle}">
   <div style="${containerStyle}">
     <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 30px; text-align: center;">
       <h1 style="color: white; margin: 0; font-size: 2rem;">🐂 Open Fortune</h1>
-      <p style="color: rgba(255,255,255,0.95); margin: 10px 0 0 0; font-size: 1rem;">开放财富 · 透明投资平台</p>
+      <p style="color: rgba(255,255,255,0.95); margin: 10px 0 0 0; font-size: 1rem;">${isCn ? 'AI创富 · 双向奔赴' : 'AI-Driven Wealth · Growing Together'}</p>
     </div>
 
     <div style="${contentStyle}">
-      <h2 style="color: #1f2937; margin-top: 0;">欢迎加入，${name}！</h2>
-      <p style="font-size: 1rem; color: #4b5563;">感谢您选择 Open Fortune，您的投资之旅即将开始。</p>
-      <p style="font-size: 1rem; color: #4b5563;">请点击下方按钮验证您的邮箱地址，激活账户：</p>
+      <h2 style="color: #1f2937; margin-top: 0;">${isCn ? `欢迎加入，${name}！` : `Welcome, ${name}!`}</h2>
+      <p style="font-size: 1rem; color: #4b5563;">
+        ${isCn 
+          ? '感谢您选择 Open Fortune — 您的 AI 共创天地，慢慢变富，潇洒人生！' 
+          : 'Thank you for choosing Open Fortune — Your AI co-creation space for steady wealth growth and a fulfilling life!'}
+      </p>
+      <p style="font-size: 1rem; color: #4b5563;">
+        ${isCn 
+          ? '请点击下方按钮验证您的邮箱地址，激活账户：' 
+          : 'Please click the button below to verify your email address and activate your account:'}
+      </p>
 
       <div style="text-align: center; margin: 30px 0;">
         <a href="${verifyUrl}" style="${buttonStyle}">
-          ✉️ 验证邮箱 / Verify Email
+          ✉️ ${isCn ? '验证邮箱' : 'Verify Email'}
         </a>
       </div>
 
       <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 15px; margin-top: 20px;">
         <p style="margin: 0; color: #1d4ed8; font-size: 0.875rem;">
-          ⏰ 验证链接将在 <strong>24 小时</strong>后失效。如未申请此账户，请忽略此邮件。
+          ${isCn 
+            ? '⏰ 验证链接将在 <strong>24 小时</strong>后失效。如未申请此账户，请忽略此邮件。' 
+            : '⏰ This verification link will expire in <strong>24 hours</strong>. If you did not request this account, please ignore this email.'}
         </p>
       </div>
     </div>
@@ -42,7 +54,7 @@ function welcomeEmailTemplate(name, verifyUrl) {
     <div style="${footerStyle}">
       <p style="margin: 5px 0; font-weight: 500;">AI Open Fortune Team</p>
       <p style="margin: 5px 0;"><a href="mailto:legal@aiopenfortune.com" style="color: #667eea; text-decoration: none;">legal@aiopenfortune.com</a></p>
-      <p style="margin: 10px 0 0 0; font-size: 0.75rem; color: #9ca3af;">© 2025 Open Fortune. All rights reserved.</p>
+      <p style="margin: 10px 0 0 0; font-size: 0.75rem; color: #9ca3af;">© 2026 Open Fortune. All rights reserved.</p>
     </div>
   </div>
 </body>
@@ -98,7 +110,7 @@ function subscriptionEmailTemplate(name, plan, expires, market) {
     <div style="${footerStyle}">
       <p style="margin: 5px 0; font-weight: 500;">AI Open Fortune Team</p>
       <p style="margin: 5px 0;"><a href="mailto:legal@aiopenfortune.com" style="color: #667eea; text-decoration: none;">legal@aiopenfortune.com</a></p>
-      <p style="margin: 10px 0 0 0; font-size: 0.75rem; color: #9ca3af;">© 2025 Open Fortune. All rights reserved.</p>
+      <p style="margin: 10px 0 0 0; font-size: 0.75rem; color: #9ca3af;">© 2026 Open Fortune. All rights reserved.</p>
     </div>
   </div>
 </body>
@@ -189,7 +201,7 @@ function weeklyReportEmailTemplate(name, weekNum, weeklyReturn, totalReturn, hol
     <div style="${footerStyle}">
       <p style="margin: 5px 0; font-weight: 500;">AI Open Fortune Team</p>
       <p style="margin: 5px 0;"><a href="mailto:legal@aiopenfortune.com" style="color: #667eea; text-decoration: none;">legal@aiopenfortune.com</a></p>
-      <p style="margin: 10px 0 0 0; font-size: 0.75rem; color: #9ca3af;">© 2025 Open Fortune. All rights reserved.</p>
+      <p style="margin: 10px 0 0 0; font-size: 0.75rem; color: #9ca3af;">© 2026 Open Fortune. All rights reserved.</p>
     </div>
   </div>
 </body>
@@ -250,7 +262,7 @@ function performanceEmailTemplate(name, cycle, returnRate, amount, market) {
     <div style="${footerStyle}">
       <p style="margin: 5px 0; font-weight: 500;">AI Open Fortune Team</p>
       <p style="margin: 5px 0;"><a href="mailto:legal@aiopenfortune.com" style="color: #667eea; text-decoration: none;">legal@aiopenfortune.com</a></p>
-      <p style="margin: 10px 0 0 0; font-size: 0.75rem; color: #9ca3af;">© 2025 Open Fortune. All rights reserved.</p>
+      <p style="margin: 10px 0 0 0; font-size: 0.75rem; color: #9ca3af;">© 2026 Open Fortune. All rights reserved.</p>
     </div>
   </div>
 </body>
