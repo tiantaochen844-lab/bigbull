@@ -20,15 +20,29 @@
         .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; padding: 80px 20px 60px; }
         .hero h1 { font-size: 2.8em; margin-bottom: 16px; }
         .hero p { font-size: 1.2em; opacity: 0.9; max-width: 600px; margin: 0 auto 30px; line-height: 1.7; }
-        .hero-targets { display: flex; justify-content: center; gap: 40px; margin-top: 30px; flex-wrap: wrap; }
+        .hero-cta { display: inline-block; background: white; color: #667eea; padding: 14px 40px; border-radius: 30px; font-weight: 700; font-size: 1.1em; text-decoration: none; margin-top: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); transition: all 0.3s; }
+        .hero-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(0,0,0,0.2); }
+        .hero-targets { display: flex; justify-content: center; gap: 40px; margin-top: 40px; flex-wrap: wrap; }
         .target-badge { background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.4); border-radius: 16px; padding: 20px 35px; text-align: center; backdrop-filter: blur(10px); }
         .target-num { font-size: 2.8em; font-weight: bold; }
         .target-label { font-size: 0.9em; opacity: 0.9; margin-top: 4px; }
 
-        /* 飞轮理念 */
-        .flywheel { background: white; padding: 70px 20px; text-align: center; }
+        /* 真实业绩 */
+        .performance { background: white; padding: 70px 20px; text-align: center; }
         .section-title { font-size: 2em; font-weight: bold; color: #333; margin-bottom: 12px; }
         .section-sub { color: #666; font-size: 1.05em; margin-bottom: 50px; }
+        .perf-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto; }
+        .perf-card { background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%); border: 2px solid #e5e7eb; border-radius: 16px; padding: 30px; transition: all 0.3s; }
+        .perf-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
+        .perf-market { font-size: 1.8em; margin-bottom: 10px; }
+        .perf-cycle { font-size: 0.9em; color: #666; margin-bottom: 15px; }
+        .perf-return { font-size: 3em; font-weight: bold; margin: 15px 0; }
+        .perf-return.positive { color: #10b981; }
+        .perf-return.negative { color: #ef4444; }
+        .perf-stocks { font-size: 0.85em; color: #666; line-height: 1.6; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e7eb; }
+
+        /* 飞轮理念 */
+        .flywheel { background: #f8f9ff; padding: 70px 20px; text-align: center; }
         .flywheel-cards { display: flex; justify-content: center; gap: 0; max-width: 900px; margin: 0 auto; flex-wrap: wrap; }
         .flywheel-card { flex: 1; min-width: 220px; padding: 35px 25px; position: relative; text-align: center; }
         .flywheel-card:not(:last-child)::after { content: '→'; position: absolute; right: -10px; top: 50%; transform: translateY(-50%); font-size: 2em; color: #667eea; font-weight: bold; }
@@ -36,70 +50,9 @@
         .flywheel-title { font-size: 1.3em; font-weight: bold; color: #667eea; margin-bottom: 10px; }
         .flywheel-desc { color: #666; font-size: 0.95em; line-height: 1.7; }
 
-        /* 服务周期时间轴 */
-        .timeline-section { background: #f8f9ff; padding: 70px 20px; }
-        .timeline { max-width: 900px; margin: 0 auto; }
-        .timeline-item { display: flex; gap: 30px; margin-bottom: 40px; align-items: flex-start; }
-        .timeline-left { display: flex; flex-direction: column; align-items: center; min-width: 80px; }
-        .timeline-dot { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4em; font-weight: bold; color: white; flex-shrink: 0; }
-        .timeline-line { width: 3px; flex: 1; min-height: 40px; margin-top: 8px; }
-        .timeline-content { background: white; border-radius: 14px; padding: 25px 30px; flex: 1; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
-        .timeline-period { font-size: 0.85em; font-weight: 600; margin-bottom: 6px; }
-        .timeline-title { font-size: 1.2em; font-weight: bold; color: #333; margin-bottom: 12px; }
-        .timeline-items { list-style: none; }
-        .timeline-items li { padding: 6px 0; color: #555; font-size: 0.95em; display: flex; align-items: flex-start; gap: 8px; }
-        .timeline-items li::before { content: '✓'; color: #667eea; font-weight: bold; flex-shrink: 0; margin-top: 1px; }
-        .cn-highlight { background: #fff8f0; }
-        .cn-highlight .timeline-dot { background: linear-gradient(135deg, #f093fb, #f5576c); }
-        .cn-highlight .timeline-line { background: linear-gradient(to bottom, #f093fb, #f5576c); }
-        .cn-highlight .timeline-period { color: #f5576c; }
-        .cn-highlight .timeline-items li::before { color: #f5576c; }
-        .us-highlight .timeline-dot { background: linear-gradient(135deg, #667eea, #764ba2); }
-        .us-highlight .timeline-line { background: linear-gradient(to bottom, #667eea, #764ba2); }
-        .us-highlight .timeline-period { color: #667eea; }
-
-        /* 套餐对比 */
-        .plans { background: white; padding: 70px 20px; }
-        .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto; }
-        .plan-card { border: 2px solid #e5e7eb; border-radius: 16px; padding: 32px 26px; position: relative; transition: all 0.3s; }
-        .plan-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
-        .plan-card.featured { border-color: #667eea; box-shadow: 0 8px 32px rgba(102,126,234,0.2); }
-        .featured-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 4px 16px; border-radius: 12px; font-size: 0.82em; font-weight: 600; white-space: nowrap; }
-        .plan-name { font-size: 1.3em; font-weight: bold; color: #333; margin-bottom: 8px; }
-        .plan-target { display: inline-block; background: #f0f4ff; color: #667eea; padding: 4px 12px; border-radius: 8px; font-size: 0.85em; font-weight: 600; margin-bottom: 16px; }
-        .plan-price { font-size: 2.2em; font-weight: bold; color: #667eea; margin: 12px 0 4px; }
-        .plan-price span { font-size: 0.45em; color: #999; font-weight: normal; }
-        .plan-flow { margin: 20px 0; }
-        .plan-flow-title { font-size: 0.85em; font-weight: 600; color: #999; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .plan-flow-item { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #f3f4f6; }
-        .plan-flow-item:last-child { border-bottom: none; }
-        .flow-icon { font-size: 1.1em; flex-shrink: 0; }
-        .flow-text { font-size: 0.9em; color: #555; line-height: 1.5; }
-        .plan-btn { display: block; width: 100%; padding: 13px; border-radius: 10px; text-align: center; font-weight: 600; font-size: 1em; cursor: pointer; border: none; margin-top: 20px; transition: all 0.3s; text-decoration: none; }
-        .plan-btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
-        .plan-btn-primary:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(102,126,234,0.4); }
-        .plan-btn-secondary { background: #f3f4f6; color: #555; }
-        .plan-btn-secondary:hover { background: #e5e7eb; }
-
-        /* 续费飞轮承诺 */
-        .promise { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 70px 20px; text-align: center; color: white; }
-        .promise h2 { font-size: 2.2em; margin-bottom: 16px; }
-        .promise p { font-size: 1.1em; opacity: 0.9; max-width: 600px; margin: 0 auto 40px; line-height: 1.8; }
-        .promise-stats { display: flex; justify-content: center; gap: 50px; flex-wrap: wrap; }
-        .promise-stat { text-align: center; }
-        .promise-num { font-size: 3em; font-weight: bold; }
-        .promise-label { font-size: 0.9em; opacity: 0.85; margin-top: 4px; }
-
-        /* 底部 */
-        .footer { background: #1a1a2e; color: #888; text-align: center; padding: 30px 20px; font-size: 0.85em; line-height: 2; }
-        .footer a { color: #667eea; text-decoration: none; }
-
         @media (max-width: 600px) {
             .hero h1 { font-size: 1.9em; }
             .flywheel-card:not(:last-child)::after { display: none; }
-            .timeline-item { flex-direction: column; gap: 12px; }
-            .timeline-left { flex-direction: row; }
-            .timeline-line { display: none; }
             .nav { padding: 12px 16px; }
             .nav-links { display: none; }
         }
@@ -114,7 +67,6 @@
         <a href="index.html">全球版</a>
         <a href="cn.html">A股版</a>
         <a href="service.html">服务流程</a>
-        <a href="terms.html">条款</a>
     </div>
     <a href="index.html#pricing" class="nav-btn">立即订阅</a>
 </nav>
@@ -123,6 +75,7 @@
 <section class="hero">
     <h1>稳预期，超收益，真智慧</h1>
     <p>AI创富陪跑，芝麻开花，季季高升。</p>
+    <a href="index.html#pricing" class="hero-cta">立即开启创富之旅 →</a>
     <div class="hero-targets">
         <div class="target-badge">
             <div class="target-num">15%</div>
@@ -135,6 +88,55 @@
         <div class="target-badge">
             <div class="target-num">99%</div>
             <div class="target-label">🔁 目标续费率</div>
+        </div>
+    </div>
+</section>
+
+<!-- 真实业绩展示 -->
+<section class="performance">
+    <div class="section-title">真实业绩，透明公开</div>
+    <div class="section-sub">过往表现不代表未来收益，但诚信是长期合作的基石</div>
+    <div class="perf-cards">
+        <div class="perf-card">
+            <div class="perf-market">🇨🇳 A股</div>
+            <div class="perf-cycle">Cycle 2 (2026-Q1)</div>
+            <div class="perf-return positive">+13.64%</div>
+            <div class="perf-stocks">
+                特变电工 +18.2%<br>
+                比亚迪 +12.5%<br>
+                五粮液 +10.3%
+            </div>
+        </div>
+        <div class="perf-card">
+            <div class="perf-market">🇨🇳 A股</div>
+            <div class="perf-cycle">Cycle 1 (2025-Q4)</div>
+            <div class="perf-return positive">+13.2%</div>
+            <div class="perf-stocks">
+                特变电工 +22.1%<br>
+                宁德时代 +8.9%<br>
+                中国平安 +9.5%
+            </div>
+        </div>
+        <div class="perf-card">
+            <div class="perf-market">🌍 美股</div>
+            <div class="perf-cycle">Cycle 2 (2026-Q1)</div>
+            <div class="perf-return negative">-5.64%</div>
+            <div class="perf-stocks">
+                市场下跌周期<br>
+                NVDA -23.83%<br>
+                GOOGL -17.13%<br>
+                <strong>诚信第一，如实披露</strong>
+            </div>
+        </div>
+        <div class="perf-card">
+            <div class="perf-market">🌍 美股</div>
+            <div class="perf-cycle">Cycle 1 (2025-Q4)</div>
+            <div class="perf-return positive">+14.8%</div>
+            <div class="perf-stocks">
+                TSLA +62.44%<br>
+                NVDA +8.2%<br>
+                MSFT +5.1%
+            </div>
         </div>
     </div>
 </section>
@@ -168,184 +170,268 @@
 </section>
 
 <!-- 服务时间轴 -->
-<section class="timeline-section">
+<section style="background: white; padding: 70px 20px;">
     <div style="text-align:center;margin-bottom:50px;">
         <div class="section-title">AI创富陪跑路线图</div>
         <div class="section-sub">关键掘金报告，全程陪跑无忧</div>
     </div>
-    <div class="timeline">
-
+    <div style="max-width: 900px; margin: 0 auto;">
         <!-- 季初 -->
-        <div class="timeline-item us-highlight">
-            <div class="timeline-left">
-                <div class="timeline-dot" style="background:linear-gradient(135deg,#667eea,#764ba2);">1</div>
-                <div class="timeline-line" style="background:linear-gradient(to bottom,#667eea,#764ba2);"></div>
+        <div style="display: flex; gap: 30px; margin-bottom: 40px; align-items: flex-start;">
+            <div style="display: flex; flex-direction: column; align-items: center; min-width: 80px;">
+                <div style="width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4em; font-weight: bold; color: white; background: linear-gradient(135deg,#667eea,#764ba2);">1</div>
+                <div style="width: 3px; flex: 1; min-height: 40px; margin-top: 8px; background: linear-gradient(to bottom,#667eea,#764ba2);"></div>
             </div>
-            <div class="timeline-content">
-                <div class="timeline-period" style="color:#667eea;">📅 季初第1-2周</div>
-                <div class="timeline-title">建仓公告 · 稳定预期</div>
-                <ul class="timeline-items">
-                    <li>发布本季度投资组合（建仓标的、数量、均价）</li>
-                    <li>发送《季度操盘策略说明》邮件（为什么选这些股票）</li>
-                    <li>明确目标收益（美股10% / A股15%）</li>
-                    <li>精英版：AI深度策略分析，专属定制方案</li>
+            <div style="background: white; border: 2px solid #e5e7eb; border-radius: 14px; padding: 25px 30px; flex: 1; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+                <div style="font-size: 0.85em; font-weight: 600; margin-bottom: 6px; color: #667eea;">📅 季初第1-2周</div>
+                <div style="font-size: 1.2em; font-weight: bold; color: #333; margin-bottom: 12px;">建仓公告 · 稳定预期</div>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 6px 0; color: #555; font-size: 0.95em; display: flex; align-items: flex-start; gap: 8px;"><span style="color: #667eea; font-weight: bold;">✓</span> 发布本季度投资组合（建仓标的、数量、均价）</li>
+                    <li style="padding: 6px 0; color: #555; font-size: 0.95em; display: flex; align-items: flex-start; gap: 8px;"><span style="color: #667eea; font-weight: bold;">✓</span> 发送《季度操盘策略说明》邮件</li>
+                    <li style="padding: 6px 0; color: #555; font-size: 0.95em; display: flex; align-items: flex-start; gap: 8px;"><span style="color: #667eea; font-weight: bold;">✓</span> 明确目标收益（美股10% / A股15%）</li>
                 </ul>
             </div>
         </div>
-
+        
         <!-- 季中 -->
-        <div class="timeline-item us-highlight">
-            <div class="timeline-left">
-                <div class="timeline-dot" style="background:linear-gradient(135deg,#667eea,#764ba2);">2</div>
-                <div class="timeline-line" style="background:linear-gradient(to bottom,#667eea,#764ba2);"></div>
+        <div style="display: flex; gap: 30px; margin-bottom: 40px; align-items: flex-start;">
+            <div style="display: flex; flex-direction: column; align-items: center; min-width: 80px;">
+                <div style="width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4em; font-weight: bold; color: white; background: linear-gradient(135deg,#667eea,#764ba2);">2</div>
+                <div style="width: 3px; flex: 1; min-height: 40px; margin-top: 8px; background: linear-gradient(to bottom,#667eea,#764ba2);"></div>
             </div>
-            <div class="timeline-content">
-                <div class="timeline-period" style="color:#667eea;">📊 季中（每周）</div>
-                <div class="timeline-title">持仓跟踪 · 实时陪伴</div>
-                <ul class="timeline-items">
-                    <li>每周五发送持仓周报（当前盈亏、市场分析）</li>
-                    <li>重大市场事件即时提醒（专业版/精英版：买卖信号推送）</li>
-                    <li>网站实时行情更新（股价/涨跌/AI走势预测）</li>
-                    <li>精英版：专属顾问随时答疑，关键节点提醒加仓/减仓</li>
+            <div style="background: white; border: 2px solid #e5e7eb; border-radius: 14px; padding: 25px 30px; flex: 1; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+                <div style="font-size: 0.85em; font-weight: 600; margin-bottom: 6px; color: #667eea;">📊 季中（每周）</div>
+                <div style="font-size: 1.2em; font-weight: bold; color: #333; margin-bottom: 12px;">持仓跟踪 · 实时陪伴</div>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 6px 0; color: #555; font-size: 0.95em; display: flex; align-items: flex-start; gap: 8px;"><span style="color: #667eea; font-weight: bold;">✓</span> 每周五发送持仓周报（当前盈亏、市场分析）</li>
+                    <li style="padding: 6px 0; color: #555; font-size: 0.95em; display: flex; align-items: flex-start; gap: 8px;"><span style="color: #667eea; font-weight: bold;">✓</span> 网站实时行情更新（股价/涨跌/AI走势预测）</li>
+                    <li style="padding: 6px 0; color: #555; font-size: 0.95em; display: flex; align-items: flex-start; gap: 8px;"><span style="color: #667eea; font-weight: bold;">✓</span> 专业版/精英版：买卖信号推送</li>
                 </ul>
             </div>
         </div>
-
-        <!-- 季末清仓 -->
-        <div class="timeline-item cn-highlight">
-            <div class="timeline-left">
-                <div class="timeline-dot">3</div>
-                <div class="timeline-line"></div>
+        
+        <!-- 季末 -->
+        <div style="display: flex; gap: 30px; margin-bottom: 40px; align-items: flex-start;">
+            <div style="display: flex; flex-direction: column; align-items: center; min-width: 80px;">
+                <div style="width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4em; font-weight: bold; color: white; background: linear-gradient(135deg,#f093fb,#f5576c);">3</div>
+                <div style="width: 3px; flex: 1; min-height: 40px; margin-top: 8px; background: linear-gradient(to bottom,#f093fb,#f5576c);"></div>
             </div>
-            <div class="timeline-content cn-highlight">
-                <div class="timeline-period" style="color:#f5576c;">🎯 季末最后1-2周</div>
-                <div class="timeline-title">清仓报告 · 超越目标</div>
-                <ul class="timeline-items" style="--check-color:#f5576c;">
-                    <li>发布完整清仓记录（每只股票买入/卖出价格、实际收益）</li>
-                    <li>季度收益 vs 目标收益对比</li>
-                    <li>超额收益分析：哪些判断对了、带来多少回报</li>
-                    <li>亏损时：主动说明原因 + 下季补偿策略（诚信建立信任）</li>
+            <div style="background: #fff8f0; border: 2px solid #f5576c; border-radius: 14px; padding: 25px 30px; flex: 1; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+                <div style="font-size: 0.85em; font-weight: 600; margin-bottom: 6px; color: #f5576c;">🎯 季末最后1-2周</div>
+                <div style="font-size: 1.2em; font-weight: bold; color: #333; margin-bottom: 12px;">清仓报告 · 超越目标</div>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 6px 0; color: #555; font-size: 0.95em; display: flex; align-items: flex-start; gap: 8px;"><span style="color: #f5576c; font-weight: bold;">✓</span> 发布完整清仓记录（买入/卖出价格、实际收益）</li>
+                    <li style="padding: 6px 0; color: #555; font-size: 0.95em; display: flex; align-items: flex-start; gap: 8px;"><span style="color: #f5576c; font-weight: bold;">✓</span> 季度收益 vs 目标收益对比</li>
+                    <li style="padding: 6px 0; color: #555; font-size: 0.95em; display: flex; align-items: flex-start; gap: 8px;"><span style="color: #f5576c; font-weight: bold;">✓</span> 亏损时：主动说明原因 + 下季补偿策略</li>
                 </ul>
             </div>
         </div>
-
-        <!-- 季度复盘 -->
-        <div class="timeline-item cn-highlight">
-            <div class="timeline-left">
-                <div class="timeline-dot">4</div>
+        
+        <!-- 复盘 -->
+        <div style="display: flex; gap: 30px; align-items: flex-start;">
+            <div style="display: flex; flex-direction: column; align-items: center; min-width: 80px;">
+                <div style="width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4em; font-weight: bold; color: white; background: linear-gradient(135deg,#f093fb,#f5576c);">4</div>
             </div>
-            <div class="timeline-content cn-highlight">
-                <div class="timeline-period" style="color:#f5576c;">🧠 季度复盘（真智慧）</div>
-                <div class="timeline-title">深度复盘 · 共同成长</div>
-                <ul class="timeline-items">
-                    <li>《季度投资逻辑复盘》报告（AI如何选股、判断依据）</li>
-                    <li>客户提问收集 → AI逐一解答</li>
-                    <li>下季度市场展望 + 新组合预告（激发续费期待）</li>
-                    <li>精英版：AI深度复盘报告 + 定制下季专属方案</li>
+            <div style="background: #fff8f0; border: 2px solid #f5576c; border-radius: 14px; padding: 25px 30px; flex: 1; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+                <div style="font-size: 0.85em; font-weight: 600; margin-bottom: 6px; color: #f5576c;">🧠 季度复盘（真智慧）</div>
+                <div style="font-size: 1.2em; font-weight: bold; color: #333; margin-bottom: 12px;">深度复盘 · 共同成长</div>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 6px 0; color: #555; font-size: 0.95em; display: flex; align-items: flex-start; gap: 8px;"><span style="color: #f5576c; font-weight: bold;">✓</span> 《季度投资逻辑复盘》报告（AI如何选股）</li>
+                    <li style="padding: 6px 0; color: #555; font-size: 0.95em; display: flex; align-items: flex-start; gap: 8px;"><span style="color: #f5576c; font-weight: bold;">✓</span> 客户提问收集 → AI逐一解答</li>
+                    <li style="padding: 6px 0; color: #555; font-size: 0.95em; display: flex; align-items: flex-start; gap: 8px;"><span style="color: #f5576c; font-weight: bold;">✓</span> 下季度市场展望 + 新组合预告</li>
                 </ul>
             </div>
         </div>
-
     </div>
 </section>
 
-<!-- 套餐服务流程对比 -->
-<section class="plans">
+<!-- 套餐对比 含年付切换 -->
+<section style="background: #f8f9ff; padding: 70px 20px;">
     <div style="text-align:center;margin-bottom:50px;">
-        <div class="section-title">三阶AI服务展示</div>
+        <div class="section-title">三阶AI服务，按需选择</div>
         <div class="section-sub">层层阶阶真体验，季季年年好多钱</div>
+        <!-- 季付/年付切换 -->
+        <div style="display: inline-flex; background: #e5e7eb; border-radius: 30px; padding: 4px; margin-bottom: 30px;">
+            <button id="btnQuarterly" onclick="switchPlan('quarterly')" style="padding: 8px 28px; border-radius: 26px; border: none; cursor: pointer; font-weight: 600; font-size: 0.95em; background: linear-gradient(135deg,#667eea,#764ba2); color: white; transition: all 0.3s;">季付</button>
+            <button id="btnAnnual" onclick="switchPlan('annual')" style="padding: 8px 28px; border-radius: 26px; border: none; cursor: pointer; font-weight: 600; font-size: 0.95em; background: transparent; color: #666; transition: all 0.3s;">年付 <span style="color: #10b981; font-size: 0.85em;">省30%</span></button>
+        </div>
     </div>
-    <div class="plans-grid">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto;">
 
         <!-- 入门版 -->
-        <div class="plan-card">
-            <div class="plan-name">🌱 入门版</div>
-            <div class="plan-target">美股10% / A股15% 季度目标</div>
-            <div class="plan-price">¥199<span>/季度</span></div>
-            <div class="plan-flow">
-                <div class="plan-flow-title">服务流程</div>
-                <div class="plan-flow-item"><div class="flow-icon">📋</div><div class="flow-text"><strong>季初：</strong>投资组合公告（建仓股票+目标收益）</div></div>
-                <div class="plan-flow-item"><div class="flow-icon">📊</div><div class="flow-text"><strong>每周：</strong>持仓周报邮件</div></div>
-                <div class="plan-flow-item"><div class="flow-icon">📈</div><div class="flow-text"><strong>实时：</strong>网站行情 + AI走势预测</div></div>
-                <div class="plan-flow-item"><div class="flow-icon">🎯</div><div class="flow-text"><strong>季末：</strong>完整清仓报告</div></div>
+        <div style="background: white; border: 2px solid #e5e7eb; border-radius: 16px; padding: 32px 26px; transition: all 0.3s;">
+            <div style="font-size: 1.3em; font-weight: bold; color: #333; margin-bottom: 8px;">🌱 入门版</div>
+            <div style="display: inline-block; background: #f0f4ff; color: #667eea; padding: 4px 12px; border-radius: 8px; font-size: 0.85em; font-weight: 600; margin-bottom: 16px;">美股10% / A股15% 季度目标</div>
+            <div style="font-size: 2.2em; font-weight: bold; color: #667eea; margin: 12px 0 4px;">
+                <span id="price-basic-quarterly">¥199</span>
+                <span id="price-basic-annual" style="display:none;">¥557</span>
+                <span style="font-size: 0.45em; color: #999; font-weight: normal;">/季度</span>
             </div>
-            <a href="index.html#pricing" class="plan-btn plan-btn-secondary">选择入门版</a>
+            <div id="save-basic" style="display:none; color: #10b981; font-size: 0.85em; margin-bottom: 10px;">年付 ¥2,228 · 省 ¥628</div>
+            <div style="margin: 20px 0;">
+                <div style="font-size: 0.85em; font-weight: 600; color: #999; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">服务内容</div>
+                <div style="display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #f3f4f6;"><span>📋</span><span style="font-size: 0.9em; color: #555;">季初建仓公告 + 目标收益</span></div>
+                <div style="display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #f3f4f6;"><span>📊</span><span style="font-size: 0.9em; color: #555;">每周持仓周报邮件</span></div>
+                <div style="display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #f3f4f6;"><span>📈</span><span style="font-size: 0.9em; color: #555;">网站实时行情 + AI走势预测</span></div>
+                <div style="display: flex; gap: 10px; align-items: flex-start; padding: 8px 0;"><span>🎯</span><span style="font-size: 0.9em; color: #555;">季末完整清仓报告</span></div>
+            </div>
+            <a href="index.html#pricing" style="display: block; width: 100%; padding: 13px; border-radius: 10px; text-align: center; font-weight: 600; font-size: 1em; text-decoration: none; background: #f3f4f6; color: #555; margin-top: 10px; transition: all 0.3s;">选择入门版</a>
         </div>
 
         <!-- 专业版 -->
-        <div class="plan-card featured">
-            <div class="featured-badge">🔥 最受欢迎</div>
-            <div class="plan-name">⚡ 专业版</div>
-            <div class="plan-target">美股10% / A股15% 季度目标</div>
-            <div class="plan-price">¥499<span>/季度</span></div>
-            <div class="plan-flow">
-                <div class="plan-flow-title">服务流程</div>
-                <div class="plan-flow-item"><div class="flow-icon">📋</div><div class="flow-text"><strong>季初：</strong>组合公告 + 深度策略说明邮件</div></div>
-                <div class="plan-flow-item"><div class="flow-icon">🔔</div><div class="flow-text"><strong>实时：</strong>买卖信号即时提醒</div></div>
-                <div class="plan-flow-item"><div class="flow-icon">📊</div><div class="flow-text"><strong>每周：</strong>持仓周报 + 市场深度分析</div></div>
-                <div class="plan-flow-item"><div class="flow-icon">🧠</div><div class="flow-text"><strong>季末：</strong>清仓报告 + 深度复盘 + 下季预告</div></div>
-                <div class="plan-flow-item"><div class="flow-icon">💬</div><div class="flow-text"><strong>答疑：</strong>邮件答疑，48小时内回复</div></div>
+        <div style="background: white; border: 2px solid #667eea; border-radius: 16px; padding: 32px 26px; position: relative; box-shadow: 0 8px 32px rgba(102,126,234,0.2); transition: all 0.3s;">
+            <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 4px 16px; border-radius: 12px; font-size: 0.82em; font-weight: 600; white-space: nowrap;">🔥 最受欢迎</div>
+            <div style="font-size: 1.3em; font-weight: bold; color: #333; margin-bottom: 8px;">⚡ 专业版</div>
+            <div style="display: inline-block; background: #f0f4ff; color: #667eea; padding: 4px 12px; border-radius: 8px; font-size: 0.85em; font-weight: 600; margin-bottom: 16px;">美股10% / A股15% 季度目标</div>
+            <div style="font-size: 2.2em; font-weight: bold; color: #667eea; margin: 12px 0 4px;">
+                <span id="price-pro-quarterly">¥499</span>
+                <span id="price-pro-annual" style="display:none;">¥1,397</span>
+                <span style="font-size: 0.45em; color: #999; font-weight: normal;">/季度</span>
             </div>
-            <a href="index.html#pricing" class="plan-btn plan-btn-primary">选择专业版</a>
+            <div id="save-pro" style="display:none; color: #10b981; font-size: 0.85em; margin-bottom: 10px;">年付 ¥5,588 · 省 ¥1,588</div>
+            <div style="margin: 20px 0;">
+                <div style="font-size: 0.85em; font-weight: 600; color: #999; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">服务内容</div>
+                <div style="display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #f3f4f6;"><span>📋</span><span style="font-size: 0.9em; color: #555;">季初公告 + <strong>深度策略说明邮件</strong></span></div>
+                <div style="display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #f3f4f6;"><span>🔔</span><span style="font-size: 0.9em; color: #555;"><strong>买卖信号即时提醒</strong></span></div>
+                <div style="display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #f3f4f6;"><span>📊</span><span style="font-size: 0.9em; color: #555;">每周持仓周报 + 市场深度分析</span></div>
+                <div style="display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #f3f4f6;"><span>🧠</span><span style="font-size: 0.9em; color: #555;">季末清仓报告 + <strong>深度复盘 + 下季预告</strong></span></div>
+                <div style="display: flex; gap: 10px; align-items: flex-start; padding: 8px 0;"><span>💬</span><span style="font-size: 0.9em; color: #555;">邮件答疑，48小时内回复</span></div>
+            </div>
+            <a href="index.html#pricing" style="display: block; width: 100%; padding: 13px; border-radius: 10px; text-align: center; font-weight: 600; font-size: 1em; text-decoration: none; background: linear-gradient(135deg,#667eea,#764ba2); color: white; margin-top: 10px; transition: all 0.3s;">选择专业版</a>
         </div>
 
         <!-- 精英版 -->
-        <div class="plan-card">
-            <div class="plan-name">👑 精英版</div>
-            <div class="plan-target">美股10% / A股15% 季度目标</div>
-            <div class="plan-price">¥999<span>/季度</span></div>
-            <div class="plan-flow">
-                <div class="plan-flow-title">服务流程</div>
-                <div class="plan-flow-item"><div class="flow-icon">🤖</div><div class="flow-text"><strong>季初：</strong>AI专属定制建仓方案 + 深度策略报告</div></div>
-                <div class="plan-flow-item"><div class="flow-icon">👤</div><div class="flow-text"><strong>全程：</strong>专属顾问微信，随时答疑</div></div>
-                <div class="plan-flow-item"><div class="flow-icon">💬</div><div class="flow-text"><strong>全程：</strong>AI智能答疑，24小时即时响应</div></div>
-                <div class="plan-flow-item"><div class="flow-icon">🧠</div><div class="flow-text"><strong>季末：</strong>AI深度复盘报告 + 下季定制专属方案</div></div>
-                <div class="plan-flow-item"><div class="flow-icon">📄</div><div class="flow-text"><strong>年度：</strong>年度投资复盘报告</div></div>
+        <div style="background: white; border: 2px solid #e5e7eb; border-radius: 16px; padding: 32px 26px; transition: all 0.3s;">
+            <div style="font-size: 1.3em; font-weight: bold; color: #333; margin-bottom: 8px;">👑 精英版</div>
+            <div style="display: inline-block; background: #f0f4ff; color: #667eea; padding: 4px 12px; border-radius: 8px; font-size: 0.85em; font-weight: 600; margin-bottom: 16px;">专属AI定制方案</div>
+            <div style="font-size: 2.2em; font-weight: bold; color: #667eea; margin: 12px 0 4px;">
+                <span id="price-elite-quarterly">¥999</span>
+                <span id="price-elite-annual" style="display:none;">¥2,797</span>
+                <span style="font-size: 0.45em; color: #999; font-weight: normal;">/季度</span>
             </div>
-            <a href="index.html#pricing" class="plan-btn plan-btn-secondary">选择精英版</a>
+            <div id="save-elite" style="display:none; color: #10b981; font-size: 0.85em; margin-bottom: 10px;">年付 ¥11,188 · 省 ¥3,188</div>
+            <div style="margin: 20px 0;">
+                <div style="font-size: 0.85em; font-weight: 600; color: #999; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">服务内容</div>
+                <div style="display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #f3f4f6;"><span>🤖</span><span style="font-size: 0.9em; color: #555;"><strong>AI专属定制建仓方案</strong> + 深度策略报告</span></div>
+                <div style="display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #f3f4f6;"><span>👤</span><span style="font-size: 0.9em; color: #555;"><strong>专属顾问微信</strong>，随时答疑</span></div>
+                <div style="display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #f3f4f6;"><span>💬</span><span style="font-size: 0.9em; color: #555;">AI智能答疑，<strong>24小时即时响应</strong></span></div>
+                <div style="display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #f3f4f6;"><span>🧠</span><span style="font-size: 0.9em; color: #555;">季末 AI深度复盘 + 下季定制专属方案</span></div>
+                <div style="display: flex; gap: 10px; align-items: flex-start; padding: 8px 0;"><span>📄</span><span style="font-size: 0.9em; color: #555;"><strong>年度投资复盘报告</strong></span></div>
+            </div>
+            <a href="index.html#pricing" style="display: block; width: 100%; padding: 13px; border-radius: 10px; text-align: center; font-weight: 600; font-size: 1em; text-decoration: none; background: #f3f4f6; color: #555; margin-top: 10px; transition: all 0.3s;">选择精英版</a>
         </div>
-
     </div>
 </section>
 
-<!-- 承诺区 -->
-<section class="promise">
-    <h2>我们（YOU & AI）的创富约定</h2>
-    <p>全程长跑，双向奔赴，慢慢变富，见证成长。</p>
-    <div class="promise-stats">
-        <div class="promise-stat">
-            <div class="promise-num">100%</div>
-            <div class="promise-label">透明公开</div>
+<!-- FAQ -->
+<section style="background: white; padding: 70px 20px;">
+    <div style="text-align:center;margin-bottom:50px;">
+        <div class="section-title">常见问题</div>
+        <div class="section-sub">有疑问？我们诚实回答</div>
+    </div>
+    <div style="max-width: 760px; margin: 0 auto;">
+        <div class="faq-item" style="border: 1px solid #e5e7eb; border-radius: 12px; margin-bottom: 12px; overflow: hidden;">
+            <button onclick="toggleFaq(this)" style="width: 100%; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer; font-size: 1em; font-weight: 600; color: #333; text-align: left;">
+                <span>收益目标是保证的吗？</span><span style="color: #667eea; font-size: 1.2em; transition: transform 0.3s;">＋</span>
+            </button>
+            <div style="display: none; padding: 0 24px 20px; color: #555; line-height: 1.8;">
+                不是。我们的季度目标（美股10%/A股15%）是基于AI分析的合理预期，<strong>不构成投资建议或收益承诺</strong>。如2026-Q1美股周期所示，市场下跌时我们会如实披露亏损（-5.64%）并主动说明原因。诚信是我们唯一的承诺。
+            </div>
         </div>
-        <div class="promise-stat">
-            <div class="promise-num">15%</div>
-            <div class="promise-label">A股季度目标收益</div>
+        <div class="faq-item" style="border: 1px solid #e5e7eb; border-radius: 12px; margin-bottom: 12px; overflow: hidden;">
+            <button onclick="toggleFaq(this)" style="width: 100%; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer; font-size: 1em; font-weight: 600; color: #333; text-align: left;">
+                <span>我需要自己操盘吗？</span><span style="color: #667eea; font-size: 1.2em; transition: transform 0.3s;">＋</span>
+            </button>
+            <div style="display: none; padding: 0 24px 20px; color: #555; line-height: 1.8;">
+                需要。我们提供AI分析的投资组合建议和操盘参考，但您需要在自己的证券账户中自行下单。我们不代客理财，不接触您的资金。
+            </div>
         </div>
-        <div class="promise-stat">
-            <div class="promise-num">10%</div>
-            <div class="promise-label">美股季度目标收益</div>
+        <div class="faq-item" style="border: 1px solid #e5e7eb; border-radius: 12px; margin-bottom: 12px; overflow: hidden;">
+            <button onclick="toggleFaq(this)" style="width: 100%; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer; font-size: 1em; font-weight: 600; color: #333; text-align: left;">
+                <span>亏损了怎么办？</span><span style="color: #667eea; font-size: 1.2em; transition: transform 0.3s;">＋</span>
+            </button>
+            <div style="display: none; padding: 0 24px 20px; color: #555; line-height: 1.8;">
+                我们会在季末报告中主动说明亏损原因，分析市场环境，并制定下季补偿策略。不逃避、不掩盖是我们的原则。2026-Q1美股亏损周期就是最好的证明。
+            </div>
         </div>
-        <div class="promise-stat">
-            <div class="promise-num">99%</div>
-            <div class="promise-label">目标续费率</div>
+        <div class="faq-item" style="border: 1px solid #e5e7eb; border-radius: 12px; margin-bottom: 12px; overflow: hidden;">
+            <button onclick="toggleFaq(this)" style="width: 100%; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer; font-size: 1em; font-weight: 600; color: #333; text-align: left;">
+                <span>可以中途退款吗？</span><span style="color: #667eea; font-size: 1.2em; transition: transform 0.3s;">＋</span>
+            </button>
+            <div style="display: none; padding: 0 24px 20px; color: #555; line-height: 1.8;">
+                订阅服务一旦开始即不退款，但您可以随时停止续订。建议先选择季付版体验，满意后再考虑年付套餐。
+            </div>
+        </div>
+        <div class="faq-item" style="border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
+            <button onclick="toggleFaq(this)" style="width: 100%; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer; font-size: 1em; font-weight: 600; color: #333; text-align: left;">
+                <span>支持哪些支付方式？</span><span style="color: #667eea; font-size: 1.2em; transition: transform 0.3s;">＋</span>
+            </button>
+            <div style="display: none; padding: 0 24px 20px; color: #555; line-height: 1.8;">
+                目前支持 PayPal（国际版），微信支付/支付宝（A股版，即将上线）。如有其他支付需求，请联系 legal@aiopenfortune.com。
+            </div>
         </div>
     </div>
-    <div style="margin-top:40px;">
-        <a href="index.html#pricing" style="background:white;color:#667eea;padding:14px 40px;border-radius:30px;font-weight:700;font-size:1.1em;text-decoration:none;display:inline-block;box-shadow:0 4px 20px rgba(0,0,0,0.15);">立即开启创富之旅 →</a>
+</section>
+
+<!-- 创富约定 -->
+<section style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 70px 20px; text-align: center; color: white;">
+    <h2 style="font-size: 2.2em; margin-bottom: 16px;">我们（YOU & AI）的创富约定</h2>
+    <p style="font-size: 1.1em; opacity: 0.9; max-width: 600px; margin: 0 auto 40px; line-height: 1.8;">全程长跑，双向奔赴，慢慢变富，见证成长。</p>
+    <div style="display: flex; justify-content: center; gap: 50px; flex-wrap: wrap; margin-bottom: 40px;">
+        <div style="text-align: center;">
+            <div style="font-size: 3em; font-weight: bold;">100%</div>
+            <div style="font-size: 0.9em; opacity: 0.85; margin-top: 4px;">透明公开</div>
+        </div>
+        <div style="text-align: center;">
+            <div style="font-size: 3em; font-weight: bold;">4年</div>
+            <div style="font-size: 0.9em; opacity: 0.85; margin-top: 4px;">深度陪跑目标</div>
+        </div>
+        <div style="text-align: center;">
+            <div style="font-size: 3em; font-weight: bold;">15%</div>
+            <div style="font-size: 0.9em; opacity: 0.85; margin-top: 4px;">A股季度目标</div>
+        </div>
+        <div style="text-align: center;">
+            <div style="font-size: 3em; font-weight: bold;">10%</div>
+            <div style="font-size: 0.9em; opacity: 0.85; margin-top: 4px;">美股季度目标</div>
+        </div>
     </div>
+    <a href="index.html#pricing" style="background: white; color: #667eea; padding: 14px 40px; border-radius: 30px; font-weight: 700; font-size: 1.1em; text-decoration: none; display: inline-block; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">立即开启创富之旅 →</a>
 </section>
 
 <!-- 底部 -->
-<div class="footer">
-    <strong style="color:#aaa;">免责声明 / DISCLAIMER</strong><br>
+<div style="background: #1a1a2e; color: #888; text-align: center; padding: 30px 20px; font-size: 0.85em; line-height: 2;">
+    <strong style="color: #aaa;">免责声明 / DISCLAIMER</strong><br>
     本平台仅提供AI驱动投资组合咨询及教育性信息服务，不受任何金融监管机构监管。<br>
     本平台所有内容均不构成投资建议。投资有风险，过往业绩不代表未来收益。<br><br>
     © 2026 AI Open Fortune. All rights reserved. |
-    <a href="terms.html">服务条款</a> |
-    <a href="index.html">全球版</a> |
-    <a href="cn.html">A股版</a> |
-    联系我们：<a href="mailto:legal@aiopenfortune.com">legal@aiopenfortune.com</a>
+    <a href="index.html" style="color: #667eea; text-decoration: none;">全球版</a> |
+    <a href="cn.html" style="color: #667eea; text-decoration: none;">A股版</a> |
+    联系我们：<a href="mailto:legal@aiopenfortune.com" style="color: #667eea; text-decoration: none;">legal@aiopenfortune.com</a>
 </div>
 
+<script>
+function switchPlan(type) {
+    const isAnnual = type === 'annual';
+    document.getElementById('btnQuarterly').style.background = isAnnual ? 'transparent' : 'linear-gradient(135deg,#667eea,#764ba2)';
+    document.getElementById('btnQuarterly').style.color = isAnnual ? '#666' : 'white';
+    document.getElementById('btnAnnual').style.background = isAnnual ? 'linear-gradient(135deg,#667eea,#764ba2)' : 'transparent';
+    document.getElementById('btnAnnual').style.color = isAnnual ? 'white' : '#666';
+
+    ['basic','pro','elite'].forEach(p => {
+        document.getElementById(`price-${p}-quarterly`).style.display = isAnnual ? 'none' : 'inline';
+        document.getElementById(`price-${p}-annual`).style.display = isAnnual ? 'inline' : 'none';
+        document.getElementById(`save-${p}`).style.display = isAnnual ? 'block' : 'none';
+    });
+}
+
+function toggleFaq(btn) {
+    const content = btn.nextElementSibling;
+    const icon = btn.querySelector('span:last-child');
+    const isOpen = content.style.display === 'block';
+    content.style.display = isOpen ? 'none' : 'block';
+    icon.textContent = isOpen ? '＋' : '－';
+    icon.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(0deg)';
+}
+</script>
 </body>
 </html>
