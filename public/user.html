@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户中心 - AI创富</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif; background: #f8f9ff; min-height: 100vh; }
+
+        /* 顶部导航 */
+        .nav { background: white; padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+        .nav-logo { font-size: 1.4em; font-weight: bold; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+        .nav-links { display: flex; gap: 15px; align-items: center; }
+        .nav-links a { text-decoration: none; color: #555; font-size: 0.95em; transition: color 0.2s; }
+        .nav-links a:hover { color: #667eea; }
+        .nav-btn { background: linear-gradient(135deg, #667eea, #764ba2); color: white !important; padding: 8px 20px; border-radius: 20px; font-size: 0.9em; font-weight: 600; }
+        .logout-btn { background: none; border: 1px solid #e5e7eb; color: #666 !important; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.9em; }
+
+        /* 主体 */
+        .main { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+
+        /* 用户信息头部 */
+        .profile-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 35px; color: white; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+        .profile-avatar { width: 72px; height: 72px; border-radius: 50%; background: rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 2em; border: 3px solid rgba(255,255,255,0.5); }
+        .profile-info { flex: 1; margin-left: 20px; }
+        .profile-name { font-size: 1.6em; font-weight: bold; margin-bottom: 5px; }
+        .profile-email { opacity: 0.9; font-size: 0.95em; }
+        .profile-badge { background: rgba(255,255,255,0.25); border: 2px solid rgba(255,255,255,0.5); border-radius: 30px; padding: 6px 18px; font-size: 0.9em; font-weight: 600; }
+
+        /* 卡片 */
+        .card { background: white; border-radius: 14px; padding: 28px; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+        .card-title { font-size: 1.1em; font-weight: 700; color: #333; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+
+        /* 订阅状态 */
+        .sub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+        .sub-item { background: #f9fafb; border-radius: 10px; padding: 18px; text-align: center; }
+        .sub-label { font-size: 0.85em; color: #6b7280; margin-bottom: 8px; }
+        .sub-value { font-size: 1.3em; font-weight: bold; color: #333; }
+        .sub-value.active { color: #10b981; }
+        .sub-value.expired { color: #ef4444; }
+        .sub-value.free { color: #6b7280; }
+
+        /* 进度条 */
+        .progress-wrap { margin-top: 16px; }
+        .progress-label { display: flex; justify-content: space-between; font-size: 0.85em; color: #6b7280; margin-bottom: 6px; }
+        .progress-bar { height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #667eea, #764ba2); transition: width 0.5s ease; }
+
+        /* 历史订单 */
+        .order-list { list-style: none; }
+        .order-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #f3f4f6; }
+        .order-item:last-child { border-bottom: none; }
+        .order-plan { font-weight: 600; color: #333; }
+        .order-date { font-size: 0.85em; color: #6b7280; margin-top: 3px; }
+        .order-amount { font-weight: bold; color: #667eea; }
+        .order-status { font-size: 0.8em; padding: 4px 10px; border-radius: 12px; }
+        .status-paid { background: #d1fae5; color: #065f46; }
+        .status-pending { background: #fef9c3; color: #854d0e; }
+
+        /* 快捷操作 */
+        .action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+        .action-btn { display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; text-decoration: none; color: #333; transition: all 0.2s; cursor: pointer; }
+        .action-btn:hover { border-color: #667eea; background: #eff6ff; }
+        .action-icon { font-size: 1.5em; }
+        .action-text { font-size: 0.95em; font-weight: 500; }
+
+        /* 空状态 */
+        .empty { text-align: center; padding: 30px; color: #9ca3af; }
+
+        /* 升级提示 */
+        .upgrade-banner { background: linear-gradient(135deg, #fef3c7, #fff8e7); border: 2px solid #f59e0b; border-radius: 12px; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; }
+        .upgrade-text h3 { color: #92400e; font-size: 1em; margin-bottom: 4px; }
+        .upgrade-text p { color: #b45309; font-size: 0.9em; }
+        .upgrade-link { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 10px 24px; border-radius: 20px; text-decoration: none; font-weight: 600; font-size: 0.9em; white-space: nowrap; }
+
+        @media (max-width: 600px) {
+            .nav { padding: 12px 16px; }
+            .profile-header { flex-direction: column; text-align: center; }
+            .profile-info { margin-left: 0; margin-top: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 导航 -->
+<nav class="nav">
+    <a href="index.html" class="nav-logo">🚀 AI创富</a>
+    <div class="nav-links">
+        <a href="index.html">全球版</a>
+        <a href="cn.html">A股版</a>
+        <a href="service.html">服务流程</a>
+        <button class="logout-btn" onclick="logout()">退出登录</button>
+    </div>
+</nav>
+
+<!-- 主体 -->
+<div class="main">
+
+    <!-- 未登录提示 -->
+    <div id="loginPrompt" style="display:none; text-align:center; padding:60px 20px;">
+        <div style="font-size:3em; margin-bottom:20px;">🔐</div>
+        <h2 style="color:#333; margin-bottom:10px;">请先登录</h2>
+        <p style="color:#666; margin-bottom:25px;">登录后即可查看您的订阅信息</p>
+        <a href="index.html" style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:12px 30px;border-radius:20px;text-decoration:none;font-weight:600;">前往登录</a>
+    </div>
+
+    <!-- 用户中心内容 -->
+    <div id="userCenter" style="display:none;">
+
+        <!-- 用户信息头部 -->
+        <div class="profile-header">
+            <div style="display:flex;align-items:center;">
+                <div class="profile-avatar" id="avatarEl">👤</div>
+                <div class="profile-info">
+                    <div class="profile-name" id="nameEl">-</div>
+                    <div class="profile-email" id="emailEl">-</div>
+                </div>
+            </div>
+            <div class="profile-badge" id="planBadgeEl">免费版</div>
+        </div>
+
+        <!-- 订阅状态 -->
+        <div class="card">
+            <div class="card-title">📊 订阅状态</div>
+            <div class="sub-grid">
+                <div class="sub-item">
+                    <div class="sub-label">当前套餐</div>
+                    <div class="sub-value" id="planEl">-</div>
+                </div>
+                <div class="sub-item">
+                    <div class="sub-label">市场版本</div>
+                    <div class="sub-value" id="marketEl">-</div>
+                </div>
+                <div class="sub-item">
+                    <div class="sub-label">到期时间</div>
+                    <div class="sub-value" id="expiresEl">-</div>
+                </div>
+                <div class="sub-item">
+                    <div class="sub-label">账户状态</div>
+                    <div class="sub-value active" id="statusEl">-</div>
+                </div>
+            </div>
+            <div class="progress-wrap" id="progressWrap" style="display:none;">
+                <div class="progress-label">
+                    <span>订阅进度</span>
+                    <span id="progressText"></span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 免费版升级提示 -->
+        <div class="upgrade-banner" id="upgradeBanner" style="display:none; margin-bottom:20px;">
+            <div class="upgrade-text">
+                <h3>🚀 升级套餐，解锁全部功能</h3>
+                <p>AI创富陪跑，季季高升，一起开启AI共创人生！</p>
+            </div>
+            <a href="service.html" class="upgrade-link">查看套餐 →</a>
+        </div>
+
+        <!-- 快捷操作 -->
+        <div class="card">
+            <div class="card-title">⚡ 快捷操作</div>
+            <div class="action-grid">
+                <a href="index.html" class="action-btn">
+                    <span class="action-icon">🌍</span>
+                    <span class="action-text">全球版行情</span>
+                </a>
+                <a href="cn.html" class="action-btn">
+                    <span class="action-icon">🇨🇳</span>
+                    <span class="action-text">A股版行情</span>
+                </a>
+                <a href="service.html" class="action-btn">
+                    <span class="action-icon">📋</span>
+                    <span class="action-text">服务流程</span>
+                </a>
+                <div class="action-btn" onclick="changePassword()">
+                    <span class="action-icon">🔑</span>
+                    <span class="action-text">修改密码</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 历史订单 -->
+        <div class="card">
+            <div class="card-title">📜 订单记录</div>
+            <ul class="order-list" id="orderList">
+                <div class="empty">暂无订单记录</div>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        document.getElementById('loginPrompt').style.display = 'block';
+    } else {
+        loadUserInfo();
+    }
+
+    async function loadUserInfo() {
+        try {
+            const res = await fetch('https://aiopenfortune.com/api/auth/me', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+
+            if (!res.ok) {
+                localStorage.removeItem('token');
+                document.getElementById('loginPrompt').style.display = 'block';
+                return;
+            }
+
+            const data = await res.json();
+            const user = data.user || data;
+
+            document.getElementById('userCenter').style.display = 'block';
+
+            // 基本信息
+            document.getElementById('nameEl').textContent = user.name || '-';
+            document.getElementById('emailEl').textContent = user.email || '-';
+            document.getElementById('avatarEl').textContent = (user.name || 'U').charAt(0).toUpperCase();
+
+            // 套餐
+            const planNames = { free: '免费版', basic: '🌱 入门版', pro: '⚡ 专业版', elite: '👑 精英版' };
+            const planName = planNames[user.plan] || user.plan || '免费版';
+            document.getElementById('planEl').textContent = planName;
+            document.getElementById('planBadgeEl').textContent = planName;
+
+            // 市场
+            const marketNames = { cn: '🇨🇳 A股版', global: '🌍 全球版' };
+            document.getElementById('marketEl').textContent = marketNames[user.market] || user.market || '-';
+
+            // 到期时间
+            const expires = user.plan_expires || user.expires;
+            if (expires && user.plan !== 'free') {
+                const expDate = new Date(expires);
+                const today = new Date();
+                const daysLeft = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
+                document.getElementById('expiresEl').textContent = expires;
+
+                if (daysLeft > 0) {
+                    document.getElementById('statusEl').textContent = `有效 (剩余${daysLeft}天)`;
+                    document.getElementById('statusEl').className = 'sub-value active';
+
+                    // 进度条（假设季度90天）
+                    const totalDays = 90;
+                    const usedPercent = Math.max(0, Math.min(100, ((totalDays - daysLeft) / totalDays * 100)));
+                    document.getElementById('progressWrap').style.display = 'block';
+                    document.getElementById('progressFill').style.width = usedPercent + '%';
+                    document.getElementById('progressText').textContent = `剩余 ${daysLeft} 天`;
+                } else {
+                    document.getElementById('expiresEl').className = 'sub-value expired';
+                    document.getElementById('statusEl').textContent = '已过期';
+                    document.getElementById('statusEl').className = 'sub-value expired';
+                }
+            } else {
+                document.getElementById('expiresEl').textContent = '—';
+                document.getElementById('statusEl').textContent = '免费版';
+                document.getElementById('statusEl').className = 'sub-value free';
+                document.getElementById('upgradeBanner').style.display = 'flex';
+            }
+
+            // 加载订单
+            loadOrders();
+
+        } catch (e) {
+            console.error('加载用户信息失败:', e);
+            document.getElementById('loginPrompt').style.display = 'block';
+        }
+    }
+
+    async function loadOrders() {
+        try {
+            const res = await fetch('https://aiopenfortune.com/api/cn-payment/orders', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (!res.ok) return;
+            const orders = await res.json();
+
+            if (orders && orders.length > 0) {
+                const planNames = { basic: '入门版', pro: '专业版', elite: '精英版' };
+                document.getElementById('orderList').innerHTML = orders.map(o => `
+                    <li class="order-item">
+                        <div>
+                            <div class="order-plan">${planNames[o.plan] || o.plan}</div>
+                            <div class="order-date">${o.created_at?.substring(0, 10) || '-'}</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div class="order-amount">${o.currency === 'CNY' ? '¥' : '$'}${o.amount}</div>
+                            <span class="order-status ${o.status === 'paid' ? 'status-paid' : 'status-pending'}">${o.status === 'paid' ? '✅ 已支付' : '⏳ 待支付'}</span>
+                        </div>
+                    </li>
+                `).join('');
+            }
+        } catch (e) { /* 静默失败 */ }
+    }
+
+    function changePassword() {
+        const email = document.getElementById('emailEl').textContent;
+        if (!email) return;
+
+        fetch('https://aiopenfortune.com/api/password/request', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        }).then(() => {
+            alert('✅ 密码重置邮件已发送，请查收邮箱！');
+        }).catch(() => {
+            alert('❌ 发送失败，请稍后重试');
+        });
+    }
+
+    function logout() {
+        if (confirm('确定退出登录？')) {
+            localStorage.removeItem('token');
+            window.location.href = 'index.html';
+        }
+    }
+</script>
+</body>
+</html>

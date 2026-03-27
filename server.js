@@ -26,6 +26,7 @@ require('./services/db');
 
 // ── 路由 ─────────────────────────────────────────────
 app.use('/api/auth',        require('./routes/auth'));
+app.use('/api/password',    require('./routes/password'));
 app.use('/api/payment',     require('./routes/payment'));
 app.use('/api/cn-payment',  require('./routes/cn_payment'));
 app.use('/api/admin',       require('./routes/admin'));

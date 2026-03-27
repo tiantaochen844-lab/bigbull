@@ -150,6 +150,22 @@ router.post('/notify', express.urlencoded({ extended: true }), async (req, res) 
 });
 
 // ─────────────────────────────────────
+// GET /api/cn-payment/orders - 查询用户所有订单
+router.get('/orders', (req, res) => {
+  const user = getUser(req);
+  if (!user) return res.status(401).json({ error: '未授权' });
+
+  db.all(
+    `SELECT order_id, plan, amount, currency, status, payment_provider, created_at
+     FROM orders WHERE user_id=? ORDER BY created_at DESC LIMIT 20`,
+    [user.id],
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: '查询失败' });
+      res.json(rows || []);
+    }
+  );
+});
+
 // GET /api/cn-payment/status/:orderId
 // 查询订单状态（前端轮询用）
 // ─────────────────────────────────────

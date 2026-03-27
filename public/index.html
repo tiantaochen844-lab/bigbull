@@ -117,6 +117,7 @@
                     <input type="email" id="loginEmail" placeholder="Email" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box;">
                     <input type="password" id="loginPassword" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box;">
                     <button onclick="handleLogin()" style="width: 100%; padding: 10px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Login</button>
+                    <div style="text-align:center;margin-top:10px;"><a href="#" onclick="forgotPassword();return false;" style="color:#667eea;font-size:0.9em;text-decoration:none;">Forgot password?</a></div>
                 </div>
                 <div id="signupForm" style="display: none;">
                     <input type="text" id="signupName" placeholder="Your Name" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box;">
@@ -631,7 +632,7 @@
             if (token) {
                 document.getElementById('authBtn').style.display = 'none';
                 document.getElementById('userInfo').style.display = 'inline-block';
-                document.getElementById('userInfo').innerHTML = `${user.email || 'User'} <button onclick="logout()" style="margin-left:8px;padding:4px 10px;background:#f5576c;color:white;border:none;border-radius:12px;cursor:pointer;font-size:0.85em;">退出</button>`;
+                document.getElementById('userInfo').innerHTML = `<a href="user.html" style="color:#667eea;font-weight:600;text-decoration:none;">👤 ${user.name || user.email}</a> <button onclick="logout()" style="margin-left:8px;padding:4px 10px;background:#f5576c;color:white;border:none;border-radius:12px;cursor:pointer;font-size:0.85em;">退出</button>`;
             } else {
                 document.getElementById('authBtn').style.display = 'block';
                 document.getElementById('userInfo').style.display = 'none';
@@ -642,6 +643,21 @@
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             updateAuthUI();
+        }
+
+        async function forgotPassword() {
+            const email = prompt('请输入您的注册邮箱：');
+            if (!email) return;
+            try {
+                const res = await fetch('https://aiopenfortune.com/api/password/request', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                alert('✅ 如果该邮箱已注册，您将收到重置密码邮件，请查收！');
+            } catch (e) {
+                alert('❌ 发送失败，请重试');
+            }
         }
 
         updateAuthUI();
