@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI创富理念 - AI创富</title>
+    <meta name="description" content="AI创富的投资理念：用人工智能驱动的量化策略，实现稳健、透明、可持续的财富增长。">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif; background: #f8f9ff; color: #333; }
+
+        /* 导航 */
+        .nav { background: white; padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 12px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; }
+        .nav-logo { font-size: 1.4em; font-weight: bold; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+        .nav-links { display: flex; gap: 20px; align-items: center; }
+        .nav-links a { text-decoration: none; color: #555; font-size: 0.95em; transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: #f5576c; font-weight: 600; }
+
+        /* 英雄区 */
+        .hero { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 100px 40px 80px; text-align: center; color: white; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%); }
+        .hero-tag { display: inline-block; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); border-radius: 20px; padding: 6px 20px; font-size: 0.9em; margin-bottom: 20px; }
+        .hero h1 { font-size: 3em; font-weight: 800; margin-bottom: 20px; line-height: 1.2; }
+        .hero p { font-size: 1.2em; opacity: 0.95; max-width: 700px; margin: 0 auto 40px; line-height: 1.8; }
+        .hero-cta { display: inline-flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+        .btn-primary { background: white; color: #f5576c; padding: 14px 32px; border-radius: 30px; text-decoration: none; font-weight: 700; font-size: 1em; transition: all 0.3s; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+        .btn-outline { background: transparent; color: white; border: 2px solid white; padding: 14px 32px; border-radius: 30px; text-decoration: none; font-weight: 600; font-size: 1em; transition: all 0.3s; }
+        .btn-outline:hover { background: white; color: #f5576c; }
+
+        /* 内容区 */
+        .section { max-width: 1000px; margin: 0 auto; padding: 80px 30px; }
+        .section-tag { display: inline-block; background: #fff0f5; color: #f5576c; border-radius: 20px; padding: 5px 16px; font-size: 0.85em; font-weight: 600; margin-bottom: 12px; }
+        .section-title { font-size: 2.2em; font-weight: 800; color: #1a1a2e; margin-bottom: 16px; }
+        .section-subtitle { font-size: 1.1em; color: #6b7280; line-height: 1.8; margin-bottom: 50px; }
+
+        /* 核心理念卡片 */
+        .principles-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 60px; max-width: 900px; margin-left: auto; margin-right: auto; }
+        .principle-card { background: white; border-radius: 16px; padding: 32px; border: 1px solid #e5e7eb; transition: all 0.3s; }
+        .principle-card:hover { border-color: #f5576c; box-shadow: 0 8px 30px rgba(245,87,108,0.15); transform: translateY(-4px); }
+        .principle-icon { font-size: 2.5em; margin-bottom: 16px; }
+        .principle-title { font-size: 1.2em; font-weight: 700; color: #1a1a2e; margin-bottom: 10px; }
+        .principle-text { color: #6b7280; line-height: 1.8; font-size: 0.95em; }
+
+        /* AI 能力展示 */
+        .ai-section { background: linear-gradient(135deg, #fff0f5, #fdf0ff); border-radius: 24px; padding: 60px 50px; margin-bottom: 60px; }
+        .ai-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+        .ai-left h2 { font-size: 2em; font-weight: 800; color: #1a1a2e; margin-bottom: 20px; }
+        .ai-left p { color: #6b7280; line-height: 1.9; font-size: 1em; }
+        .ai-features { list-style: none; margin-top: 24px; display: flex; flex-direction: column; gap: 12px; }
+        .ai-features li { display: flex; align-items: flex-start; gap: 10px; color: #444; font-size: 0.95em; }
+        .ai-features li::before { content: '✦'; color: #f5576c; font-size: 0.8em; margin-top: 3px; flex-shrink: 0; }
+        .ai-right { display: flex; flex-direction: column; gap: 16px; }
+        .ai-stat { background: white; border-radius: 12px; padding: 20px 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+        .ai-stat-value { font-size: 2em; font-weight: 800; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .ai-stat-label { color: #6b7280; font-size: 0.9em; margin-top: 4px; }
+
+        /* 投资流程 */
+        .flow-section { margin-bottom: 60px; }
+        .flow-steps { display: flex; flex-direction: column; gap: 0; }
+        .flow-step { display: flex; gap: 30px; align-items: flex-start; padding: 30px 0; border-bottom: 1px solid #f3f4f6; }
+        .flow-step:last-child { border-bottom: none; }
+        .step-num { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.3em; font-weight: 800; flex-shrink: 0; }
+        .step-content h3 { font-size: 1.15em; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+        .step-content p { color: #6b7280; line-height: 1.8; font-size: 0.95em; }
+
+        /* 诚信承诺 */
+        .promise-section { background: #1a1a2e; border-radius: 24px; padding: 60px 50px; color: white; margin-bottom: 60px; text-align: center; }
+        .promise-section h2 { font-size: 2em; font-weight: 800; margin-bottom: 16px; }
+        .promise-section p { opacity: 0.85; font-size: 1.05em; line-height: 1.9; max-width: 720px; margin: 0 auto 40px; }
+        .promise-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 780px; margin: 0 auto; }
+        .promise-item { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 28px; }
+        .promise-item .emoji { font-size: 2em; margin-bottom: 10px; }
+        .promise-item h4 { font-size: 1em; font-weight: 700; margin-bottom: 8px; }
+        .promise-item p { font-size: 0.88em; opacity: 0.8; line-height: 1.7; }
+
+        /* CTA */
+        .cta-section { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 24px; padding: 60px 40px; text-align: center; color: white; }
+        .cta-section h2 { font-size: 2.2em; font-weight: 800; margin-bottom: 16px; }
+        .cta-section p { font-size: 1.1em; opacity: 0.95; margin-bottom: 35px; line-height: 1.7; }
+
+        /* 页脚 */
+        footer { background: #1a1a2e; color: #888; text-align: center; padding: 30px 20px; font-size: 0.85em; line-height: 2; }
+        footer strong { color: #aaa; }
+        footer a { color: #f5576c; text-decoration: none; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2em; }
+            .ai-grid { grid-template-columns: 1fr; }
+            .nav { padding: 12px 16px; }
+            .nav-links { gap: 12px; }
+            .section { padding: 50px 20px; }
+            .ai-section, .promise-section { padding: 40px 25px; }
+            .principles-grid { grid-template-columns: 1fr; }
+            .promise-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 导航 -->
+<nav class="nav">
+    <a href="cn.html" class="nav-logo">🚀 AI创富</a>
+    <div class="nav-links">
+        <a href="cn.html">A股版</a>
+        <a href="index.html">国际版</a>
+        <a href="philosophy-cn.html" class="active">AI创富理念</a>
+        <a href="service-cn.html">服务流程</a>
+        <a href="user.html">用户中心</a>
+    </div>
+</nav>
+
+<!-- 英雄区 -->
+<section class="hero">
+    <div class="hero-tag">🤖 AI驱动 · 长期主义 · 透明共创</div>
+    <h1>AI创富理念</h1>
+    <p>我们相信：真正的财富来自认知的升维。用人工智能洞见市场规律，用数据驱动每一个决策，用透明重塑每一段信任关系。</p>
+    <div class="hero-cta">
+        <a href="service-cn.html" class="btn-primary">一起开启AI共创人生 →</a>
+        <a href="cn.html" class="btn-outline">查看实时行情</a>
+    </div>
+</section>
+
+<!-- 核心理念 -->
+<div class="section">
+    <div class="section-tag">核心理念</div>
+    <div class="section-title">四大支柱，稳健前行</div>
+    <div class="section-subtitle">AI Open Fortune 不做短期炒作，只做长期陪跑。这四个原则是我们所有决策的底层逻辑。</div>
+    <div class="principles-grid">
+        <div class="principle-card">
+            <div class="principle-icon">🔍</div>
+            <div class="principle-title">数据驱动，消除情绪</div>
+            <div class="principle-text">投资最大的敌人是情绪。AI不会恐惧，不会贪婪，不会因昨晚的新闻改变既定策略。每一个买卖决策，都来自多维度的量化模型，而不是直觉与冲动。</div>
+        </div>
+        <div class="principle-card">
+            <div class="principle-icon">🛡️</div>
+            <div class="principle-title">风控优先，守住本金</div>
+            <div class="principle-text">再好的策略都有回撤。我们的AI风控系统实时监控持仓风险，设定严格的止损线，确保每一次市场波动都在可控范围内，守住本金是一切收益的前提。</div>
+        </div>
+        <div class="principle-card">
+            <div class="principle-icon">💎</div>
+            <div class="principle-title">透明共创，双向奔赴</div>
+            <div class="principle-text">业绩好的时候我们公开庆祝，亏损的季度我们照实披露。没有美化，没有选择性展示。只有真实的数据，才能建立真实的信任。</div>
+        </div>
+        <div class="principle-card">
+            <div class="principle-icon">🌱</div>
+            <div class="principle-title">长期主义，复利为王</div>
+            <div class="principle-text">我们不追求一夜暴富，只追求持续稳健的复利增长。短期波动是噪音，长期趋势才是信号。每一季度的积累，都是通向财务自由的阶梯。</div>
+        </div>
+    </div>
+
+    <!-- AI 能力 -->
+    <div class="ai-section">
+        <div class="ai-grid">
+            <div class="ai-left">
+                <h2>AI如何为你创富？</h2>
+                <p>我们的AI系统7×24小时不间断扫描全球市场，实时处理数千只股票的多维度数据，捕捉人类难以察觉的规律与机会。</p>
+                <ul class="ai-features">
+                    <li>实时解析财报、新闻、情绪数据，快于人类100倍</li>
+                    <li>多因子量化模型，综合基本面+技术面+市场情绪</li>
+                    <li>自动调仓再平衡，每月动态优化持仓结构</li>
+                    <li>AI调整策略，遭遇亏损季后智能对冲守恒</li>
+                    <li>每周推送持仓报告，透明展示每一笔交易理由</li>
+                </ul>
+            </div>
+            <div class="ai-right">
+                <div class="ai-stat">
+                    <div class="ai-stat-value">7×24h</div>
+                    <div class="ai-stat-label">AI 不间断监控市场</div>
+                </div>
+                <div class="ai-stat">
+                    <div class="ai-stat-value">3,000+</div>
+                    <div class="ai-stat-label">每日扫描标的数量</div>
+                </div>
+                <div class="ai-stat">
+                    <div class="ai-stat-value">50+</div>
+                    <div class="ai-stat-label">量化因子综合评估</div>
+                </div>
+                <div class="ai-stat">
+                    <div class="ai-stat-value">100ms</div>
+                    <div class="ai-stat-label">信号响应速度</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 投资流程 -->
+    <div class="flow-section">
+        <div class="section-tag">运作流程</div>
+        <div class="section-title">每一分钱如何为你工作</div>
+        <div style="margin-bottom:40px;"></div>
+        <div class="flow-steps">
+            <div class="flow-step">
+                <div class="step-num">01</div>
+                <div class="step-content">
+                    <h3>AI扫描 · 每日选股</h3>
+                    <p>AI每日扫描A股/美股数千只标的，结合财务健康度、成长性、技术趋势、市场情绪等50+因子，筛选出当前最优质的投资机会清单。</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="step-num">02</div>
+                <div class="step-content">
+                    <h3>策略制定 · 组合构建</h3>
+                    <p>根据你的订阅版本，AI为你构建一个分散化的投资组合，综合考虑行业配比、市值分布、风险敞口，最大化风险调整后收益。</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="step-num">03</div>
+                <div class="step-content">
+                    <h3>实时监控 · 动态调仓</h3>
+                    <p>每月至少一次系统性再平衡，触发特定事件（业绩变动、价格突破止损线等）时即时调整。每一笔操作都有明确的量化逻辑支撑。</p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="step-num">04</div>
+                <div class="step-content">
+                    <h3>透明报告 · 共同成长</h3>
+                    <p>每周推送持仓周报，每季度出具完整收益报告。好的季度一起欢呼，亏损的季度如实说明原因并启动AI调整策略，永远不回避，永远不美化。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 诚信承诺 -->
+    <div class="promise-section">
+        <h2>🤝 我们的约定</h2>
+        <p>AI创富不是一个稳赚不赔的神话。市场有风险，选择需谨慎。但一旦决定：就让我们用先进的AI技术、透明的信息共享、真诚的长期陪伴，一起穿越每一个市场周期，见证财富共创的奇迹。</p>
+        <div class="promise-grid">
+            <div class="promise-item">
+                <div class="emoji">📊</div>
+                <h4>真实业绩，从不美化</h4>
+                <p>亏损季度照样公开，不做选择性展示</p>
+            </div>
+            <div class="promise-item">
+                <div class="emoji">🔐</div>
+                <h4>资金安全，独立掌控</h4>
+                <p>你的资金在自己账户，我们只提供策略</p>
+            </div>
+            <div class="promise-item">
+                <div class="emoji">💬</div>
+                <h4>每周周报，全程透明</h4>
+                <p>持仓明细、操作逻辑，事无巨细</p>
+            </div>
+            <div class="promise-item">
+                <div class="emoji">🔄</div>
+                <h4>AI调整策略，守护信任</h4>
+                <p>遭遇亏损季，启动智能对冲方案</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-section">
+        <h2>准备好了吗？</h2>
+        <p>加入AI创富，让AI成为你投资路上最聪明的伙伴。<br>不是一时的热血，是长久的同行。</p>
+        <a href="service-cn.html" class="btn-primary">查看套餐，开启AI共创人生 →</a>
+    </div>
+</div>
+
+<!-- 页脚 -->
+<footer>
+    <strong>免责声明</strong><br>
+    本平台仅提供AI驱动投资组合咨询及教育性信息服务，不受任何金融监管机构监管。<br>
+    本平台所有内容均不构成投资建议。投资有风险，过往业绩不代表未来收益。<br><br>
+    © 2026 AI Open Fortune. All rights reserved. |
+    <a href="cn.html">A股版</a> |
+    <a href="index.html">国际版</a> |
+    联系我们：<a href="mailto:legal@aiopenfortune.com">legal@aiopenfortune.com</a>
+</footer>
+
+</body>
+</html>
