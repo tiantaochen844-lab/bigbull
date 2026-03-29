@@ -4,11 +4,11 @@ const { getHistory, predictFuture } = require('../services/market');
 
 const router = express.Router();
 
-// ── 内存缓存（60秒）防止 Cloudflare 524 超时 ──────────
+// ── 内存缓存（5分钟）防止 Cloudflare 524 超时 ──────────
 const cache = {};
 function getCache(key) {
   const c = cache[key];
-  if (c && Date.now() - c.ts < 60000) return c.data;
+  if (c && Date.now() - c.ts < 300000) return c.data;
   return null;
 }
 function setCache(key, data) {
@@ -221,3 +221,27 @@ router.get('/pricing', (req, res) => res.json([
 ]));
 
 module.exports = router;
+
+// ── 后台预热缓存（启动时 + 每4分钟）────────────────
+async function warmCache() {
+  try {
+    const result = {};
+    await Promise.all(Object.entries(US_STOCKS).map(async ([sym, info]) => {
+      const live = await getUsQuote(sym);
+      result[sym] = {
+        name: info.name, nameEn: info.nameEn,
+        price: live?.price ?? FALLBACK[sym].price,
+        change: live?.change ?? FALLBACK[sym].change,
+        volume: live?.volume ?? FALLBACK[sym].volume,
+        high: live?.high ?? 0, low: live?.low ?? 0,
+        pe: info.pe, live: live?.live ?? false
+      };
+    }));
+    setCache('us_stocks', result);
+    console.log('✅ US stocks cache warmed');
+  } catch(e) {
+    console.log('⚠️ US cache warm failed');
+  }
+}
+module.exports.warmCache = warmCache;
+setInterval(warmCache, 240000);

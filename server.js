@@ -105,8 +105,14 @@ app.get('/api/pricing', (req, res) => res.json([
 ]));
 
 // ── 启动 ──────────────────────────────────────────────
+const usMarket = require('./routes/us_market');
+const cnMarket = require('./routes/cn_market');
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🐂 Open Fortune running on http://0.0.0.0:${PORT}`);
   console.log(`🌍 Access: http://43.133.48.91:${PORT}`);
   console.log(`🇨🇳 A股版: http://43.133.48.91:${PORT}/cn.html`);
+  // 启动后预热行情缓存
+  if (typeof usMarket.warmCache === 'function') usMarket.warmCache();
+  if (typeof cnMarket.warmCnCache === 'function') cnMarket.warmCnCache();
 });

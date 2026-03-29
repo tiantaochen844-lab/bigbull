@@ -3,11 +3,11 @@ const { getSinaQuote } = require('../services/sina');
 const { predictFuture } = require('../services/market');
 const router = express.Router();
 
-// ── 内存缓存（60秒）防止超时 ──────────────────────────
+// ── 内存缓存（5分钟）防止超时 ──────────────────────────
 const cache = {};
 function getCache(key) {
   const c = cache[key];
-  if (c && Date.now() - c.ts < 60000) return c.data;
+  if (c && Date.now() - c.ts < 300000) return c.data;
   return null;
 }
 function setCache(key, data) {
@@ -204,3 +204,27 @@ router.get('/cn/pricing', async (req, res) => {
 });
 
 module.exports = router;
+
+// ── 后台预热缓存（启动时 + 每4分钟）────────────────
+async function warmCnCache() {
+  try {
+    const result = {};
+    await Promise.all(Object.entries(CN_STOCKS).map(async ([symbol, info]) => {
+      const live = await getSinaQuote(info.code);
+      result[symbol] = {
+        symbol, name: info.name,
+        price: live?.price ?? 0, change: live?.change ?? 0,
+        volume: live?.volume ?? '--', pe: info.pe,
+        high: live?.high ?? 0, low: live?.low ?? 0,
+        marketCap: info.marketCap, market: 'cn',
+        live: live?.live ?? false
+      };
+    }));
+    setCache('cn_stocks', result);
+    console.log('✅ CN stocks cache warmed');
+  } catch(e) {
+    console.log('⚠️ CN cache warm failed');
+  }
+}
+module.exports.warmCnCache = warmCnCache;
+setInterval(warmCnCache, 240000);
