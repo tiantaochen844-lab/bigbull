@@ -79,8 +79,8 @@
 </head>
 <body>
     <div class="nav-switch">
-        <a href="philosophy.html" class="nav-btn" style="background:linear-gradient(135deg,#667eea,#764ba2);">💡 AI创富理念</a>
-        <a href="service.html" class="nav-btn">📋 服务流程</a>
+        <a href="philosophy-cn.html" class="nav-btn" style="background:linear-gradient(135deg,#667eea,#764ba2);">💡 AI创富理念</a>
+        <a href="service-cn.html" class="nav-btn">📋 服务流程</a>
         <a href="index.html" class="nav-btn">🌍 Global / 全球版</a>
     </div>
     <div class="container">
@@ -153,30 +153,43 @@
             `;
         }
         async function loadStocks() {
-            const res = await fetch('https://aiopenfortune.com/api/cn/stocks');
-            const stocks = await res.json();
-            
-            // 取前4只A股，2×2布局
-            const stockList = Object.entries(stocks).slice(0, 4);
-            
+            // 先显示骨架屏
             document.getElementById('stocksGrid').innerHTML = `
                 <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:800px;margin:0 auto;">
-                    ${stockList.map(([code, data]) => `
-                        <div class="stock-card" onclick="showForecast('${code}')">
-                            <div class="stock-header"><div class="stock-code">${data.symbol || code}</div></div>
-                            <div class="stock-name">${data.name}</div>
-                            <div class="stock-price">¥${data.price}</div>
-                            <div class="stock-change ${data.change >= 0 ? 'positive' : 'negative'}">
-                                ${data.change >= 0 ? '▲' : '▼'} ${Math.abs(data.change)}%
+                    ${['宁德时代','特变电工','中国平安','美的集团'].map(name => `
+                        <div class="stock-card" style="opacity:0.5">
+                            <div class="stock-name" style="color:#ccc">${name}</div>
+                            <div class="stock-price" style="color:#ccc">¥---</div>
+                            <div class="stock-change" style="color:#ccc">加载中...</div>
+                        </div>`).join('')}
+                </div>`;
+            try {
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), 8000);
+                const res = await fetch('https://aiopenfortune.com/api/cn/stocks', { signal: controller.signal });
+                clearTimeout(timer);
+                const stocks = await res.json();
+                const stockList = Object.entries(stocks).slice(0, 4);
+                document.getElementById('stocksGrid').innerHTML = `
+                    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:800px;margin:0 auto;">
+                        ${stockList.map(([code, data]) => `
+                            <div class="stock-card" onclick="showForecast('${code}')">
+                                <div class="stock-header"><div class="stock-code">${data.symbol || code}</div></div>
+                                <div class="stock-name">${data.name}</div>
+                                <div class="stock-price">¥${data.price}</div>
+                                <div class="stock-change ${data.change >= 0 ? 'positive' : 'negative'}">
+                                    ${data.change >= 0 ? '▲' : '▼'} ${Math.abs(data.change)}%
+                                </div>
+                                <div class="stock-info">
+                                    <span>成交量: ${data.volume}</span>
+                                    <span>市盈率: ${data.pe}</span>
+                                </div>
                             </div>
-                            <div class="stock-info">
-                                <span>成交量: ${data.volume}</span>
-                                <span>市盈率: ${data.pe}</span>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
+                        `).join('')}
+                    </div>`;
+            } catch(e) {
+                document.getElementById('stocksGrid').innerHTML = '<div style="color:#9ca3af;padding:20px;text-align:center;">行情加载失败，请刷新重试</div>';
+            }
         }
         async function loadPortfolio() {
             const res = await fetch('https://aiopenfortune.com/api/cn/portfolio');

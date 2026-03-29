@@ -4,6 +4,17 @@ const { getHistory, predictFuture } = require('../services/market');
 
 const router = express.Router();
 
+// ── 内存缓存（60秒）防止 Cloudflare 524 超时 ──────────
+const cache = {};
+function getCache(key) {
+  const c = cache[key];
+  if (c && Date.now() - c.ts < 60000) return c.data;
+  return null;
+}
+function setCache(key, data) {
+  cache[key] = { data, ts: Date.now() };
+}
+
 // ── 美股标的列表 ─────────────────────────────────────
 const US_STOCKS = {
   AAPL:  { name: '苹果公司',  nameEn: 'Apple Inc.',      pe: 28.5 },
@@ -60,8 +71,11 @@ const US_TRADES = [
   }
 ];
 
-// ── 获取全部美股行情 ──────────────────────────────────
+// ── 获取全部美股行情（带60秒缓存）────────────────────
 router.get('/stocks', async (req, res) => {
+  const cached = getCache('us_stocks');
+  if (cached) return res.json(cached);
+
   const result = {};
   await Promise.all(Object.entries(US_STOCKS).map(async ([sym, info]) => {
     const live = await getUsQuote(sym);
@@ -77,6 +91,7 @@ router.get('/stocks', async (req, res) => {
       live: live?.live ?? false
     };
   }));
+  setCache('us_stocks', result);
   res.json(result);
 });
 

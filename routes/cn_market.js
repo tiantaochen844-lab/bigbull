@@ -3,6 +3,17 @@ const { getSinaQuote } = require('../services/sina');
 const { predictFuture } = require('../services/market');
 const router = express.Router();
 
+// ── 内存缓存（60秒）防止超时 ──────────────────────────
+const cache = {};
+function getCache(key) {
+  const c = cache[key];
+  if (c && Date.now() - c.ts < 60000) return c.data;
+  return null;
+}
+function setCache(key, data) {
+  cache[key] = { data, ts: Date.now() };
+}
+
 // ── A股标的列表 ─────────────────────────────────────
 const CN_STOCKS = {
   '600089': { name: '特变电工', code: 'sh600089', pe: '26.90', marketCap: '1580亿' },
@@ -45,8 +56,11 @@ const REAL_TRADES = [
   }
 ];
 
-// ── 获取A股所有行情 ────────────────────────────────────
+// ── 获取A股所有行情（带60秒缓存）────────────────────
 router.get('/cn/stocks', async (req, res) => {
+  const cached = getCache('cn_stocks');
+  if (cached) return res.json(cached);
+
   const result = {};
   await Promise.all(Object.entries(CN_STOCKS).map(async ([symbol, info]) => {
     const live = await getSinaQuote(info.code);
@@ -64,10 +78,9 @@ router.get('/cn/stocks', async (req, res) => {
       live: live?.live ?? false
     };
   }));
+  setCache('cn_stocks', result);
   res.json(result);
 });
-
-// ── A股个股预测走势 ────────────────────────────────────
 router.get('/cn/forecast/:symbol', async (req, res) => {
   const { symbol } = req.params;
   const info = CN_STOCKS[symbol];

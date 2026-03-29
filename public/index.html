@@ -322,8 +322,19 @@ async function loadUser() {
 
 // ── Stocks ───────────────────────────────────────────
 async function loadStocks() {
+    // 先显示骨架屏，页面不阻塞
+    document.getElementById('stocksGrid').innerHTML = ['AAPL','MSFT','NVDA','TSLA','GOOGL','BABA'].map(code => `
+        <div class="stock-card" style="opacity:0.5">
+            <div class="stock-top"><span class="stock-code">${code}</span><span class="stock-badge">NASDAQ / NYSE</span></div>
+            <div class="stock-name" style="color:#ccc">Loading...</div>
+            <div class="stock-price" style="color:#ccc">$---</div>
+            <div class="stock-change" style="color:#ccc">-- %</div>
+        </div>`).join('');
     try {
-        const res = await fetch(`${API}/api/stocks`);
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 8000);
+        const res = await fetch(`${API}/api/stocks`, { signal: controller.signal });
+        clearTimeout(timer);
         const stocks = await res.json();
         document.getElementById('stocksGrid').innerHTML = Object.entries(stocks).map(([code, d]) => `
             <div class="stock-card">
@@ -344,7 +355,7 @@ async function loadStocks() {
             </div>
         `).join('');
     } catch(e) {
-        document.getElementById('stocksGrid').innerHTML = '<div style="color:#9ca3af;padding:20px;">Unable to load market data.</div>';
+        document.getElementById('stocksGrid').innerHTML = '<div style="color:#9ca3af;padding:20px;">Unable to load market data. Please refresh.</div>';
     }
 }
 
