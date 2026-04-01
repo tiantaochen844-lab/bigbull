@@ -12,8 +12,13 @@ const BASE_URL = 'https://aiopenfortune.com';
 
 // ── PayPal 环境配置 ───────────────────────────────────
 function getPayPalClient() {
-  const clientId     = process.env.PAYPAL_CLIENT_ID     || 'placeholder';
-  const clientSecret = process.env.PAYPAL_CLIENT_SECRET || 'placeholder';
+  const clientId = process.env.PAYPAL_CLIENT_ID;
+  const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
+  
+  if (!clientId || !clientSecret) {
+    throw new Error('PayPal not configured yet. Please set PAYPAL_CLIENT_ID and PAYPAL_CLIENT_SECRET in .env');
+  }
+  
   const env = process.env.PAYPAL_MODE === 'live'
     ? new paypal.core.LiveEnvironment(clientId, clientSecret)
     : new paypal.core.SandboxEnvironment(clientId, clientSecret);
