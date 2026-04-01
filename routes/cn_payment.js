@@ -7,7 +7,7 @@ const { sendMail, subscriptionEmail } = require('../services/mailer');
 const { createXunhupayOrder, verifyXunhupayCallback } = require('../services/xunhupay');
 
 const BASE_URL = process.env.BASE_URL || 'https://aiopenfortune.com';
-const JWT_SECRET = process.env.JWT_SECRET || 'openfortune_secret_2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'openfortune_secret';
 
 // 套餐价格（元）
 const CN_PLANS = {
