@@ -180,7 +180,6 @@
         }
         function showAuthMsg(msg, type) { document.getElementById('authMsg').innerHTML = `<div class="auth-msg ${type}">${msg}</div>`; }
 
-        // 登录
         async function doLogin() {
             const email = document.getElementById('loginEmail').value;
             const pass = document.getElementById('loginPass').value;
@@ -193,7 +192,6 @@
             } catch(e) { showAuthMsg('网络错误', 'error'); }
         }
 
-        // 注册
         async function doSignup() {
             const name = document.getElementById('regName').value;
             const email = document.getElementById('regEmail').value;
