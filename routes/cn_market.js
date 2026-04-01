@@ -197,9 +197,30 @@ router.get('/cn/portfolio', async (req, res) => {
 // ── 订阅定价 ──────────────────────────────────────────
 router.get('/cn/pricing', async (req, res) => {
   res.json([
-    { id: 'starter', name: '入门版', price: '199', period: '季度', recommended: false, features: ['实时A股行情', 'AI走势预测', '季度投资组合建议', '邮件通知'] },
-    { id: 'pro',     name: '专业版', price: '499', period: '季度', recommended: true,  features: ['入门版全部功能', '实盘周期详情', '个股深度分析', '买卖点提示', '专属客服'] },
-    { id: 'elite',   name: '精英版', price: '999', period: '季度', recommended: false, features: ['专业版全部功能', '1v1投资顾问', '定制化组合方案', '优先信号推送', '年度复盘报告'] },
+    { 
+      id: 'starter', 
+      name: '入门版', 
+      recommended: false, 
+      features: ['实时A股行情', 'AI走势预测', '季度投资组合建议', '邮件通知'],
+      quarterly: { price: 199 },
+      annual: { price: 557, discount: '7折', save: 239 }
+    },
+    { 
+      id: 'pro', 
+      name: '专业版', 
+      recommended: true, 
+      features: ['入门版全部功能', '实盘周期详情', '个股深度分析', '买卖点提示', '专属客服'],
+      quarterly: { price: 499 },
+      annual: { price: 1397, discount: '7折', save: 599 }
+    },
+    { 
+      id: 'elite', 
+      name: '精英版', 
+      recommended: false, 
+      features: ['专业版全部功能', '1v1投资顾问', '定制化组合方案', '优先信号推送', '年度复盘报告'],
+      quarterly: { price: 999 },
+      annual: { price: 2797, discount: '7折', save: 1199 }
+    },
   ]);
 });
 

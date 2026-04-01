@@ -212,12 +212,30 @@ router.get('/portfolio', (req, res) => {
 
 // ── 订阅定价 ──────────────────────────────────────────
 router.get('/pricing', (req, res) => res.json([
-  { id: 'basic',  name: 'Basic',  nameCn: '基础版', price: 49,  period: 'quarterly', periodCn: '季度', recommended: false,
-    features: [{ en: 'Real-time US stock quotes', cn: '美股实时行情' }, { en: 'Weekly portfolio update', cn: '每周组合更新' }, { en: 'Email alerts', cn: '邮件提醒' }, { en: 'Historical performance', cn: '历史业绩查询' }] },
-  { id: 'pro',    name: 'Pro',   nameCn: '专业版', price: 99,  period: 'quarterly', periodCn: '季度', recommended: true,
-    features: [{ en: 'All Basic features', cn: '基础版全部功能' }, { en: 'AI predictions', cn: 'AI走势预测' }, { en: 'Daily insights', cn: '每日市场洞察' }, { en: 'Priority support', cn: '优先客服' }, { en: 'Trade alerts', cn: '实盘买卖提醒' }, { en: 'Advanced analytics', cn: '高级分析工具' }] },
-  { id: 'elite',  name: 'Elite', nameCn: '精英版', price: 199, period: 'quarterly', periodCn: '季度', recommended: false,
-    features: [{ en: 'All Pro features', cn: '专业版全部功能' }, { en: '1-on-1 consultation', cn: '一对一策略咨询' }, { en: 'Exclusive opportunities', cn: '独家投资机会' }, { en: 'Real-time chat', cn: '实时聊天支持' }, { en: 'Custom portfolio', cn: '定制组合方案' }, { en: 'API access', cn: 'API接口' }] }
+  { 
+    id: 'basic', 
+    name: 'Basic', 
+    recommended: false,
+    features: ['Real-time US stock quotes', 'Weekly portfolio update', 'Email alerts', 'Historical performance'],
+    quarterly: { price: 49 },
+    annual: { price: 137, discount: '30% OFF', save: 59 }
+  },
+  { 
+    id: 'pro', 
+    name: 'Pro', 
+    recommended: true,
+    features: ['All Basic features', 'AI predictions', 'Daily insights', 'Priority support', 'Trade alerts', 'Advanced analytics'],
+    quarterly: { price: 99 },
+    annual: { price: 277, discount: '30% OFF', save: 119 }
+  },
+  { 
+    id: 'elite', 
+    name: 'Elite', 
+    recommended: false,
+    features: ['All Pro features', '1-on-1 consultation', 'Exclusive opportunities', 'Real-time chat', 'Custom portfolio', 'API access'],
+    quarterly: { price: 199 },
+    annual: { price: 557, discount: '30% OFF', save: 239 }
+  }
 ]));
 
 module.exports = router;
