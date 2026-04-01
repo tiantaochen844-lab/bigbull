@@ -3,8 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI创富 - AI驱动的A股智能投资平台</title>
-    <meta name="description" content="AI驱动的A股投资策略，透明业绩，诚实披露">
+    <title>AI创富 - AI驱动的A股智能投资平台 | 透明业绩 诚信投资</title>
+    <meta name="description" content="AI创富提供AI驱动的A股投资策略，实时行情分析，透明业绩展示。专业的智能投资平台，助您把握A股投资机会。">
+    <meta name="keywords" content="AI投资,A股投资,智能投资,股票分析,投资策略,AI创富,量化投资,股票推荐">
+    <meta name="author" content="AI创富">
+    <link rel="canonical" href="https://aiopenfortune.com/cn.html">
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -132,9 +143,18 @@
         .auth-msg.success{background:#d1fae5;color:#065f46}
         .forgot-link{text-align:center;margin-top:10px;font-size:0.88em;color:#667eea;cursor:pointer}
         .btn-login{background:linear-gradient(135deg,#667eea,#764ba2);color:white!important;border-radius:20px!important;padding:8px 22px!important;font-weight:600;margin-left:8px}
+        /* 加载动画 */
+        .loading{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.95);z-index:9999;display:flex;justify-content:center;align-items:center;flex-direction:column}
+        .loading-spinner{width:50px;height:50px;border:4px solid #e5e7eb;border-top-color:#667eea;border-radius:50%;animation:spin 1s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .loading-text{margin-top:16px;color:#667eea;font-weight:600}
     </style>
 </head>
 <body>
+<div class="loading" id="loading">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">加载中...</div>
+</div>
 
 <!-- NAV -->
 <nav class="nav">
@@ -617,6 +637,7 @@ async function checkSubscription() {
 }
 
 // ── 初始化 ──
+window.addEventListener('load',()=>document.getElementById('loading').style.display='none');
 loadUser();
 loadGrowthChart();
 loadTrades();

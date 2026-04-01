@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const compression = require('compression');
 const cors = require('cors');
 const path = require('path');
 
@@ -8,6 +9,23 @@ const PORT = process.env.PORT || 3000;
 
 // 信任 Cloudflare 代理
 app.set('trust proxy', 1);
+
+// HTTPS强制跳转
+app.use((req,res,next)=>{
+  if(req.headers['x-forwarded-proto']!=='https'&&process.env.NODE_ENV==='production'){
+    return res.redirect('https://'+req.headers.host+req.url);
+  }
+  next();
+});
+
+// 安全头部
+app.use((req,res,next)=>{
+  res.setHeader('X-Content-Type-Options','nosniff');
+  res.setHeader('X-Frame-Options','DENY');
+  res.setHeader('X-XSS-Protection','1; mode=block');
+  res.setHeader('Strict-Transport-Security','max-age=31536000; includeSubDomains');
+  next();
+});
 
 const { generalLimiter, authLimiter, emailLimiter, paymentLimiter } = require('./middleware/rateLimiter');
 
@@ -23,6 +41,7 @@ app.use(cors({
   ],
   credentials: true
 }));
+app.use(compression());
 app.use(express.json());
 app.use(express.static('public'));
 
