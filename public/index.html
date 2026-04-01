@@ -717,8 +717,9 @@ function handleSubscribe(plan, period = 'quarterly') {
 
 // ── Init ─────────────────────────────────────────────
 window.addEventListener('load',()=>document.getElementById('loading').style.display='none');
+function waitForChart(callback){if(typeof Chart!=='undefined'){callback();}else{setTimeout(()=>waitForChart(callback),100);}}
 loadUser();
-loadPerformance();
+waitForChart(()=>loadPerformance());
 loadStocks();
 loadHoldings();
 loadNextQuarter();
