@@ -75,19 +75,6 @@
         .forecast-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; max-width: 900px; width: 90%; max-height: 90vh; overflow-y: auto; }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 2em; cursor: pointer; color: #999; }
         .chart-container { position: relative; height: 400px; margin: 20px 0; }
-        .auth-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
-        .auth-box { background: white; padding: 36px; border-radius: 16px; width: 90%; max-width: 420px; position: relative; }
-        .auth-close { position: absolute; top: 12px; right: 16px; background: none; border: none; font-size: 1.8em; cursor: pointer; color: #999; }
-        .auth-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
-        .auth-tab { flex: 1; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px; cursor: pointer; font-weight: 600; background: white; color: #6b7280; transition: all 0.2s; }
-        .auth-tab.active { border-color: #f5576c; background: #f5576c; color: white; }
-        .auth-input { width: 100%; padding: 11px 14px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 0.95em; margin-bottom: 12px; transition: border 0.2s; }
-        .auth-input:focus { outline: none; border-color: #f5576c; }
-        .auth-btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #f093fb, #f5576c); color: white; border: none; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; margin-top: 4px; }
-        .auth-msg { font-size: 0.85em; text-align: center; margin-top: 10px; padding: 8px; border-radius: 6px; }
-        .auth-msg.error { background: #fee2e2; color: #991b1b; }
-        .auth-msg.success { background: #d1fae5; color: #065f46; }
-        .btn-login { background: linear-gradient(135deg, #f093fb, #f5576c); color: white !important; border-radius: 20px !important; padding: 8px 22px !important; font-weight: 600; margin-left: 8px; }
     </style>
 </head>
 <body>
@@ -95,9 +82,6 @@
         <a href="philosophy-cn.html" class="nav-btn" style="background:linear-gradient(135deg,#667eea,#764ba2);">💡 AI创富理念</a>
         <a href="service-cn.html" class="nav-btn">📋 服务流程</a>
         <a href="index.html" class="nav-btn">🌍 Global / 全球版</a>
-        <span id="userArea">
-            <a href="#" class="nav-btn btn-login" onclick="showAuthModal();return false;">登录</a>
-        </span>
     </div>
     <div class="container">
     <div class="forecast-modal" id="forecastModal">
@@ -139,38 +123,6 @@
         <div class="portfolio-section" id="portfolioSection"></div>
         <div class="pricing-section" id="pricingSection"></div>
     </div>
-    <div class="auth-modal" id="authModal" onclick="if(event.target===this)closeAuthModal()">
-        <div class="auth-box">
-            <button class="auth-close" onclick="closeAuthModal()">×</button>
-            <div class="auth-tabs">
-                <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">登录</button>
-                <button class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">注册</button>
-            </div>
-            <div id="loginForm">
-                <input class="auth-input" type="email" id="loginEmail" placeholder="邮箱地址">
-                <input class="auth-input" type="password" id="loginPass" placeholder="密码">
-                <button class="auth-btn" onclick="doLogin()">登录</button>
-            </div>
-            <div id="signupForm" style="display:none;">
-                <input class="auth-input" type="text" id="regName" placeholder="姓名">
-                <input class="auth-input" type="email" id="regEmail" placeholder="邮箱地址">
-                <input class="auth-input" type="password" id="regPass" placeholder="密码（至少6位）">
-                <button class="auth-btn" onclick="doSignup()">注册</button>
-            </div>
-            <div id="authMsg"></div>
-        </div>
-    </div>
-    <script>
-        const API='https://aiopenfortune.com';let token=localStorage.getItem('token');
-        function showAuthModal(){document.getElementById('authModal').style.display='flex';}
-        function closeAuthModal(){document.getElementById('authModal').style.display='none';document.getElementById('authMsg').innerHTML='';}
-        function switchAuthTab(t){document.getElementById('loginForm').style.display=t==='login'?'block':'none';document.getElementById('signupForm').style.display=t==='signup'?'block':'none';document.getElementById('tabLogin').className='auth-tab'+(t==='login'?' active':'');document.getElementById('tabSignup').className='auth-tab'+(t==='signup'?' active':'');}
-        function showAuthMsg(m,t){document.getElementById('authMsg').innerHTML=`<div class="auth-msg ${t}">${m}</div>`;}
-        async function doLogin(){const e=document.getElementById('loginEmail').value,p=document.getElementById('loginPass').value;if(!e||!p)return showAuthMsg('请填写所有字段','error');try{const r=await fetch(`${API}/api/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e,password:p})});const d=await r.json();if(d.token){localStorage.setItem('token',d.token);token=d.token;closeAuthModal();setUserArea(d.user||{email:e});}else{showAuthMsg(d.error||'登录失败','error');}}catch(e){showAuthMsg('网络错误','error');}}
-        async function doSignup(){const n=document.getElementById('regName').value,e=document.getElementById('regEmail').value,p=document.getElementById('regPass').value;if(!n||!e||!p)return showAuthMsg('请填写所有字段','error');if(p.length<6)return showAuthMsg('密码至少6位','error');try{const r=await fetch(`${API}/api/auth/register`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,email:e,password:p,market:'cn'})});const d=await r.json();if(d.success||d.token){showAuthMsg('✅ 注册成功！请查收验证邮件','success');if(d.token){localStorage.setItem('token',d.token);token=d.token;setUserArea({name:n,email:e});}}else{showAuthMsg(d.error||'注册失败','error');}}catch(e){showAuthMsg('网络错误','error');}}
-        function setUserArea(u){document.getElementById('userArea').innerHTML=`<span style="color:white;font-weight:600;margin-right:8px;">👤 ${u.name||u.email}</span><button onclick="doLogout()" class="nav-btn" style="background:#ef4444;color:white;border-color:#ef4444;">登出</button>`;}
-        function doLogout(){localStorage.removeItem('token');token=null;document.getElementById('userArea').innerHTML=`<a href="#" class="nav-btn btn-login" onclick="showAuthModal();return false;">登录</a>`;}
-        async function loadUser(){if(!token)return;try{const r=await fetch(`${API}/api/auth/me`,{headers:{'Authorization':'Bearer '+token}});if(r.ok){const d=await r.json();setUserArea(d.user||d);}else{localStorage.removeItem('token');token=null;}}catch(e){}}
     <script>
         async function loadHistory() {
             const res = await fetch('https://aiopenfortune.com/api/cn/history');
@@ -381,7 +333,6 @@
             }
         }
 
-        loadUser();
         loadHistory();
         loadStocks();
         loadPortfolio();
