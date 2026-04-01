@@ -92,8 +92,8 @@
 </head>
 <body>
     <div class="nav-switch">
-        <a href="philosophy-cn.html" class="nav-btn" style="background:linear-gradient(135deg,#667eea,#764ba2);">💡 AI创富理念</a>
-        <a href="service-cn.html" class="nav-btn">📋 服务流程</a>
+        <a href="philosophy.html" class="nav-btn" style="background:linear-gradient(135deg,#667eea,#764ba2);">💡 AI创富理念</a>
+        <a href="service.html" class="nav-btn">📋 服务流程</a>
         <a href="index.html" class="nav-btn">🌍 Global / 全球版</a>
         <span id="userArea">
             <a href="#" class="nav-btn btn-login" onclick="showAuthModal();return false;">登录</a>
@@ -201,43 +201,22 @@
             `;
         }
         async function loadStocks() {
-            // 先显示骨架屏
-            document.getElementById('stocksGrid').innerHTML = `
-                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:800px;margin:0 auto;">
-                    ${['宁德时代','特变电工','中国平安','美的集团'].map(name => `
-                        <div class="stock-card" style="opacity:0.5">
-                            <div class="stock-name" style="color:#ccc">${name}</div>
-                            <div class="stock-price" style="color:#ccc">¥---</div>
-                            <div class="stock-change" style="color:#ccc">加载中...</div>
-                        </div>`).join('')}
-                </div>`;
-            try {
-                const controller = new AbortController();
-                const timer = setTimeout(() => controller.abort(), 8000);
-                const res = await fetch('https://aiopenfortune.com/api/cn/stocks', { signal: controller.signal });
-                clearTimeout(timer);
-                const stocks = await res.json();
-                const stockList = Object.entries(stocks).slice(0, 4);
-                document.getElementById('stocksGrid').innerHTML = `
-                    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:800px;margin:0 auto;">
-                        ${stockList.map(([code, data]) => `
-                            <div class="stock-card" onclick="showForecast('${code}')">
-                                <div class="stock-header"><div class="stock-code">${data.symbol || code}</div></div>
-                                <div class="stock-name">${data.name}</div>
-                                <div class="stock-price">¥${data.price}</div>
-                                <div class="stock-change ${data.change >= 0 ? 'positive' : 'negative'}">
-                                    ${data.change >= 0 ? '▲' : '▼'} ${Math.abs(data.change)}%
-                                </div>
-                                <div class="stock-info">
-                                    <span>成交量: ${data.volume}</span>
-                                    <span>市盈率: ${data.pe}</span>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>`;
-            } catch(e) {
-                document.getElementById('stocksGrid').innerHTML = '<div style="color:#9ca3af;padding:20px;text-align:center;">行情加载失败，请刷新重试</div>';
-            }
+            const res = await fetch('https://aiopenfortune.com/api/cn/stocks');
+            const stocks = await res.json();
+            document.getElementById('stocksGrid').innerHTML = Object.entries(stocks).map(([code, data]) => `
+                <div class="stock-card" onclick="showForecast('${code}')">
+                    <div class="stock-header"><div class="stock-code">${data.code}</div></div>
+                    <div class="stock-name">${data.name}</div>
+                    <div class="stock-price">¥${data.price}</div>
+                    <div class="stock-change ${data.change >= 0 ? 'positive' : 'negative'}">
+                        ${data.change >= 0 ? '▲' : '▼'} ${Math.abs(data.change)}%
+                    </div>
+                    <div class="stock-info">
+                        <span>成交量: ${data.volume}</span>
+                        <span>市盈率: ${data.pe}</span>
+                    </div>
+                </div>
+            `).join('');
         }
         async function loadPortfolio() {
             const res = await fetch('https://aiopenfortune.com/api/cn/portfolio');
@@ -281,8 +260,9 @@
                             <div class="plan-price">¥${plan.price}</div>
                             <div class="plan-period">/${plan.period}</div>
                             <ul class="plan-features">${plan.features.map(f => `<li>${f}</li>`).join('')}</ul>
-                            <div style="margin-top:10px;">
-                                <button class="subscribe-btn" style="width:100%;font-size:0.95em;" onclick="startCnPay('${plan.id}','wechat')">💚 微信支付</button>
+                            <div style="display:flex;gap:8px;margin-top:10px;">
+                                <button class="subscribe-btn" style="flex:1;font-size:0.95em;" onclick="startCnPay('${plan.id}','wechat')">💚 微信支付</button>
+                                <button class="subscribe-btn" style="flex:1;font-size:0.95em;background:linear-gradient(135deg,#1677ff,#0958d9);" onclick="startCnPay('${plan.id}','alipay')">💙 支付宝</button>
                             </div>
                         </div>
                     `).join('')}
@@ -388,12 +368,13 @@
         loadPricing();
         loadTrades();
 
-        // 国内微信支付
+        // 国内微信/支付宝支付
         async function startCnPay(plan, payType) {
             const token = localStorage.getItem('token');
             if (!token) { alert('请先登录后再订阅 / Please login first'); return; }
 
-            if (!confirm(`确认使用微信支付订阅？`)) return;
+            const payTypeName = payType === 'wechat' ? '微信支付' : '支付宝';
+            if (!confirm(`确认使用 ${payTypeName} 订阅？`)) return;
 
             try {
                 const res = await fetch('https://aiopenfortune.com/api/cn-payment/create', {
@@ -429,7 +410,7 @@
                     <p style="color:#666;font-size:0.9em;margin-bottom:4px;">${data.title}</p>
                     <p style="color:#f5576c;font-size:1.8em;font-weight:bold;margin-bottom:20px;">¥${data.amount}</p>
                     <img src="${data.qrcode}" style="width:200px;height:200px;border:1px solid #e5e7eb;border-radius:8px;" onerror="this.src='';this.alt='请访问支付链接';"/>
-                    <p style="color:#666;font-size:0.85em;margin-top:12px;">请用微信扫码完成支付</p>
+                    <p style="color:#666;font-size:0.85em;margin-top:12px;">请用微信/支付宝扫码完成支付</p>
                     <a href="${data.payUrl}" target="_blank" style="display:inline-block;margin-top:10px;color:#667eea;font-size:0.9em;">🔗 点击打开支付页面</a>
                     <div style="margin-top:20px;">
                         <button onclick="checkPayStatus('${data.orderId}')" style="background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;padding:10px 28px;border-radius:8px;cursor:pointer;font-weight:600;">✅ 我已完成支付</button>
@@ -490,7 +471,7 @@
         <strong>本平台不受美国证券交易委员会（SEC）、中国证券监督管理委员会（CSRC）或任何金融监管机构的监管。</strong><br>
         本平台所有内容均不构成投资建议、证券推荐或买卖要约。投资有风险，过往业绩不代表未来收益，用户需自行承担全部投资决策责任。<br><br>
         This platform is for informational purposes only and is <strong>NOT regulated by the SEC, CSRC, or any financial authority.</strong> Nothing herein constitutes investment advice. Past performance does not guarantee future results.<br><br>
-        © 2026 AI Open Fortune. All rights reserved. | <a href="/terms.html" style="color: #667eea;">服务条款 / Terms of Service</a> | <a href="/privacy.html" style="color: #667eea;">隐私政策 / Privacy Policy</a>
+        © 2026 AI Open Fortune. All rights reserved. | <a href="/terms.html" style="color: #667eea;">服务条款 / Terms of Service</a>
     </div>
 </body>
 </html>
