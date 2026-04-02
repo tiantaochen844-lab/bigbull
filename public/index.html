@@ -241,14 +241,23 @@
         <div class="pricing-grid" id="pricingSection"></div>
     </div>
 
-    <!-- ⑥ 我的持仓 & 预警设置（登录用户可见） -->
-    <div id="alertsSection" style="display:none;margin-top:48px;">
+    <!-- ⑥ 我的持仓 & 预警设置 -->
+    <div id="alertsSection" style="margin-top:48px;">
         <div class="section-label">Portfolio Alerts</div>
         <div class="section-title">My Holdings & Alerts</div>
-        <div class="section-sub">Track your positions and set price alerts</div>
+        <div class="section-sub">Track your positions and set price alerts · subscribers only</div>
 
+        <!-- 未登录提示 -->
+        <div id="alertsLoginPrompt" style="display:none;background:white;border-radius:14px;padding:40px;border:1px solid #e5e7eb;text-align:center;margin-top:24px;">
+            <div style="font-size:2em;margin-bottom:12px;">🔔</div>
+            <div style="font-size:1.1em;font-weight:700;color:#1a1a2e;margin-bottom:8px;">Portfolio Alerts</div>
+            <div style="color:#6b7280;margin-bottom:20px;">Login to set up holding alerts and receive buy/sell notifications by email.</div>
+            <button onclick="showModal()" style="padding:12px 32px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;border-radius:8px;font-size:1em;font-weight:600;cursor:pointer;">Login / Sign Up</button>
+        </div>
+
+        <!-- 已登录功能区 -->
+        <div id="alertsContent" style="display:none;">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px;">
-
             <!-- 持仓管理 -->
             <div style="background:white;border-radius:14px;padding:24px;border:1px solid #e5e7eb;">
                 <h3 style="margin:0 0 16px;color:#1a1a2e;font-size:1.1em;">📊 My Holdings</h3>
@@ -262,7 +271,6 @@
                     <div style="color:#9ca3af;text-align:center;padding:20px;font-size:0.9em;">No holdings yet. Add your first position above.</div>
                 </div>
             </div>
-
             <!-- 预警设置 -->
             <div style="background:white;border-radius:14px;padding:24px;border:1px solid #e5e7eb;">
                 <h3 style="margin:0 0 16px;color:#1a1a2e;font-size:1.1em;">🔔 Alert Rules</h3>
@@ -285,17 +293,17 @@
                     <button onclick="createAlert()" style="padding:8px 16px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.9em;white-space:nowrap;">+ Alert</button>
                 </div>
                 <div id="alertsList" style="max-height:250px;overflow-y:auto;">
-                    <div style="color:#9ca3af;text-align:center;padding:20px;font-size:0.9em;">No alerts set. Create your first alert above.</div>
+                    <div style="color:#9ca3af;text-align:center;padding:20px;font-size:0.9em;">No alerts set.</div>
                 </div>
             </div>
         </div>
-
         <!-- 预警历史 -->
         <div style="background:white;border-radius:14px;padding:24px;border:1px solid #e5e7eb;margin-top:24px;">
             <h3 style="margin:0 0 16px;color:#1a1a2e;font-size:1.1em;">📋 Alert History</h3>
             <div id="alertHistory" style="max-height:200px;overflow-y:auto;">
                 <div style="color:#9ca3af;text-align:center;padding:20px;font-size:0.9em;">No alerts triggered yet.</div>
             </div>
+        </div>
         </div>
     </div>
 
@@ -791,14 +799,19 @@ loadMarketBrief();
 
 // ── 持仓预警区块显示 ──────────────────────────────────
 function showAlertsSection() {
-    if (!token) return;
-    document.getElementById('alertsSection').style.display = 'block';
-    loadMyHoldings();
-    loadMyAlerts();
-    loadAlertHistory();
+    if (token) {
+        document.getElementById('alertsLoginPrompt').style.display = 'none';
+        document.getElementById('alertsContent').style.display = 'block';
+        loadMyHoldings();
+        loadMyAlerts();
+        loadAlertHistory();
+    } else {
+        document.getElementById('alertsLoginPrompt').style.display = 'block';
+        document.getElementById('alertsContent').style.display = 'none';
+    }
 }
-// 页面加载时如果已登录则显示
-if (token) showAlertsSection();
+// 页面加载时立即初始化
+showAlertsSection();
 
 // ── 持仓管理 ─────────────────────────────────────────
 async function addHolding() {
