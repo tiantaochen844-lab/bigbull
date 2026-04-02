@@ -241,7 +241,65 @@
         <div class="pricing-grid" id="pricingSection"></div>
     </div>
 
-    <!-- ⑥ 优惠内容 -->
+    <!-- ⑥ 我的持仓 & 预警设置（登录用户可见） -->
+    <div id="alertsSection" style="display:none;margin-top:48px;">
+        <div class="section-label">Portfolio Alerts</div>
+        <div class="section-title">My Holdings & Alerts</div>
+        <div class="section-sub">Track your positions and set price alerts</div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px;">
+
+            <!-- 持仓管理 -->
+            <div style="background:white;border-radius:14px;padding:24px;border:1px solid #e5e7eb;">
+                <h3 style="margin:0 0 16px;color:#1a1a2e;font-size:1.1em;">📊 My Holdings</h3>
+                <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+                    <input id="holdingSymbol" placeholder="Symbol (e.g. AAPL)" style="flex:1;min-width:100px;padding:8px 12px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9em;">
+                    <input id="holdingCost" placeholder="Cost Price" type="number" style="flex:1;min-width:80px;padding:8px 12px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9em;">
+                    <input id="holdingQty" placeholder="Quantity" type="number" style="flex:1;min-width:70px;padding:8px 12px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9em;">
+                    <button onclick="addHolding()" style="padding:8px 16px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.9em;white-space:nowrap;">+ Add</button>
+                </div>
+                <div id="holdingsList" style="max-height:250px;overflow-y:auto;">
+                    <div style="color:#9ca3af;text-align:center;padding:20px;font-size:0.9em;">No holdings yet. Add your first position above.</div>
+                </div>
+            </div>
+
+            <!-- 预警设置 -->
+            <div style="background:white;border-radius:14px;padding:24px;border:1px solid #e5e7eb;">
+                <h3 style="margin:0 0 16px;color:#1a1a2e;font-size:1.1em;">🔔 Alert Rules</h3>
+                <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+                    <input id="alertSymbol" placeholder="Symbol" style="flex:1;min-width:80px;padding:8px 12px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9em;">
+                    <select id="alertType" style="flex:1;min-width:130px;padding:8px 12px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9em;">
+                        <option value="pct_change">% Change Alert</option>
+                        <option value="price_above">Price Above (Pro+)</option>
+                        <option value="price_below">Price Below (Pro+)</option>
+                        <option value="ai_signal">AI Signal (Elite)</option>
+                    </select>
+                </div>
+                <div style="display:flex;gap:8px;margin-bottom:16px;">
+                    <input id="alertThreshold" placeholder="Threshold (% or price)" type="number" style="flex:1;padding:8px 12px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9em;">
+                    <select id="alertDirection" style="flex:1;padding:8px 12px;border:1px solid #e5e7eb;border-radius:8px;font-size:0.9em;">
+                        <option value="both">Both Directions</option>
+                        <option value="up">Up Only</option>
+                        <option value="down">Down Only</option>
+                    </select>
+                    <button onclick="createAlert()" style="padding:8px 16px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.9em;white-space:nowrap;">+ Alert</button>
+                </div>
+                <div id="alertsList" style="max-height:250px;overflow-y:auto;">
+                    <div style="color:#9ca3af;text-align:center;padding:20px;font-size:0.9em;">No alerts set. Create your first alert above.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 预警历史 -->
+        <div style="background:white;border-radius:14px;padding:24px;border:1px solid #e5e7eb;margin-top:24px;">
+            <h3 style="margin:0 0 16px;color:#1a1a2e;font-size:1.1em;">📋 Alert History</h3>
+            <div id="alertHistory" style="max-height:200px;overflow-y:auto;">
+                <div style="color:#9ca3af;text-align:center;padding:20px;font-size:0.9em;">No alerts triggered yet.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ⑦ 优惠内容 -->
     <div style="margin-top:48px;margin-bottom:48px;">
         <div class="section-label">Promotions</div>
         <div class="section-title">Special Offers</div>
@@ -728,6 +786,115 @@ loadHoldings();
 loadNextQuarter();
 loadPricing();
 loadMarketBrief();
+// 持仓预警（登录后加载）
+if(token){ loadMyHoldings(); loadMyAlerts(); loadAlertHistory(); document.getElementById('alertsSection').style.display='block'; }
+
+// ── 持仓管理 ─────────────────────────────────────────
+async function addHolding() {
+    if (!token) { showModal(); return; }
+    const symbol = document.getElementById('holdingSymbol').value.trim().toUpperCase();
+    const cost = parseFloat(document.getElementById('holdingCost').value);
+    const qty = parseFloat(document.getElementById('holdingQty').value);
+    if (!symbol || !cost || !qty) { alert('Please fill in all fields'); return; }
+    const res = await fetch(`${API}/api/alerts/holdings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ symbol, cost_price: cost, quantity: qty })
+    });
+    const data = await res.json();
+    if (data.success) {
+        document.getElementById('holdingSymbol').value = '';
+        document.getElementById('holdingCost').value = '';
+        document.getElementById('holdingQty').value = '';
+        loadMyHoldings();
+    } else { alert(data.error || 'Failed to add holding'); }
+}
+
+async function loadMyHoldings() {
+    if (!token) return;
+    const res = await fetch(`${API}/api/alerts/holdings`, { headers: { 'Authorization': 'Bearer ' + token } });
+    const holdings = await res.json();
+    const el = document.getElementById('holdingsList');
+    if (!holdings.length) { el.innerHTML = '<div style="color:#9ca3af;text-align:center;padding:20px;font-size:0.9em;">No holdings yet.</div>'; return; }
+    el.innerHTML = holdings.map(h => `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f3f4f6;">
+            <div>
+                <span style="font-weight:700;color:#1a1a2e;">${h.symbol}</span>
+                <span style="color:#6b7280;font-size:0.85em;margin-left:8px;">${h.quantity} shares @ $${h.cost_price}</span>
+            </div>
+            <button onclick="deleteHolding('${h.symbol}')" style="padding:4px 10px;background:#fee2e2;color:#ef4444;border:none;border-radius:6px;cursor:pointer;font-size:0.8em;">Remove</button>
+        </div>
+    `).join('');
+}
+
+async function deleteHolding(symbol) {
+    if (!confirm(`Remove ${symbol} from holdings?`)) return;
+    await fetch(`${API}/api/alerts/holdings/${symbol}`, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + token } });
+    loadMyHoldings();
+}
+
+// ── 预警管理 ─────────────────────────────────────────
+async function createAlert() {
+    if (!token) { showModal(); return; }
+    const symbol = document.getElementById('alertSymbol').value.trim().toUpperCase();
+    const alert_type = document.getElementById('alertType').value;
+    const threshold = parseFloat(document.getElementById('alertThreshold').value) || 5;
+    const direction = document.getElementById('alertDirection').value;
+    if (!symbol) { alert('Please enter a symbol'); return; }
+    const res = await fetch(`${API}/api/alerts/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ symbol, alert_type, threshold, direction })
+    });
+    const data = await res.json();
+    if (data.success) {
+        document.getElementById('alertSymbol').value = '';
+        document.getElementById('alertThreshold').value = '';
+        loadMyAlerts();
+    } else { alert(data.error || 'Failed to create alert'); }
+}
+
+async function loadMyAlerts() {
+    if (!token) return;
+    const res = await fetch(`${API}/api/alerts/list`, { headers: { 'Authorization': 'Bearer ' + token } });
+    const alerts = await res.json();
+    const el = document.getElementById('alertsList');
+    if (!alerts.length) { el.innerHTML = '<div style="color:#9ca3af;text-align:center;padding:20px;font-size:0.9em;">No alerts set.</div>'; return; }
+    const typeLabels = { pct_change: '% Change', price_above: 'Price Above', price_below: 'Price Below', ai_signal: 'AI Signal' };
+    el.innerHTML = alerts.map(a => `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f3f4f6;">
+            <div>
+                <span style="font-weight:700;color:#1a1a2e;">${a.symbol}</span>
+                <span style="background:#ede9fe;color:#7c3aed;padding:2px 8px;border-radius:12px;font-size:0.75em;margin-left:8px;">${typeLabels[a.alert_type]||a.alert_type}</span>
+                <span style="color:#6b7280;font-size:0.85em;margin-left:8px;">Threshold: ${a.threshold}${a.alert_type==='pct_change'?'%':'$'}</span>
+            </div>
+            <button onclick="deleteAlert(${a.id})" style="padding:4px 10px;background:#fee2e2;color:#ef4444;border:none;border-radius:6px;cursor:pointer;font-size:0.8em;">Delete</button>
+        </div>
+    `).join('');
+}
+
+async function deleteAlert(id) {
+    await fetch(`${API}/api/alerts/${id}`, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + token } });
+    loadMyAlerts();
+}
+
+async function loadAlertHistory() {
+    if (!token) return;
+    const res = await fetch(`${API}/api/alerts/history`, { headers: { 'Authorization': 'Bearer ' + token } });
+    const history = await res.json();
+    const el = document.getElementById('alertHistory');
+    if (!history.length) { el.innerHTML = '<div style="color:#9ca3af;text-align:center;padding:20px;font-size:0.9em;">No alerts triggered yet.</div>'; return; }
+    el.innerHTML = history.map(h => `
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f3f4f6;">
+            <div>
+                <span style="font-weight:700;color:#1a1a2e;">${h.symbol}</span>
+                <span style="color:#6b7280;font-size:0.85em;margin-left:8px;">$${h.trigger_price}</span>
+                <div style="color:#374151;font-size:0.85em;margin-top:4px;">${h.message}</div>
+            </div>
+            <div style="color:#9ca3af;font-size:0.75em;white-space:nowrap;margin-left:12px;">${new Date(h.sent_at).toLocaleDateString()}</div>
+        </div>
+    `).join('');
+}
 </script>
 
 <!-- Crisp Chat -->
