@@ -719,13 +719,15 @@ function handleSubscribe(plan, period = 'quarterly') {
 window.addEventListener('load',()=>document.getElementById('loading').style.display='none');
 function waitForChart(callback){if(typeof Chart!=='undefined'){callback();}else{setTimeout(()=>waitForChart(callback),100);}}
 loadUser();
-waitForChart(()=>loadPerformance());
+waitForChart(()=>{
+    loadPerformance();
+    drawPerformanceChart();
+});
 loadStocks();
 loadHoldings();
 loadNextQuarter();
 loadPricing();
 loadMarketBrief();
-drawPerformanceChart();
 </script>
 
 <!-- Crisp Chat -->
