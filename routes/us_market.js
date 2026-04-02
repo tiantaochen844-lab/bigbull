@@ -216,7 +216,7 @@ router.get('/pricing', (req, res) => res.json([
     id: 'basic', 
     name: 'Basic', 
     recommended: false,
-    features: ['Real-time US stock quotes', 'Weekly portfolio update', 'Email alerts', 'Historical performance'],
+    features: ['Real-time portfolio updates', 'Weekly market analysis', 'Portfolio alerts (>5% swing)', 'Historical performance data'],
     quarterly: { price: 49 },
     annual: { price: 137, discount: '30% OFF', save: 59 }
   },
@@ -224,7 +224,7 @@ router.get('/pricing', (req, res) => res.json([
     id: 'pro', 
     name: 'Pro', 
     recommended: true,
-    features: ['All Basic features', 'AI predictions', 'Daily insights', 'Priority support', 'Trade alerts', 'Advanced analytics'],
+    features: ['All Basic features', 'AI-powered predictions', 'Daily market insights', 'Priority support', 'Custom portfolio alerts (price targets)', 'Advanced analytics'],
     quarterly: { price: 99 },
     annual: { price: 277, discount: '30% OFF', save: 119 }
   },
@@ -232,7 +232,7 @@ router.get('/pricing', (req, res) => res.json([
     id: 'elite', 
     name: 'Elite', 
     recommended: false,
-    features: ['All Pro features', '1-on-1 consultation', 'Exclusive opportunities', 'Real-time chat', 'Custom portfolio', 'API access'],
+    features: ['All Pro features', '1-on-1 strategy consultation', 'Exclusive investment opportunities', 'AI smart alerts (auto buy/sell signals)', 'Real-time chat support'],
     quarterly: { price: 199 },
     annual: { price: 557, discount: '30% OFF', save: 239 }
   }
