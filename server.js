@@ -56,6 +56,7 @@ app.use('/api/auth',        authLimiter,    require('./routes/auth'));
 app.use('/api/password',    emailLimiter,   require('./routes/password'));
 app.use('/api/payment',     paymentLimiter, require('./routes/payment'));
 app.use('/api/cn-payment',  paymentLimiter, require('./routes/cn_payment'));
+app.use('/api/alerts',                      require('./routes/alerts'));
 app.use('/api/admin',       require('./routes/admin'));
 app.use('/api',         require('./routes/us_market'));
 app.use('/api',         require('./routes/cn_market'));
@@ -116,16 +117,17 @@ app.get('/api/portfolio', (req, res) => {
 
 app.get('/api/pricing', (req, res) => res.json([
   { id: 'basic',  name: 'Basic',  nameCn: '基础版', price: 49,  period: 'quarterly', periodCn: '季度', recommended: false,
-    features: [{ en: 'Real-time portfolio updates', cn: '实时投资组合更新' }, { en: 'Weekly market analysis', cn: '每周市场分析' }, { en: 'Email alerts', cn: '邮件提醒' }, { en: 'Historical performance data', cn: '历史业绩数据' }] },
+    features: [{ en: 'Real-time portfolio updates', cn: '实时投资组合更新' }, { en: 'Weekly market analysis', cn: '每周市场分析' }, { en: 'Portfolio alerts (>5% swing)', cn: '持仓预警（涨跌>5%邮件通知）' }, { en: 'Historical performance data', cn: '历史业绩数据' }] },
   { id: 'pro',    name: 'Pro',   nameCn: '专业版', price: 99,  period: 'quarterly', periodCn: '季度', recommended: true,
-    features: [{ en: 'All Basic features', cn: '基础版全部功能' }, { en: 'AI-powered predictions', cn: 'AI驱动预测' }, { en: 'Daily market insights', cn: '每日市场洞察' }, { en: 'Priority support', cn: '优先客服支持' }, { en: 'Custom alerts', cn: '自定义提醒' }, { en: 'Advanced analytics', cn: '高级分析工具' }] },
+    features: [{ en: 'All Basic features', cn: '基础版全部功能' }, { en: 'AI-powered predictions', cn: 'AI驱动预测' }, { en: 'Daily market insights', cn: '每日市场洞察' }, { en: 'Priority support', cn: '优先客服支持' }, { en: 'Custom portfolio alerts (price targets)', cn: '自定义持仓预警（自设价格阈值）' }, { en: 'Advanced analytics', cn: '高级分析工具' }] },
   { id: 'elite',  name: 'Elite', nameCn: '精英版', price: 199, period: 'quarterly', periodCn: '季度', recommended: false,
-    features: [{ en: 'All Pro features', cn: '专业版全部功能' }, { en: '1-on-1 strategy consultation', cn: '一对一策略咨询' }, { en: 'Exclusive investment opportunities', cn: '独家投资机会' }, { en: 'Real-time chat support', cn: '实时聊天支持' }, { en: 'Custom portfolio builder', cn: '定制组合构建器' }, { en: 'API access', cn: 'API接口访问' }] }
+    features: [{ en: 'All Pro features', cn: '专业版全部功能' }, { en: '1-on-1 strategy consultation', cn: '一对一策略咨询' }, { en: 'Exclusive investment opportunities', cn: '独家投资机会' }, { en: 'AI smart alerts (auto buy/sell signals)', cn: 'AI智能持仓预警（自动买卖信号）' }, { en: 'Real-time chat support', cn: '实时聊天支持' }, { en: 'Custom portfolio builder', cn: '定制组合构建器' }, { en: 'API access', cn: 'API接口访问' }] }
 ]));
 
 // ── 启动 ──────────────────────────────────────────────
 const usMarket = require('./routes/us_market');
 const cnMarket = require('./routes/cn_market');
+const { startAlertMonitor } = require('./services/alertMonitor');
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🐂 Open Fortune running on http://0.0.0.0:${PORT}`);
@@ -134,4 +136,6 @@ app.listen(PORT, '0.0.0.0', () => {
   // 启动后预热行情缓存
   if (typeof usMarket.warmCache === 'function') usMarket.warmCache();
   if (typeof cnMarket.warmCnCache === 'function') cnMarket.warmCnCache();
+  // 启动持仓预警监控
+  startAlertMonitor();
 });
