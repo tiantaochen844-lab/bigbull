@@ -11,9 +11,9 @@ const JWT_SECRET = process.env.JWT_SECRET || 'openfortune_secret';
 
 // 套餐价格（元）
 const CN_PLANS = {
-  basic:  { name: '入门版', quarterly: 199, annual: 557 },
-  pro:    { name: '专业版', quarterly: 499, annual: 1397 },
-  elite:  { name: '精英版', quarterly: 999, annual: 2797 }
+  starter: { name: '入门版', quarterly: 199, annual: 557 },
+  pro:     { name: '专业版', quarterly: 499, annual: 1397 },
+  elite:   { name: '精英版', quarterly: 999, annual: 2797 }
 };
 
 // 验证 JWT
