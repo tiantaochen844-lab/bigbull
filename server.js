@@ -121,7 +121,7 @@ app.get('/api/pricing', (req, res) => res.json([
   { id: 'pro',    name: 'Pro',   nameCn: '专业版', price: 99,  period: 'quarterly', periodCn: '季度', recommended: true,
     features: [{ en: 'All Basic features', cn: '基础版全部功能' }, { en: 'AI-powered predictions', cn: 'AI驱动预测' }, { en: 'Daily market insights', cn: '每日市场洞察' }, { en: 'Priority support', cn: '优先客服支持' }, { en: 'Custom portfolio alerts (price targets)', cn: '自定义持仓预警（自设价格阈值）' }, { en: 'Advanced analytics', cn: '高级分析工具' }] },
   { id: 'elite',  name: 'Elite', nameCn: '精英版', price: 199, period: 'quarterly', periodCn: '季度', recommended: false,
-    features: [{ en: 'All Pro features', cn: '专业版全部功能' }, { en: '1-on-1 strategy consultation', cn: '一对一策略咨询' }, { en: 'Exclusive investment opportunities', cn: '独家投资机会' }, { en: 'AI smart alerts (auto buy/sell signals)', cn: 'AI智能持仓预警（自动买卖信号）' }, { en: 'Real-time chat support', cn: '实时聊天支持' }, { en: 'Custom portfolio builder', cn: '定制组合构建器' }] }
+    features: [{ en: 'All Pro features', cn: '专业版全部功能' }, { en: '1-on-1 strategy consultation', cn: '一对一策略咨询' }, { en: 'Exclusive investment opportunities', cn: '独家投资机会' }, { en: 'AI smart alerts (auto buy/sell signals)', cn: 'AI智能持仓预警（自动买卖信号）' }, { en: 'Real-time chat support', cn: '实时聊天支持' }] }
 ]));
 
 // ── 启动 ──────────────────────────────────────────────
