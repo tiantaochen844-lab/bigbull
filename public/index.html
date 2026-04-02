@@ -445,6 +445,8 @@ async function doLogin() {
             token = data.token;
             closeModal();
             setUserArea(data.user || {email});
+            // 登录后显示持仓预警区块
+            showAlertsSection();
         } else {
             showMsg(data.error || 'Login failed.', 'error');
         }
@@ -462,7 +464,7 @@ async function doSignup() {
         const data = await res.json();
         if (data.success || data.token) {
             showMsg('✅ Account created! Please check your email to verify.', 'success');
-            if (data.token) { localStorage.setItem('token', data.token); token = data.token; setUserArea({name, email}); }
+            if (data.token) { localStorage.setItem('token', data.token); token = data.token; setUserArea({name, email}); showAlertsSection(); }
         } else {
             showMsg(data.error || 'Sign up failed.', 'error');
         }
@@ -786,8 +788,17 @@ loadHoldings();
 loadNextQuarter();
 loadPricing();
 loadMarketBrief();
-// 持仓预警（登录后加载）
-if(token){ loadMyHoldings(); loadMyAlerts(); loadAlertHistory(); document.getElementById('alertsSection').style.display='block'; }
+
+// ── 持仓预警区块显示 ──────────────────────────────────
+function showAlertsSection() {
+    if (!token) return;
+    document.getElementById('alertsSection').style.display = 'block';
+    loadMyHoldings();
+    loadMyAlerts();
+    loadAlertHistory();
+}
+// 页面加载时如果已登录则显示
+if (token) showAlertsSection();
 
 // ── 持仓管理 ─────────────────────────────────────────
 async function addHolding() {
