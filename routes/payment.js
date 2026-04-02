@@ -142,10 +142,11 @@ router.post('/paypal/capture-order', async (req, res) => {
 router.post('/wechat/pay', async (req, res) => {
   const user = getUserFromToken(req);
   if (!user) return res.status(401).json({ error: '请先登录' });
+  
+  // 重定向到国内支付接口（使用虎皮椒）
   res.json({
-    status: 'pending_config',
-    message: '微信支付需配置企业商户号，请联系管理员',
-    contact: 'admin@openfortune.com'
+    redirect: '/api/cn-payment/create',
+    message: '请使用国内支付接口 /api/cn-payment/create'
   });
 });
 
